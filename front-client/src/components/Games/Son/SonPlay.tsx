@@ -204,7 +204,7 @@ function SonPlay({
     <div className={`${styles.background}`} id="background">
       <div>
       <div className={`${styles.title}`}>손병호 게임</div> 
-      {myTurn ? <div><span className="text-2xl text-purple-400 font-bold">{`${peopleName[myNum]}`}</span></div>: null}
+      <div><span className="text-2xl text-purple-400 font-bold">{`${peopleName[currentTurn]}`}</span></div>
       </div>
       <div className={`${styles.layout}`}>
         <div id="hands1" className={`${styles.hands1}`}>
