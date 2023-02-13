@@ -464,8 +464,7 @@ const WebRTC = ({
       console.log("포차 설정 변경!----------------------");
       // setUpdateCheck((prev) => !prev);
       getPochaInfo();
-      window.location.reload();
-      // toast.success("포차 정보가 변경되었습니다");
+      toast.success("포차 설정이 변경되었습니다");
       // 방 설정 다시 불러오기!!! 테스트
       // await pocha_config_update("3");
     });
@@ -610,10 +609,10 @@ const WebRTC = ({
             </div>
           ) : null}
           <div className="text-white w-full min-h-[85vh]">
-            <span
+            {ssul && <span
               className="font-bold text-3xl fixed left-0 right-0 top-10"
               ref={ssulTitle}
-            >{`:: ${ssul} ::`}</span>
+            >{`💬${ssul}`}</span>}
             <div className="flex flex-wrap justify-evenly items-center p-24 min-h-[85vh]">
               {/* 내 비디오 공간 */}
               <video
