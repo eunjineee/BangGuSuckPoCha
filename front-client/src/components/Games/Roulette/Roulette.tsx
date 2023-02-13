@@ -35,11 +35,12 @@ function Roulette({
   const canvasSketch = useRef<any>(null);
   const [ctx, setCtx] = useState<any>(null);
 
+  const [isRoulette, setIsRoulette] = useState<boolean>(true);
+
   // 룰렛에서 Public 모달 보이기 관련
   const showModal = useAppSelector((state) => {
     return state.rouletteResultModal;
   });
-
 
   // 캔버스 값이 들어오면 ctx 값 세팅
   useEffect(() => {
@@ -48,8 +49,9 @@ function Roulette({
 
     socket.on("game_roulette", async (random: number) => {
       console.log("룰렛 돌아가냐!!!@!@여기는 룰렛??", random);
+      setIsRoulette(false);
       rotate(random);
-    })
+    });
     return () => {
       socket.off("game_roulette");
     };
@@ -103,37 +105,38 @@ function Roulette({
     newMake();
   }
 
-
-  const rotate = (random : number) => {
+  const rotate = (random: number) => {
     canvasSketch.current!.style.transform = `initial`;
     canvasSketch.current!.style.transition = `initial`;
-    
+
     const arc = 360 / product.length;
     const rotate = random * arc + 3600 + arc * 3 - arc / 4;
 
     canvasSketch.current!.style.transform = `rotate(-${rotate}deg)`;
     canvasSketch.current!.style.transition = `2s`;
-   
+
     // 모달에 전달할 데이터
     setModalData({
       type: "roulette",
       msg: product[random],
       pochaId: pochaId,
     });
-    setTimeout(() =>  {
+    setTimeout(() => {
       // 모달 켜는 dispatch
       dispatch(showRouletteResultModal(true));
-    }, 3000);
-
+      canvasSketch.current!.style.transform = `initial`;
+      canvasSketch.current!.style.transition = `initial`;
+      setIsRoulette(true);
+    }, 2500);
   };
 
   const startRoulette = () => {
-    console.log("서버로 룰렛가냐?")
+    console.log("서버로 룰렛가냐?");
     const random = Math.floor(Math.random() * product.length);
     const roomName = pochaId;
-    console.log("랜덤값",random);
+    console.log("랜덤값", random);
     socket.emit("game_roulette", roomName, random);
-  }
+  };
 
   const onClickClose = () => {
     // 선택창으로 돌아가기
@@ -171,9 +174,9 @@ function Roulette({
           </div>
           <canvas ref={canvasSketch} width="480" height="480"></canvas>
           <div className={`${styles.buttons}`}>
-            <button onClick={startRoulette} className={`${styles.play}`}>
+            {isRoulette && <button onClick={startRoulette} className={`${styles.play}`}>
               룰렛 돌리기
-            </button>
+            </button>}
             <button onClick={onClickClose} className={`${styles.play}`}>
               EXIT
             </button>

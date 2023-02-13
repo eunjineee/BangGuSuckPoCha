@@ -234,11 +234,11 @@ function RoomFooterNav({
             <img
               onClick={onClickChangePocha}
               className="h-[2.2rem] py-auto transition-all duration-300 hover:scale-110"
-              src={require("src/assets/roomIcon/exclamation-mark.png")}
+              src={roomTheme === 1 ? require("src/assets/roomIcon/game_control.png") : require("src/assets/roomIcon/story_chat.png")}
               alt="change"
               id="change"
             />
-            <span className="text-[0.8rem] mt-1">포차변경</span>
+            <span className="text-[0.8rem] mt-1">{roomTheme === 1 ? "게임포차" : "소통포차"}</span>
           </div>
           <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer">
             <img
