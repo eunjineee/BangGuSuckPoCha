@@ -139,6 +139,13 @@ function ReviewComponent({reviewAfter,setReviewAfter,reviewBefore,setReviewBefor
   // console.log('리뷰 안한거: ',reviewBefore)
   // console.log('리뷰 한거: ',reviewAfter)
   // 리뷰안한게 있다면
+
+  // useEffect(()=> {
+  //   if (clickReviewState) {
+      
+  //   }
+  // },[clickReviewState])
+
   if (reviewBefore.length !== 0) {
     showBefore = reviewBefore?.map((e:any)=> {
       return (
@@ -169,7 +176,7 @@ function ReviewComponent({reviewAfter,setReviewAfter,reviewBefore,setReviewBefor
         </div>
         <div className="flex justify-center items-center mt-[10rem]">
           <div className="h-full w-[25rem] text-xl cursor-pointer" id="reviewlist">
-            <span className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem]" style={{borderBottom: 'groove 4px #FFFFFF' }} onClick={()=> {setClickReviewState(false)}}>리뷰 목록</span></div>
+            <span className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem] " style={{borderBottom: 'groove 4px #FFFFFF' }} onClick={()=> {setClickReviewState(false)}}>리뷰 목록</span></div>
           <div className="h-full w-[25rem] text-xl cursor-pointer" id="reviewdone">
             <span className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem]" style={{borderBottom: 'groove 4px #FFFFFF' }} onClick={()=> {setClickReviewState(true)}}>리뷰 완료</span></div>
         </div>
