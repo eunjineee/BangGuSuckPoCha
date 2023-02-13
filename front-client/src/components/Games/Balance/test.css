@@ -79,14 +79,13 @@
   background-clip: content-box, border-box;
   width: 80%;
   height: 24rem;
-  /* height: 100%; */
   margin: 0.5rem auto;
   border-radius: 1rem;
   display: flex;
 }
 
 .buttons {
-  /* display: flex; */
+  display: flex;
   justify-content: space-between;
   width: 80%;
   margin: 0 auto;
@@ -124,11 +123,11 @@
   height: 4rem;
 }
 
-/* .q1,
+.q1,
 .q2,
 .buttons {
   display: none;
-} */
+}
 
 .q1,
 .q2 {
@@ -140,7 +139,7 @@
 }
 
 .subject {
-  
+  display : flex;
   justify-content: center;
   align-items: center;
   height: 19rem;
@@ -163,12 +162,4 @@
 
 .imgDiv:hover {
   padding-top: 5rem;
-}
-
-.romOrNor{
-  transition: all 0.7s;
-}
-
-.romOrNor:hover {
-  color: #ff6e7f;
 }
