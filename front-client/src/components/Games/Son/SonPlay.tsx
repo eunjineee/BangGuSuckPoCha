@@ -28,7 +28,7 @@ function SonPlay({
   // 사람들 스코어
   const [peopleScore, setPeopleScore] = useState<number[]>([5, 5, 5, 5, 5, 5]);
   // 내 번호 세팅
-  const [myNum, setMyNum] = useState<number>(0);
+  const [myNum, setMyNum] = useState<number>(-1);
   // 현재 나의 턴
   const [myTurn, setMyTurn] = useState<boolean>(false);
   // 현재 턴 세팅
@@ -92,9 +92,7 @@ function SonPlay({
 
   // 최초 실행
   useEffect(() => {
-    // 유저 정보들 세팅
-    setPeopleInfo();
-    gamestart();
+
     // 접을때 주고 받는 함수
     socket.on("game_son_fold", (myNum: number) => {
       finish();
@@ -121,6 +119,9 @@ function SonPlay({
   };
 
   useEffect(() => {
+    // 유저 정보들 세팅
+    setPeopleInfo();
+    gamestart();
     // 턴 넘어오는거 받는 함수
     socket.on("game_son_turn", (turn: any) => {
       if (turn === totalCount) {
@@ -142,7 +143,7 @@ function SonPlay({
     if (currentTurn === myNum) {
       setMyTurn(true);
     }
-  }, [currentTurn])
+  }, [currentTurn]);
 
   //손 만들기(인원수 넘어가는 손은 가리기)
   function gamestart() {
@@ -203,8 +204,10 @@ function SonPlay({
   return (
     <div className={`${styles.background}`} id="background">
       <div>
-      <div className={`${styles.title}`}>손병호 게임</div> 
-      <div><span className="text-2xl text-purple-400 font-bold">{`${peopleName[currentTurn]}`}</span></div>
+        <div className={`${styles.title}`}>손병호 게임</div>
+        <div>
+          <span className="text-2xl text-purple-400 font-bold">{`${peopleName[currentTurn]}`}</span>
+        </div>
       </div>
       <div className={`${styles.layout}`}>
         <div id="hands1" className={`${styles.hands1}`}>
@@ -335,17 +338,15 @@ function SonPlay({
             value="접기"
           />
         </div>
-        <div
-          onClick={onClickNextTurn}
-          className={myTurn === true ? "" : "hidden"}
-          ref={turnDiv}
-        >
-          <input
-            type="button"
-            className={`${styles.button}`}
-            value="턴넘기기"
-          />
-        </div>
+        {myTurn === true ? (
+          <div onClick={onClickNextTurn} ref={turnDiv}>
+            <input
+              type="button"
+              className={`${styles.button}`}
+              value="턴넘기기"
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );
