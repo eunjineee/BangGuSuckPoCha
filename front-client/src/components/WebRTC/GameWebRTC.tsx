@@ -6,7 +6,10 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  balanceChange,
+  balanceQuestionChange,
   changeNavAlarmReviewEmojiUserData,
+  isRomanNormalChange,
   isRtcLoading,
   selectGame,
   showGameSelectModal,
@@ -612,12 +615,35 @@ const WebRTC = ({
       }, 1000);
     });
 
+    // 밸런스 게임 시그널받기
+    socket.on("game_balance_Intro", (isBalance) => {
+      console.log("WebRTC에서 roomName에서 받았나?", isBalance);
+      dispatch(balanceChange(isBalance))
+    });
+
+    // 밸런스 게임 시그널받기
+    socket.on("game_balance_typeChange", (choiceType) => {
+      if (choiceType === 'EXIT') {
+        dispatch(isRomanNormalChange(null))
+      } else {
+        dispatch(isRomanNormalChange(choiceType))
+      }
+      console.log("choiceType?", choiceType);
+    });
+
+    // 밸런스 게임 테마별 질문 변경
+    socket.on("game_balance_subjectChange", (themeDataList) => {
+      dispatch(balanceQuestionChange(themeDataList))
+    });
+
     return () => {
       socket.off("game_select");
       socket.off("game_back_select");
       socket.off("game_son_signal");
     };
   }, []);
+
+  
 
   // 게임 선택창 상태
   const isGameSelect = useAppSelector((state) => {
