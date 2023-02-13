@@ -103,7 +103,6 @@ function Roulette({
     newMake();
   }
 
-
   const rotate = (random : number) => {
     canvasSketch.current!.style.transform = `initial`;
     canvasSketch.current!.style.transition = `initial`;
@@ -123,7 +122,9 @@ function Roulette({
     setTimeout(() =>  {
       // 모달 켜는 dispatch
       dispatch(showRouletteResultModal(true));
-    }, 3000);
+      canvasSketch.current!.style.transform = `initial`;
+      canvasSketch.current!.style.transition = `initial`;
+    }, 2500);
 
   };
 

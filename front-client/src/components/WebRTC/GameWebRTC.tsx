@@ -458,7 +458,8 @@ const WebRTC = ({
       console.log("포차 설정 변경!----------------------");
       // 방 설정 다시 불러오기!!! 테스트
       getPochaInfo();
-      window.location.reload();
+      toast.success("포차 설정이 변경되었습니다");
+      // window.location.reload();
       // toast.success("포차 정보가 변경되었습니다");
       // await pocha_config_update("3");
     });
