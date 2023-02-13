@@ -257,3 +257,10 @@ input.txt {
   overflow: scroll;
   box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
 }
+
+.dropbtn_click_style{
+  font-family: Material Icons;
+  font-size: 16px; 
+  color: #3b3b3b; 
+  float: right;
+}

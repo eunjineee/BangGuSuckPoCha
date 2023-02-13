@@ -20,7 +20,7 @@ function LiarVote({
   const [titles, setTitles] = useState<any>(null)
   const [nowtitle, setNowtitle] = useState<any>(null)
   const onClickClose = () => {
-    const signalData = "VOTE";
+    const signalData = "INTRO";
     // 다음 페이지로 이동
     socket.emit("game_liar_signal", roomName, signalData);
   };
@@ -73,7 +73,7 @@ function LiarVote({
             type="button" 
             onClick={onClickClose} 
             className={`${styles.retry}`} 
-            value="NEXT" 
+            value="지금은 인트로" 
           />
         </div>
       </div>
