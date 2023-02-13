@@ -47,6 +47,12 @@ const WebRTC = ({
   // const [updateCheck, setUpdateCheck] = useState<boolean>(false);
   // const currentUsers = useRef<any>([1]);
   // useRef 배열
+  const div1 = useRef<HTMLDivElement>(null);
+  const div2 = useRef<HTMLDivElement>(null);
+  const div3 = useRef<HTMLDivElement>(null);
+  const div4 = useRef<HTMLDivElement>(null);
+  const div5 = useRef<HTMLDivElement>(null);
+  const div6 = useRef<HTMLDivElement>(null);
   // const peerFace = useRef<any>([]);
   const peerFace1 = useRef<HTMLVideoElement>(null);
   const peerFace2 = useRef<HTMLVideoElement>(null);
@@ -420,7 +426,9 @@ const WebRTC = ({
   // ------------ 포차 기능 code --------------
   const ssulTitle = useRef<HTMLDivElement>(null);
   const [ssul, setSsul] = useState<string>("");
-  const [jjanImg, setJjanImg] = useState<any>(require("src/assets/theme/jjan1.png"));
+  const [jjanImg, setJjanImg] = useState<any>(
+    require("src/assets/theme/jjan1.png")
+  );
 
   // //  axios
   // const api = axios.create({
@@ -490,7 +498,7 @@ const WebRTC = ({
         navigate(`/main`);
         window.location.reload();
       }
-    })
+    });
     return () => {
       socket.off("pocha_change");
       socket.off("pocha_extension");
@@ -498,7 +506,6 @@ const WebRTC = ({
       socket.off("ban");
     };
   }, []);
-
 
   // ------------- RTC Code --------------
   function makeConnection() {
@@ -541,28 +548,33 @@ const WebRTC = ({
 
     if (userCount.current === 1) {
       peerFace2.current!.classList.add("hidden");
+      div3.current!.classList.add("hidden");
       peerFace1.current!.srcObject = stream;
       peerFace1.current!.id = username;
-      console.log("비디오 아이디 유저네임1", username);
     } else if (userCount.current === 2) {
       peerFace2.current!.classList.remove("hidden");
+      div3.current!.classList.remove("hidden");
       peerFace3.current!.classList.add("hidden");
+      div4.current!.classList.add("hidden");
       peerFace2.current!.srcObject = stream;
       peerFace2.current!.id = username;
-      console.log("비디오 아이디 유저네임2", username);
     } else if (userCount.current === 3) {
       peerFace3.current!.classList.remove("hidden");
+      div4.current!.classList.remove("hidden");
       peerFace4.current!.classList.add("hidden");
+      div5.current!.classList.add("hidden");
       peerFace3.current!.srcObject = stream;
       peerFace3.current!.id = username;
-      console.log("비디오 아이디 유저네임3", username);
     } else if (userCount.current === 4) {
       peerFace4.current!.classList.remove("hidden");
+      div5.current!.classList.remove("hidden");
       peerFace5.current!.classList.add("hidden");
+      div6.current!.classList.add("hidden");
       peerFace4.current!.srcObject = stream;
       peerFace4.current!.id = username;
     } else if (userCount.current === 5) {
       peerFace5.current!.classList.remove("hidden");
+      div6.current!.classList.remove("hidden");
       peerFace5.current!.srcObject = stream;
       peerFace5.current!.id = username;
     }
@@ -571,21 +583,22 @@ const WebRTC = ({
 
   // 유저들 프로파일 모달 띄우기
   const ShowUserProfile = async (event: React.MouseEvent<any>) => {
-    if(userCount.current >= 2) {
+    if (userCount.current >= 2) {
       const username = event.currentTarget.id;
-      console.log('여긴 이벤트: ',event);
-      
+      console.log("여긴 이벤트: ", event);
+
       // console.log("모달용 데이터 닉?", username);
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
       });
       console.log("모달용 데이터?", data);
-      dispatch(changeNavAlarmReviewEmojiUserData(data))
+      dispatch(changeNavAlarmReviewEmojiUserData(data));
       dispatch(showRoomUserProfile());
       // setUserProfileData(data);
       // dispatch(isRtcLoading(false));
     }
   };
+  
 
   return (
     <>
@@ -605,58 +618,74 @@ const WebRTC = ({
           {count ? (
             <div className=" bg-black bg-opacity-70 flex flex-col justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
               <img src={jjanImg} alt="jjan" />
-              <div className="text-7xl font-bold text-white fixed top-28 z-30">{count}</div>
+              <div className="text-7xl font-bold text-white fixed top-28 z-30">
+                {count}
+              </div>
             </div>
           ) : null}
           <div className="text-white w-full min-h-[85vh]">
-            {ssul && <span
-              className="font-bold text-3xl fixed left-0 right-0 top-10"
-              ref={ssulTitle}
-            >{`💬${ssul}`}</span>}
+            {ssul && (
+              <span
+                className="font-bold text-3xl fixed left-0 right-0 top-10"
+                ref={ssulTitle}
+              >{`💬${ssul}`}</span>
+            )}
             <div className="flex flex-wrap justify-evenly items-center p-24 min-h-[85vh]">
               {/* 내 비디오 공간 */}
-              <video
-                className="w-[30rem] h-80 py-3 border-2"
-                ref={myFace}
-                playsInline
-                autoPlay
-              ></video>
+              <div ref={div1} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 my-3">
+                <video
+                  className="object-fill"
+                  ref={myFace}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
               {/* 다른 사람들 비디오 공간 */}
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer border-2"
-                ref={peerFace1}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer border-2 hidden"
-                ref={peerFace2}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer border-2 hidden"
-                ref={peerFace3}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer border-2 hidden"
-                ref={peerFace4}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer border-2 hidden"
-                ref={peerFace5}
-                playsInline
-                autoPlay
-              ></video>
+              <div ref={div2} className={userCount.current >= 2 ? "rounded-[1rem] overflow-hidden w-[28rem] border-2 my-3" : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"}>
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer"
+                  ref={peerFace1}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div3} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace2}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div4} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace3}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div5} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace4}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div6} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace5}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
             </div>
             <div className="flex justify-center items-center ">
               <div className="flex w-fit">
