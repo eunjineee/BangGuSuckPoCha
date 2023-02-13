@@ -66,7 +66,7 @@ function StoryRoom(): JSX.Element {
           break;
         case "T1B0":
           navigate(`/gameroom/${PochaId}`);
-          toast.success("포차 설정이 변경되었습니다");
+          // toast.success("포차 설정이 변경되었습니다");
           break;
       }
       setIsLoading(false);

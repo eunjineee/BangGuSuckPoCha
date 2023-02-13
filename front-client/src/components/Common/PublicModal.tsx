@@ -170,9 +170,9 @@ const PublicModal = ({
         inviteMyFriend();
         break;
       case "roulette":
-        console.log("게임선택창게임선택창", roomName);
         // 게임선택창으로 돌아가기
-        socket.emit("game_back_select", roomName);
+        dispatch(showRouletteResultModal(false));
+        // socket.emit("game_back_select", roomName);
         break;
     }
     // RoomFooterNavbar에서 모달 끄기
