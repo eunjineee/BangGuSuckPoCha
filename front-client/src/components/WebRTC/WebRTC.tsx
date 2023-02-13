@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  changeNavAlarmReviewEmojiUserData,
   isRtcLoading,
   showPublicModal,
   showRoomUserProfile,
@@ -573,15 +574,17 @@ const WebRTC = ({
   const ShowUserProfile = async (event: React.MouseEvent<any>) => {
     if(userCount.current >= 2) {
       const username = event.currentTarget.id;
-  
+      console.log('여긴 이벤트: ',event);
+      
       // console.log("모달용 데이터 닉?", username);
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
       });
       console.log("모달용 데이터?", data);
-      setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
+      dispatch(changeNavAlarmReviewEmojiUserData(data))
       dispatch(showRoomUserProfile());
+      // setUserProfileData(data);
+      // dispatch(isRtcLoading(false));
     }
   };
 

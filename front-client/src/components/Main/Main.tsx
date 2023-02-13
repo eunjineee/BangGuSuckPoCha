@@ -134,7 +134,7 @@ function Main(): JSX.Element {
   const RoomUserProfileClickCheck: any = useAppSelector((state: any) => {
     return state.RoomUserProfileClickCheck;
   });
-
+  
   // 캐러셀 클릭시 알림&메뉴 컴포넌트 조건분기
   if (mainCreateRoomCarouselCheck) {
     if (checkMenuState) {

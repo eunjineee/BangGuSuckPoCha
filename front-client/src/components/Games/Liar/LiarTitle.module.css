@@ -1,25 +1,27 @@
 .titlespan{
-  width: 652px;
+  position: absolute;
+  width: 651px;
   height: 100px;
 
   font-family: 'Inter';
   font-style: normal;
   font-weight: 800;
-  font-size: 55px;
-  line-height: 85px;
+  font-size: 60px;
+  line-height: 73px;
   text-align: center;
 
-  color: #FFA149;
-  margin: auto;
-  text-shadow: 0px 0px 30px #FF0000;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .img1{
   z-index: 10;
   position: absolute;
-  margin-top: 130px;
-  width: 240px;
-  height: 248px;
+  margin-top: 210px;
+  /* bottom: 0; */
+  /* margin-right: 20px; */
 }
 
 .img2{
@@ -43,60 +45,57 @@ input.txt {
 }
 
 .box2 {
+  position: absolute;
   width: 652px;
-  height: 100px;
+  height: 92px;
 
   font-family: 'Inter';
   font-style: normal;
   font-weight: 800;
-  font-size: 55px;
+  font-size: 60px;
   line-height: 85px;
   text-align: center;
 
   color: #FFA149;
-  margin-top: 10px;
-  margin-bottom: 0px;
+
   text-shadow: 0px 0px 30px #FF0000;
 }
 
 .box3 {
 /* 손가락 접기 */
-  width: 700px;
-  height: 105px;
+  /* position: absolute; */
+  width: 130px;
+  height: 36px;
 
   font-family: 'Inter';
   font-style: normal;
   font-weight: 800;
-  line-height: 97px;
+  font-size: 40px;
+  line-height: 48px;
   text-align: center;
 
   color: #FFFFFF;
 
-  text-shadow: 0px 0px 30px #FF0000;
   -webkit-text-stroke: 1px #FFA149;
-
-  margin-top: 300px;
+  text-shadow: 0px 0px 30px #FF0000;
+  /* border: solid 2px #FF0000; */
 }
 
 .box4 {
-  /* 마셔라! 마셔라! */
-  position: absolute;
-  width: 319px;
-  height: 76px;
+  height: 36px;
 
   font-family: 'Inter';
   font-style: normal;
   font-weight: 800;
-  font-size: 45px;
-  line-height: 54px;
+  font-size: 40px;
+  line-height: 48px;
   text-align: center;
 
   color: #FFFFFF;
 
-  text-shadow: 0px 0px 30px #70FF00;
-  -webkit-text-stroke: 1px #007C2A;
-
-  margin-top: 530px;
+  -webkit-text-stroke: 1px #FFA149;
+  text-shadow: 0px 0px 30px #FF0000;
+  /* border: solid 2px #FF0000; */
 }
 
 .layout {
@@ -106,11 +105,53 @@ input.txt {
   flex-direction: column;
 } 
 
+.layout2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+} 
+
+.layout3 {
+  display: flex;
+  justify-content: center;
+} 
+
+.layout4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 755px;
+  height: 100px;
+  border-radius: 0.7rem;
+  border: 1px solid #FFD098;
+  box-shadow: 0px 0px 30px #FFD687;
+  margin-top: 50px;
+
+  /* 주제 */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+} 
+
 .layout5 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 140px;
+  margin-top: 200px;
+  margin-left: 0px;
+} 
+
+.layout6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
 } 
 
 .retry{
@@ -135,31 +176,12 @@ input.txt {
 
   color: #FFFFFF;
 
-  border: 2px solid #FFD098;
+  border: 1px solid #FFD098;
   text-shadow: 0px 0px 15px #FF0000;
   cursor: pointer;
 }
 
 .retry:hover{
-  box-sizing: border-box;
-  border-radius: 0.3rem;
-  margin: 0 20px;
-  margin-top: -10px;
-
-  width: 207px;
-  height: 78px;
-
-  background: #131313;
-  box-shadow: 0px 0px 20px #FFA0A0;
-
-  /* PLAY */
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 800;
-  font-size: 40px;
-  line-height: 48px;
-  text-align: center;
-
   color: #FFA149;
 
   border: 1px solid #FFD098;
@@ -167,7 +189,27 @@ input.txt {
   cursor: pointer;
 }
 
-
 .button {
   border: solid 1px #fff;
+}
+
+.text1{
+  width: 512px;
+
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 35px;
+
+
+  text-align: center;
+
+  color: #FFFFFF;
+  display : flex;
+
+  justify-content : center;
+
+  margin-top: 90px;
 }

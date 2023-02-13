@@ -176,7 +176,7 @@ function RoomFooterNav({
     try {
       await axios({
         method: "PUT",
-        url: `https://i8e201.p.ssafy.io//api/pocha/talk/ssul/${roomName}`,
+        url: `https://i8e201.p.ssafy.io/api/pocha/talk/ssul/${roomName}`,
         data: {
           ssulTitle: input,
           username: myName,

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  changeNavAlarmReviewEmojiUserData,
   isRtcLoading,
   selectGame,
   showGameSelectModal,
@@ -18,6 +19,7 @@ import RoomUserProfile from "../Common/RoomUserProfile";
 import Balance from "../Games/Balance/Balance";
 import GameSelect from "../Games/GameSelect/GameSelect";
 import LadderIntro from "../Games/Ladder/LadderIntro";
+import LiarIntro from "../Games/Liar/LiarIntro";
 import Roulette from "../Games/Roulette/Roulette";
 import SonIntro from "../Games/Son/SonIntro";
 // webRTC관련
@@ -558,9 +560,10 @@ const WebRTC = ({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
       });
       console.log("모달용 데이터?", data);
-      setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
+      dispatch(changeNavAlarmReviewEmojiUserData(data))
       dispatch(showRoomUserProfile());
+      // setUserProfileData(data);
+      // dispatch(isRtcLoading(false));
     }
   };
   // ---------------- 게임 관련 --------------------
@@ -698,7 +701,6 @@ const WebRTC = ({
                     <SonIntro
                       socket={socket}
                       pochaId={pochaId}
-                      pochaUsers={pochaUsers}
                     />
                   )
                 : null}
@@ -710,16 +712,16 @@ const WebRTC = ({
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}
-              {selectedId === "ladder"
+                : null}   
+              {selectedId === "liar"
                 ? pochaUsers && (
-                    <LadderIntro
+                    <LiarIntro
                       socket={socket}
                       pochaId={pochaId}
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}
+                : null}   
             </div>
 
             {/* 사람 공간 */}

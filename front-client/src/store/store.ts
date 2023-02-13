@@ -511,6 +511,17 @@ const selectGameId = createSlice({
   },
 });
 
+// const [isLadder, setIsLadder] = useState<boolean>(false);
+const isLadder = createSlice({
+  name: "isLadder",
+  initialState: false,
+  reducers: {
+    LadderChange(state) {
+      return !state;
+    }
+  }
+})
+
 //
 export const store = configureStore({
   // store에서 만든 state를 전역에서 사용할 수 있도록 등록하기
@@ -572,9 +583,10 @@ export const store = configureStore({
     // 친구 삭제 모달 클릭 여부
     roomDeleteFriendModalCheck: roomDeleteFriendModalCheck.reducer,
     // Game관련
-    rouletteResultModal : rouletteResultModal.reducer,
-    gameSelectModal : gameSelectModal.reducer,
-    selectGameId : selectGameId.reducer,
+    rouletteResultModal: rouletteResultModal.reducer,
+    gameSelectModal: gameSelectModal.reducer,
+    selectGameId: selectGameId.reducer,
+    isLadder: isLadder.reducer,
   },
 });
 //주석추가
@@ -646,6 +658,7 @@ export const { changeRoomDeleteFriendModalCheck } = roomDeleteFriendModalCheck.a
 export const { showRouletteResultModal } = rouletteResultModal.actions;
 export const { showGameSelectModal } = gameSelectModal.actions;
 export const { selectGame } = selectGameId.actions;
+export const { LadderChange } = isLadder.actions;
 
 // store의 타입 미리 export 해둔 것.
 export type RootState = ReturnType<typeof store.getState>;

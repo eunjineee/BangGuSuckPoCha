@@ -29,6 +29,8 @@ function SonPlay({
   const [peopleScore, setPeopleScore] = useState<number[]>([5, 5, 5, 5, 5, 5]);
   // 내 번호 세팅
   const [myNum, setMyNum] = useState<number>(0);
+  // 현재 턴 세팅
+  const [currentTurn, setCurrentTurn] = useState<number>(0);
   // 손가락들 가져옴
   const txtSpan0 = useRef<any>(null);
   const txtSpan1 = useRef<any>(null);
@@ -44,6 +46,7 @@ function SonPlay({
     txtSpan4,
     txtSpan5,
   ]);
+  const turnDiv = useRef<HTMLDivElement>(null);
 
   // 이미지들 가져옴
   // const img0 = useRef<any>(null);
@@ -62,7 +65,7 @@ function SonPlay({
   // ]);
 
   const setPeopleInfo = () => {
-    console.log(txtSpanList);
+    console.log(pochaUsers, "유저들 리스트");
     pochaUsers.forEach((user: any, index: number) => {
       // setPeopleScore();
       // setTxtSpanList((prev) => prev = [txtSpan0, txtSpan1, txtSpan2, txtSpan3, txtSpan4, txtSpan5]);
@@ -72,60 +75,92 @@ function SonPlay({
       }
     });
   };
-  
+  const nextTurn = (turn: number) => {
+    setCurrentTurn(turn)
+    turnDiv.current!.classList.remove("hidden");
+    switch (turn) {
+      case 0:
+        txtSpan0.current.classList.remove("text-lime-300");
+        txtSpan1.current.classList.add("text-lime-300");
+        break
+      case 1:
+        txtSpan1.current.classList.remove("text-lime-300");
+        txtSpan2.current.classList.add("text-lime-300");
+        break
+      case 2:
+        txtSpan2.current.classList.remove("text-lime-300");
+        txtSpan3.current.classList.add("text-lime-300");
+        break
+      case 3:
+        txtSpan3.current.classList.remove("text-lime-300");
+        txtSpan4.current.classList.add("text-lime-300");
+        break
+      case 4:
+        txtSpan4.current.classList.remove("text-lime-300");
+        txtSpan5.current.classList.add("text-lime-300");
+        break
+      case 5:
+        txtSpan5.current.classList.remove("text-lime-300");
+        txtSpan0.current.classList.add("text-lime-300");
+        break
+    }
+  }
+
   // 최초 실행
   useEffect(() => {
     // 유저 정보들 세팅
     setPeopleInfo();
     gamestart();
-    // 접을때 ..
-    socket.on("game_son_fold", (myNum : number) => {
-      // console.log("새로운배열 왜갱신안되지", peopleScore);
+    // 접을때 주고 받는 함수
+    socket.on("game_son_fold", (myNum: number) => {
+      finish();
+      console.log("새로운배열 갱신되고있냐?", peopleScore);
       const newArray = peopleScore.map((score, index) => {
         if (index === myNum) {
           return score - 1;
         }
-        return score
+        return score;
       });
-      // console.log("새로운배열?", newArray);
+      console.log("새로운배열?", newArray);
       setPeopleScore((prev) => [...newArray]);
-      finish();
       // console.log("새로운배열zzzzzzzz?", peopleScore);
-    })
+    });
 
     return () => {
       socket.off("game_son_fold");
     };
   }, [peopleScore]);
 
+  
+  useEffect(() => {
+    if (currentTurn === myNum) {
+      turnDiv.current!.classList.remove("hidden");
+    }
+
+    // 턴 넘어오는거 받는 함수
+    socket.on("game_son_turn", (turn: any) => {
+      console.log("턴 넘어왔냐?", turn);
+      nextTurn(turn);
+    });
+
+    return () => {
+      socket.off("game_son_turn");
+    };
+  }, [])
+
   //손 만들기(인원수 넘어가는 손은 가리기)
   function gamestart() {
     for (var i = 0; i < 6; i++) {
-      if (i > peopleCount) {
+      if (i >= peopleCount) {
         // console.log(txtSpanList[i].current);
         txtSpanList[i].current.classList.add("hidden");
       }
     }
   }
 
-  // //데이터 초기화 (점수 리스트 5로 초기화) retry
-  // function initData() {
-  //   peopleScore = [5,5,5,5,5,5]
-  // }
-
   //손가락 접기
   function fold() {
     socket.emit("game_son_fold", roomName, myNum);
-
-    // // peopleScore[myNum] -= 1;
-    // // rock(myNum);  //주먹되면 끝나니깐 검사
-
-    // 우선 이거 이미지 리스트 포문 돌리는거 주석
-    // imgList.forEach((img) => {
-    //   if (img.current.id === String(myNum)) {
-    //     img.current.src = require(`src/assets/game_son/fingers${peopleScore[myNum]}.png`);
-    //   }
-    // });
   }
 
   // 순서 돌아올때마다 초록색! (조건 말하는 사람(접기 눌러짐))
@@ -137,16 +172,19 @@ function SonPlay({
   // }
 
   //게임 끝인지 확인 > 주먹이냐?? 오키 그럼 넘겨
-  function finish(){
+  function finish() {
     const resultList: string[] = [];
+    console.log("자 여기 결과가기전", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
-      if(score === 1) {
+      console.log("s여기@@@@@@@@@@@@", score, index);
+      if (score === 1) {
         resultList.push(peopleName[index]);
+        console.log("여기오냐?", peopleScore);
       }
-    })
-    if(resultList.length) {
-      // alert(`우선 잠오니까 여기까지 ${[...resultList]} 니들 탈락`)
-      const signalData = "RESULT"
+    });
+    if (resultList.length >= 1) {
+      console.log("여기오냐 결과가기전?", peopleScore);
+      const signalData = "RESULT";
       const data = resultList;
       socket.emit("game_son_signal", roomName, signalData, data);
     }
@@ -156,19 +194,30 @@ function SonPlay({
     fold();
   };
 
+  const onClickNextTurn = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.add("hidden");
+    console.log("다음턴")
+    const turn = myNum;
+    socket.emit("game_son_turn", roomName, turn);
+  }
+
   return (
     <div className={`${styles.background}`} id="background">
       <div className={`${styles.title}`}>손병호 게임</div>
       <div className={`${styles.layout}`}>
         <div id="hands1" className={`${styles.hands1}`}>
           <div
-            className={`w-[230px] h-[250px] flex flex-col items-center`}
+            className={`w-[230px] h-[250px] flex flex-col items-center text-lime-300`}
             id="txtSpan0"
             ref={txtSpan0}
           >
             <img
               className={`${styles.fingersImg}`}
-              src={require(`src/assets/game_son/fingers${peopleScore[0]}.png`)}
+              src={
+                peopleScore[0] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[0]}.png`)
+                  : null
+              }
               alt="people0"
               // ref={img0}
               id="0"
@@ -184,7 +233,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={require(`src/assets/game_son/fingers${peopleScore[1]}.png`)}
+              src={
+                peopleScore[1] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[1]}.png`)
+                  : null
+              }
               alt="people1"
               // ref={img1}
               id="1"
@@ -200,7 +253,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={require(`src/assets/game_son/fingers${peopleScore[2]}.png`)}
+              src={
+                peopleScore[2] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[2]}.png`)
+                  : null
+              }
               alt="people2"
               // ref={img2}
               id="2"
@@ -218,7 +275,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={require(`src/assets/game_son/fingers${peopleScore[3]}.png`)}
+              src={
+                peopleScore[3] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[3]}.png`)
+                  : null
+              }
               alt="people3"
               // ref={img3}
               id="3"
@@ -234,7 +295,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={require(`src/assets/game_son/fingers${peopleScore[4]}.png`)}
+              src={
+                peopleScore[4] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[4]}.png`)
+                  : null
+              }
               alt="people4"
               // ref={img4}
               id="4"
@@ -250,7 +315,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={require(`src/assets/game_son/fingers${peopleScore[5]}.png`)}
+              src={
+                peopleScore[5] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[5]}.png`)
+                  : null
+              }
               alt="people5"
               // ref={img5}
               id="5"
@@ -261,13 +330,22 @@ function SonPlay({
           </div>
         </div>
       </div>
-      <div className={`${styles.layout2}`}>
-        <input
-          type="button"
-          className={`${styles.button}`}
-          onClick={onClickFold}
-          value="접기"
-        />
+      <div className="flex justify-center ">
+        <div className={`${styles.layout2}`}>
+          <input
+            type="button"
+            className={`${styles.button}`}
+            onClick={onClickFold}
+            value="접기"
+          />
+        </div>
+        <div onClick={onClickNextTurn} className={`hidden`} ref={turnDiv}>
+          <input
+            type="button"
+            className={`${styles.button}`}
+            value="턴넘기기"
+          />
+        </div>
       </div>
     </div>
   );

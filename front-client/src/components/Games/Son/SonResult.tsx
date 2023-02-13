@@ -23,18 +23,33 @@ function SonResult({
 
   return (
     <div className={`${styles.layout3}`}>
-    <div className={`${styles.box} ${styles.layout}`}>
-      <img src={require("src/assets/game_son/fingers0.png")} className={`${styles.img1}`} />
-      <div className={`${styles.box2}`}>손병호 게임</div>
-      <div className={`${styles.box3}`}>{[...resultData]}</div>
-      <div className={`${styles.box4}`}>마셔라! 마셔라!</div>
-      
-      <div className={`${styles.layout5}`}>
-        <input onClick={onClickIntro} type="button" className={`${styles.retry}`} value="RETRY" />
-        <input type="button" className={`${styles.retry}`} onClick={onClickClose} value="EXIT" />
+      <div className={`${styles.box} ${styles.layout}`}>
+        <img
+          src={require("src/assets/game_son/fingers0.png")}
+          className={`${styles.img1}`}
+        />
+        <div className={`${styles.box2}`}>손병호 게임</div>
+        <div className={`${styles.box3} text-4xl`}>{resultData.map((data: any) => {
+          return <span>{`${data} `}</span>
+        })}</div>
+        <div className={`${styles.box4}`}>마셔라! 마셔라!</div>
+
+        <div className={`${styles.layout5}`}>
+          <input
+            onClick={onClickIntro}
+            type="button"
+            className={`${styles.retry}`}
+            value="RETRY"
+          />
+          <input
+            type="button"
+            className={`${styles.retry}`}
+            onClick={onClickClose}
+            value="EXIT"
+          />
+        </div>
       </div>
     </div>
-  </div>
   );
 }
 
