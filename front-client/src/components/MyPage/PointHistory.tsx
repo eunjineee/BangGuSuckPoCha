@@ -89,9 +89,9 @@ const PointHistory = () => {
                               <div className="flex flex-col pt-5 w-[30%] text-center h-full">
                                 <div className="font-bold text-[20px] text-black">
                                   {it.content ===
-                                  "Welcome to BangGuSuck Pocha!" ? (
+                                  "출석체크" ? (
                                     <>출석체크</>
-                                  ) : it.content === "썰변경" ? (
+                                  ) : it.content.split("-")[0] === "썰 변경" ? (
                                     <>썰변경</>
                                   ) : null}
                                 </div>
