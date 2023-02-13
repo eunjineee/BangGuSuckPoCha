@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 import './Balance.css'
 
 function Balance({
@@ -12,9 +14,13 @@ function Balance({
   pochaUsers: any;
 }):JSX.Element {
   const usersLength = pochaUsers.length;
+  console.log('포차이름: ',pochaId);
+  
   console.log(usersLength);
   
   const imgDiv = useRef<any>()
+   // 플레이어 자동재생 막기
+  const player = useRef<any>();
 
   const [isStart,setIstStart] = useState(false)
   const [theme,setTheme] = useState<any>(null)
@@ -26,6 +32,24 @@ function Balance({
 
   const [generalDataList, setGeneralDataList] = useState<any>(null)
   const [romanticDataList, setRomanticDataList] = useState<any>(null)
+
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      // preload='auto'
+      // loop
+      src="/balanceGame/BBong.mp3"
+      onPlay={e => console.log("onPlay") }
+      style={{display:'none'}}
+      volume={0.5}
+      // other props here
+    />
+  );
+
+  useEffect(()=> {
+    player.current.audio.current.pause();
+  },[])
 
   useEffect(()=> {
     // Normal 
@@ -69,12 +93,11 @@ function Balance({
   },[qDiv])
     
   // play
-  var audio = new Audio();
-  audio.src = "뿅.mp3"
+  // var audio = new Audio();
+  // audio.src = "뿅.mp3"
 
   function play() {
-    
-    // audio.play();
+    Player()
   }
 
   // 다음 질문
@@ -83,7 +106,7 @@ function Balance({
     if (theme === null) {
       return
     }
-    play()
+    Player()
     // 연애
     if (theme === '0') {
       console.log('연애 입니다');
@@ -107,7 +130,7 @@ function Balance({
 
   // 주제 선택 - 연애
   function romantic() {
-    play()
+    Player()
     // 연애 선택
     setTheme('0')
     setSubjectDiv('hidden')
@@ -122,7 +145,7 @@ function Balance({
   
   // 주제 선택 - 일반
   function general() {
-    play()
+    Player()
     // 일반 선택
     setTheme('1')
     setSubjectDiv('hidden')
@@ -179,6 +202,9 @@ function Balance({
 
   return (
     <>
+      {
+        <Player /> 
+      }
       {/* start */}
       {
         isStart === false ? <BalanceIntro />: <BalanceStart />
