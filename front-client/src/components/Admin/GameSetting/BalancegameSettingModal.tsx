@@ -101,7 +101,7 @@ const BalancegameSettingModal = () => {
         className={`z-10 bg-slate-900 bg-opacity-90 fixed top-0 right-0 bottom-0 left-0 flex flex-col justify-center items-center text-white`}
       >
         <div className="w-[80rem] h-[50rem] border-2 border-white rounded-[6rem] flex flex-col justify-center items-center">
-          <div className="h-[11%] w-[78%]">양세찬게임 데이터 header</div>
+          <div className="h-[11%] w-[78%]">BalanceGame</div>
           <div className="h-[10%] w-[78%] flex flex-row justify-start p-">
             <div className="h-[100%] w-[30%] p-5">
               <div

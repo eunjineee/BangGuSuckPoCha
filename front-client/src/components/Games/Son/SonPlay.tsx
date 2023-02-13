@@ -64,7 +64,7 @@ function SonPlay({
   // ]);
 
   const setPeopleInfo = () => {
-    console.log(pochaUsers,"유저들 리스트");
+    console.log(pochaUsers, "유저들 리스트");
     pochaUsers.forEach((user: any, index: number) => {
       // setPeopleScore();
       // setTxtSpanList((prev) => prev = [txtSpan0, txtSpan1, txtSpan2, txtSpan3, txtSpan4, txtSpan5]);
@@ -74,31 +74,40 @@ function SonPlay({
       }
     });
   };
-  
+
   // 최초 실행
   useEffect(() => {
     // 유저 정보들 세팅
     setPeopleInfo();
     gamestart();
     // 접을때 ..
-    socket.on("game_son_fold", (myNum : number) => {
+    socket.on("game_son_fold", (myNum: number) => {
+      finish();
       console.log("새로운배열 갱신되고있냐?", peopleScore);
       const newArray = peopleScore.map((score, index) => {
         if (index === myNum) {
           return score - 1;
         }
-        return score
+        return score;
       });
       console.log("새로운배열?", newArray);
       setPeopleScore((prev) => [...newArray]);
-      finish();
       // console.log("새로운배열zzzzzzzz?", peopleScore);
-    })
+    });
 
     return () => {
       socket.off("game_son_fold");
     };
   }, [peopleScore]);
+  useEffect(() => {
+    socket.on("game_son_turn", (turn: any) => {
+      console.log("턴 넘어왔냐?", turn);
+    });
+
+    return () => {
+      socket.off("game_son_turn");
+    };
+  }, [])
 
   //손 만들기(인원수 넘어가는 손은 가리기)
   function gamestart() {
@@ -110,11 +119,9 @@ function SonPlay({
     }
   }
 
-
   //손가락 접기
   function fold() {
     socket.emit("game_son_fold", roomName, myNum);
-
   }
 
   // 순서 돌아올때마다 초록색! (조건 말하는 사람(접기 눌러짐))
@@ -126,19 +133,19 @@ function SonPlay({
   // }
 
   //게임 끝인지 확인 > 주먹이냐?? 오키 그럼 넘겨
-  function finish(){
+  function finish() {
     const resultList: string[] = [];
     console.log("자 여기 결과가기전", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
       console.log("s여기@@@@@@@@@@@@", score, index);
-      if(score < 0) {
+      if (score === 1) {
         resultList.push(peopleName[index]);
-        console.log("여기오냐?",peopleScore)
+        console.log("여기오냐?", peopleScore);
       }
-    })
-    if(resultList.length >= 1) {
-      console.log("여기오냐 결과가기전?",peopleScore)
-      const signalData = "RESULT"
+    });
+    if (resultList.length >= 1) {
+      console.log("여기오냐 결과가기전?", peopleScore);
+      const signalData = "RESULT";
       const data = resultList;
       socket.emit("game_son_signal", roomName, signalData, data);
     }
@@ -147,6 +154,12 @@ function SonPlay({
   const onClickFold = () => {
     fold();
   };
+
+  const onClickNextTurn = () => {
+    console.log("다음턴")
+    const turn = myNum;
+    socket.emit("game_son_turn", roomName, turn);
+  }
 
   return (
     <div className={`${styles.background}`} id="background">
@@ -160,7 +173,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={peopleScore[0] >= 0 ? require(`src/assets/game_son/fingers${peopleScore[0]}.png`) : null}
+              src={
+                peopleScore[0] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[0]}.png`)
+                  : null
+              }
               alt="people0"
               // ref={img0}
               id="0"
@@ -176,7 +193,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={peopleScore[1] >= 0 ? require(`src/assets/game_son/fingers${peopleScore[1]}.png`) : null}
+              src={
+                peopleScore[1] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[1]}.png`)
+                  : null
+              }
               alt="people1"
               // ref={img1}
               id="1"
@@ -192,7 +213,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={peopleScore[2] >= 0 ? require(`src/assets/game_son/fingers${peopleScore[2]}.png`) : null}
+              src={
+                peopleScore[2] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[2]}.png`)
+                  : null
+              }
               alt="people2"
               // ref={img2}
               id="2"
@@ -210,7 +235,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={peopleScore[3] >= 0 ? require(`src/assets/game_son/fingers${peopleScore[3]}.png`) : null}
+              src={
+                peopleScore[3] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[3]}.png`)
+                  : null
+              }
               alt="people3"
               // ref={img3}
               id="3"
@@ -226,7 +255,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={peopleScore[4] >= 0 ? require(`src/assets/game_son/fingers${peopleScore[4]}.png`) : null}
+              src={
+                peopleScore[4] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[4]}.png`)
+                  : null
+              }
               alt="people4"
               // ref={img4}
               id="4"
@@ -242,7 +275,11 @@ function SonPlay({
           >
             <img
               className={`${styles.fingersImg}`}
-              src={peopleScore[5] >= 0 ? require(`src/assets/game_son/fingers${peopleScore[5]}.png`) : null}
+              src={
+                peopleScore[5] >= 0
+                  ? require(`src/assets/game_son/fingers${peopleScore[5]}.png`)
+                  : null
+              }
               alt="people5"
               // ref={img5}
               id="5"
@@ -253,13 +290,23 @@ function SonPlay({
           </div>
         </div>
       </div>
-      <div className={`${styles.layout2}`}>
-        <input
-          type="button"
-          className={`${styles.button}`}
-          onClick={onClickFold}
-          value="접기"
-        />
+      <div className="flex justify-center ">
+        <div className={`${styles.layout2}`}>
+          <input
+            type="button"
+            className={`${styles.button}`}
+            onClick={onClickFold}
+            value="접기"
+          />
+        </div>
+        <div className={`${styles.layout2}`}>
+          <input
+            type="button"
+            className={`${styles.button}`}
+            onClick={onClickNextTurn}
+            value="턴넘기기"
+          />
+        </div>
       </div>
     </div>
   );

@@ -259,6 +259,10 @@ wsServer.on("connection", (socket) => {
   socket.on("game_son_fold", (roomName, socketId) => {
     wsServer.to(roomName).emit("game_son_fold", socketId);
   });
+  // 다음 턴
+  socket.on("game_son_turn", (roomName, turn) => {
+    wsServer.to(roomName).emit("game_son_turn", turn);
+  });
 
   // 라이어 게임
   // 라이어게임 여러 시그널
