@@ -17,16 +17,26 @@ function LiarTitle({
 }): React.ReactElement {
   const roomName = pochaId;
   const {totalCount} = pochaInfo;
-  const [liar, setLiar] = useState<any>(null)
   const [titles, setTitles] = useState<any>(null)
   const [nowtitle, setNowtitle] = useState<any>(null)
   const [isliar, setIsliar] = useState<any>(false)
+  const [liarnum, setLiarnum] = useState<any>(false)
   
   // 내 이름
   const myName = localStorage.getItem("Username");  
   const [mynum, setMyNum] = useState<any>(null)
   
-  
+  useEffect(() => {
+    // 라이어 게임 시그널받기
+    socket.on("game_liar_number", (data: number) => {
+      setSignal(signalData);
+    })
+    return () => {
+      socket.off("game_liar_number");
+    };
+  }, []);
+
+
   const onClickClose = () => {
     const signalData = "VOTE";
     // 다음 페이지로 이동
@@ -54,28 +64,31 @@ function LiarTitle({
       console.log("라이어 게임 주제 axios error", error);
     }
   }
+  //소켓에서 해줘. >ㅇ
+  const liarnumber = () => {
+    const liarnum = Math.floor(Math.random()*totalCount);
+    setLiarnum(liarnum);
+    socket.emit("game_liar_number", roomName, liarnum);
+  }
 
-  const liarnum = () => {
-    const liar = Math.floor(Math.random()*totalCount);
+  const maintitle = () => {
+    if (titles){
+      const titleone = Math.floor(Math.random()*(titles.length));
+      setNowtitle(titles[titleone]);
+    }
+  }
+
+  const imliar = () => {
     if(liar === mynum){
       getLiarInfo(true);
     }else{
       getLiarInfo(false);
     }
   }
-
-  const maintitle = () => {
-    if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length));
-      console.log(titles[titleone], titleone)
-      setNowtitle(titles[titleone]);
-    }
-  }
-
   useEffect(()=> {
     getLiarSubject();
     setPeopleInfo();
-    liarnum();
+    liarnumber();
   },[])
 
   useEffect(()=> {

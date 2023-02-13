@@ -269,4 +269,8 @@ wsServer.on("connection", (socket) => {
   socket.on("game_liar_signal", (roomName, signalData, data) => {
     wsServer.to(roomName).emit("game_liar_signal", signalData, data);
   });
+  //정한 라이어 보내기
+  socket.on("game_liar_number", (roomName, data) => {
+    wsServer.to(roomName).emit("game_liar_number", data);
+  });
 });

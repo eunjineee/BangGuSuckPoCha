@@ -53,7 +53,7 @@ function LiarVote({
   useEffect(()=> {
     maintitle();
   },[titles])
-  console.log("#################",pochaInfo)
+  
   return (
     <div className={`${styles.layout3}`}>
       <div className={`${styles.box} ${styles.layout}`}>
