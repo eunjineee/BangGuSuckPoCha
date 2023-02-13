@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  changeEnterPochaType,
   inviteMyFriend,
   showPublicModal,
   showUpdatePocha,
@@ -27,6 +28,7 @@ function RoomFooterNav({
   const myName = localStorage.getItem("Username");
   // 룸 이름
   const roomName = pochaId;
+  
   // Public모달 데이터
   const [modalData, setModalData] = useState<any>(null);
   // 현재 포차테마 가져올 주소
@@ -36,10 +38,13 @@ function RoomFooterNav({
   useEffect(() => {
     if (url.indexOf("story") !== -1) {
       setRoomTheme(1);
+      dispatch(changeEnterPochaType(1))
     } else if (url.indexOf("game") !== -1) {
       setRoomTheme(2);
+      dispatch(changeEnterPochaType(2))
     } else if (url.indexOf("meeting") !== -1) {
       setRoomTheme(3);
+      dispatch(changeEnterPochaType(3))
     }
     setTimeout(() => {
       setIsLoading(false);
