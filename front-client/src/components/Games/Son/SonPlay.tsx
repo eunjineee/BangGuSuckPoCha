@@ -143,7 +143,7 @@ function SonPlay({
     if (currentTurn === myNum) {
       setMyTurn(true);
     }
-  }, [currentTurn]);
+  }, [currentTurn, myNum]);
 
   //손 만들기(인원수 넘어가는 손은 가리기)
   function gamestart() {
