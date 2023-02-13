@@ -8,18 +8,19 @@ function LiarTitle({
   pochaUsers,
   pochaInfo,
   getLiarInfo,
+  isliar,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
   pochaInfo: any;
   getLiarInfo: Function;
+  isliar: any;
 }): React.ReactElement {
   const roomName = pochaId;
   const {totalCount} = pochaInfo;
   const [titles, setTitles] = useState<any>(null)
   const [nowtitle, setNowtitle] = useState<any>(null)
-  const [isliar, setIsliar] = useState<any>(false)
   const [liarnum, setLiarnum] = useState<any>(false) // 라이어의 넘버
   
   // 내 이름
@@ -60,7 +61,7 @@ function LiarTitle({
       }
     });
   };
-
+  // 라이어 게임 주제 받아오기
   const getLiarSubject = async() => {
     try {
       const {
@@ -83,7 +84,7 @@ function LiarTitle({
 
   const maintitle = () => {
     if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length));
+      const titleone = Math.floor(Math.random()*(titles.length-1));
       setNowtitle(titles[titleone]);
     }
   }
@@ -108,7 +109,7 @@ function LiarTitle({
     maintitle();
   },[titles])
 
-  console.log("라이어는-------",liarnum)
+  console.log(totalCount,"~~~~~~~~~중에 라이어는-------",liarnum, "mynum---", mynum)
   return (
     <div className={`${styles.layout3}`}>
       <div className={`${styles.box} ${styles.layout}`}>
