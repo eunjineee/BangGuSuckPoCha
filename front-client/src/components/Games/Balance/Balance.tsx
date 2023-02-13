@@ -164,7 +164,7 @@ function Balance({
             <div className="sub">B</div>
             <div className={`subject ${subjectDiv} romOrNor`} onClick={general}>일반</div>
             <div className={`${qDiv} romOrNor q2 `} onClick={play}>{q2Div}</div>
-          </div>
+          </div> 
         </div>
         <div className={`${qDiv} buttons`}>
           <div onClick={()=> {
