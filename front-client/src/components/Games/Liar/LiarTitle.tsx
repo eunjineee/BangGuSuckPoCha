@@ -57,7 +57,11 @@ function LiarTitle({
 
   const liarnum = () => {
     const liar = Math.floor(Math.random()*totalCount);
-    setLiar(liar);
+    if(liar === mynum){
+      getLiarInfo(true);
+    }else{
+      getLiarInfo(false);
+    }
   }
 
   const maintitle = () => {
@@ -65,14 +69,6 @@ function LiarTitle({
       const titleone = Math.floor(Math.random()*(titles.length));
       console.log(titles[titleone], titleone)
       setNowtitle(titles[titleone]);
-    }
-  }
-
-  const meLiar = () => {
-    if(liarnum === mynum){
-      getLiarInfo(true);
-    }else{
-      getLiarInfo(false);
     }
   }
 
@@ -84,8 +80,7 @@ function LiarTitle({
 
   useEffect(()=> {
     maintitle();
-    meLiar();
-  },[titles,mynum])
+  },[titles])
 
   return (
     <div className={`${styles.layout3}`}>
