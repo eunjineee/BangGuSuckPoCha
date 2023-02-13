@@ -649,31 +649,31 @@ const WebRTC = ({
               <div className="text-7xl font-bold text-white fixed top-28 z-30">{count}</div>
             </div>
           ) : null}
-          <div className="text-white w-full min-h-[85vh] flex justify-center">
-            <div className="flex flex-col justify-evenly items-center">
+          <div className="text-white w-full min-h-[85vh] flex justify-evenly">
+            <div className="flex flex-col justify-evenly items-center ">
               {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
               {/* 내 비디오 공간 */}
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
-                  className="h-[17rem]"
+                  className="object-fill"
                   ref={myFace}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace2}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace4}
                   playsInline
                   autoPlay
@@ -727,28 +727,28 @@ const WebRTC = ({
 
             {/* 사람 공간 */}
             <div className="flex flex-col justify-evenly items-center">
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace1}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace3}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace5}
                   playsInline
                   autoPlay

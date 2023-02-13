@@ -106,6 +106,7 @@ function Roulette({
   }
 
   const rotate = (random: number) => {
+    dispatch(showRouletteResultModal(false));
     canvasSketch.current!.style.transform = `initial`;
     canvasSketch.current!.style.transition = `initial`;
 
