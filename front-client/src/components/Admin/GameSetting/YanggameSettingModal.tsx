@@ -100,7 +100,7 @@ const YanggameSettingModal = () => {
       <div
         ref={bgDiv}
         onMouseDown={CloseYangSettingModal}
-        className={`z-10 bg-slate-800 bg-opacity-75 fixed top-0 right-0 bottom-0 left-0 flex flex-col justify-center items-center text-white`}
+        className={`z-10 bg-slate-800 bg-opacity-100 fixed top-0 right-0 bottom-0 left-0 flex flex-col justify-center items-center text-white`}
       >
         <>
           <div className="w-[50rem] h-[50rem] border-2 flex flex-row border-white rounded-[6rem] flex flex-col items-center ">
