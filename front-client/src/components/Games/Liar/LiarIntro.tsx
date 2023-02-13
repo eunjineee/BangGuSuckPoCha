@@ -2,6 +2,7 @@ import styles from "./LiarIntro.module.css";
 import { useState, useEffect } from "react";
 import LiarMenual from "./LiarMenual";
 import LiarTitle from "./LiarTitle";
+import LiarVote from "./LiarVote";
 import axios from "axios";
 
 function LiarIntro({
@@ -20,6 +21,12 @@ function LiarIntro({
 
   const [pochaInfo, setPochaInfo] = useState<any>(null)
 
+  const [isliar, setIsliar] = useState<any>(null);
+
+
+  function getLiarInfo(data: boolean) {
+    setIsliar(data)
+  }
   // 포차 정보 요청
   const getPochaInfo = async () => {
     try {
@@ -62,10 +69,13 @@ function LiarIntro({
   return (
     <>
       {signal === "PLAY" ? (
-        <LiarTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+        <LiarTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} getLiarInfo={getLiarInfo}/>
       ) : null}
       {signal === "MENUAL" ? (
         <LiarMenual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+      ) : null}
+      {signal === "VOTE" ? (
+        <LiarVote socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}  pochaInfo={pochaInfo} isliar={isliar}/>
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>

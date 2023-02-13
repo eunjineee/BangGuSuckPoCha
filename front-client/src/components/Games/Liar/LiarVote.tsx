@@ -1,44 +1,28 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import styles from "./LiarTitle.module.css";
+import styles from "./LiarVote.module.css";
 
-function LiarTitle({
+function LiarVote({
   socket,
   pochaId,
   pochaUsers,
   pochaInfo,
-  getLiarInfo,
+  isliar,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
   pochaInfo: any;
-  getLiarInfo: Function;
+  isliar: boolean;
 }): React.ReactElement {
   const roomName = pochaId;
-  const {totalCount} = pochaInfo;
-  const [liar, setLiar] = useState<any>(null)
+
   const [titles, setTitles] = useState<any>(null)
   const [nowtitle, setNowtitle] = useState<any>(null)
-  const [isliar, setIsliar] = useState<any>(false)
-  
-  // 내 이름
-  const myName = localStorage.getItem("Username");  
-  const [mynum, setMyNum] = useState<any>(null)
-  
-  
   const onClickClose = () => {
     const signalData = "VOTE";
     // 다음 페이지로 이동
     socket.emit("game_liar_signal", roomName, signalData);
-  };
-
-  const setPeopleInfo = () => {
-    pochaUsers.forEach((user: any, index: number) => {
-      if (user.username === myName) {
-        setMyNum(index);
-      }
-    });
   };
 
   const getLiarSubject = async() => {
@@ -55,11 +39,6 @@ function LiarTitle({
     }
   }
 
-  const liarnum = () => {
-    const liar = Math.floor(Math.random()*totalCount);
-    setLiar(liar);
-  }
-
   const maintitle = () => {
     if (titles){
       const titleone = Math.floor(Math.random()*(titles.length));
@@ -67,26 +46,14 @@ function LiarTitle({
       setNowtitle(titles[titleone]);
     }
   }
-
-  const meLiar = () => {
-    if(liarnum === mynum){
-      getLiarInfo(true);
-    }else{
-      getLiarInfo(false);
-    }
-  }
-
   useEffect(()=> {
     getLiarSubject();
-    setPeopleInfo();
-    liarnum();
   },[])
 
   useEffect(()=> {
     maintitle();
-    meLiar();
-  },[titles,mynum])
-
+  },[titles])
+  console.log("#################",pochaInfo)
   return (
     <div className={`${styles.layout3}`}>
       <div className={`${styles.box} ${styles.layout}`}>
@@ -95,7 +62,7 @@ function LiarTitle({
           <div className={`${styles.box3}`}>주제 :</div>
           {nowtitle && <div className={`${styles.box4}`} id="maintitle">{nowtitle.type}</div>}
         </div>
-        {nowtitle && <div className={`${styles.layout4}`} id="title">{isliar? nowtitle.word:"라이어입니다"}</div>}
+        {nowtitle && <div className={`${styles.layout4}`} id="title">{nowtitle.word}</div>}
         <span className={`${styles.text1}`}>
           두 턴을 돌고 난 후,
           <br/>
@@ -114,4 +81,4 @@ function LiarTitle({
   );
 }
 
-export default LiarTitle;
+export default LiarVote;

@@ -12,7 +12,7 @@ function LiarMenual({
   const roomName = pochaId;
 
   const onClickClose = () => {
-    const signalData = "Title";
+    const signalData = "INTRO";
     // 선택창으로 돌아가기
     socket.emit("game_liar_signal", roomName, signalData);
   };
