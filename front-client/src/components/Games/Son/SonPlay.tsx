@@ -78,25 +78,17 @@ function SonPlay({
     });
   };
   // 턴 넘어오면 실행하는 함수
-  const nextTurn = (turn: number) => {
-    // 현재 전달받은 값으로 턴 세팅하고
-    setCurrentTurn(turn + 1)
-    // 우선 세팅전에 턴값을 줘서
-    const nowTurn = turn + 1;
-    // 내 턴 세팅해서 턴넘기기 띄우고
-    txtSpanList.forEach((txt) => {
-      // for문 돌려서 id값이 내 번호랑 같고 내 번호가 현재 턴번호면
-      if(txt.current.id === myNum && myNum === nowTurn) {
-        setMyTurn(true);
-        txt.current.classList.add("text-lime-300");
-        return
-      }
-    })
-    // // if문을 그냥 통과하면 0으로 세팅
-    // const init = 0;
-    // socket.emit("game_son_turn", roomName, init);
-    
-  }
+  // const nextTurn = (turn: number) => {
+  //   // 현재 전달받은 값으로 턴 세팅하고
+  //   setCurrentTurn(turn);
+  //   // 우선 세팅전에 턴값을 줘서
+  //   const nowTurn = turn;
+  //   // 현재턴이 내 이름과 같으면 내턴으로 세팅함
+  //   if (nowTurn === myNum) {
+  //     setMyTurn(true);
+  //     return;
+  //   }
+  // };
 
   // 최초 실행
   useEffect(() => {
@@ -123,22 +115,34 @@ function SonPlay({
     };
   }, [peopleScore]);
 
-  
-  useEffect(() => {
-    if (currentTurn === myNum) {
-      setMyTurn(true);
-    }
+  // 초기화 함수
+  const init = () => {
+    setCurrentTurn(0);
+  };
 
+  useEffect(() => {
     // 턴 넘어오는거 받는 함수
     socket.on("game_son_turn", (turn: any) => {
+      if (turn === totalCount) {
+        init();
+        return;
+      }
       console.log("턴 넘어왔냐?", turn);
-      nextTurn(turn);
+      // 턴 세팅
+      setCurrentTurn(turn);
     });
 
     return () => {
       socket.off("game_son_turn");
     };
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    // 턴 보고있다가 마이턴 세팅
+    if (currentTurn === myNum) {
+      setMyTurn(true);
+    }
+  }, [currentTurn])
 
   //손 만들기(인원수 넘어가는 손은 가리기)
   function gamestart() {
@@ -188,31 +192,24 @@ function SonPlay({
 
   const onClickNextTurn = (event: React.MouseEvent<HTMLDivElement>) => {
     // event.currentTarget.classList.add("hidden");
-    console.log("다음턴", myNum)
-    console.log("다음턴2", txtSpanList)
-    txtSpanList.forEach((txt) => {
-      // for문 돌려서 id값이 내 번호랑 같고 내 번호가 현재 턴번호면
-      if(txt.current.id === myNum) {
-        console.log("다음턴여긴오냐", myNum)
-        txt.current.classList.remove("text-lime-300");
-        txt.current.classList.add("text-white");
-        return
-      }
-    })
+    console.log("다음턴", myNum + 1);
     // 턴 data에 myNum담아보냄
-    const turn = myNum;
+    const turn = myNum + 1;
     // 마이턴 false
     setMyTurn(false);
     socket.emit("game_son_turn", roomName, turn);
-  }
+  };
 
   return (
     <div className={`${styles.background}`} id="background">
-      <div className={`${styles.title}`}>손병호 게임</div>
+      <div>
+      <div className={`${styles.title}`}>손병호 게임</div> 
+      {myTurn ? <div><span className="text-2xl text-purple-400 font-bold">{`${peopleName[myNum]}`}</span></div>: null}
+      </div>
       <div className={`${styles.layout}`}>
         <div id="hands1" className={`${styles.hands1}`}>
           <div
-            className={`w-[230px] h-[250px] flex flex-col items-center text-lime-300`}
+            className={`w-[230px] h-[250px] flex flex-col items-center`}
             id="0"
             ref={txtSpan0}
           >
@@ -225,7 +222,6 @@ function SonPlay({
               }
               alt="people0"
               // ref={img0}
-              
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[0]}
@@ -339,7 +335,11 @@ function SonPlay({
             value="접기"
           />
         </div>
-        <div onClick={onClickNextTurn} className={myTurn === true ? "" : "hidden"} ref={turnDiv}>
+        <div
+          onClick={onClickNextTurn}
+          className={myTurn === true ? "" : "hidden"}
+          ref={turnDiv}
+        >
           <input
             type="button"
             className={`${styles.button}`}
