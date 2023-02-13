@@ -28,9 +28,11 @@ function SonPlay({
   // 사람들 스코어
   const [peopleScore, setPeopleScore] = useState<number[]>([5, 5, 5, 5, 5, 5]);
   // 내 번호 세팅
-  const [myNum, setMyNum] = useState<number>(0);
+  const [myNum, setMyNum] = useState<number>(-1);
+  // 현재 나의 턴
+  const [myTurn, setMyTurn] = useState<boolean>(false);
   // 현재 턴 세팅
-  const [turn, setTurn] = useState<number>(0);
+  const [currentTurn, setCurrentTurn] = useState<number>(0);
   // 손가락들 가져옴
   const txtSpan0 = useRef<any>(null);
   const txtSpan1 = useRef<any>(null);
@@ -46,6 +48,7 @@ function SonPlay({
     txtSpan4,
     txtSpan5,
   ]);
+  const turnDiv = useRef<HTMLDivElement>(null);
 
   // 이미지들 가져옴
   // const img0 = useRef<any>(null);
@@ -74,13 +77,23 @@ function SonPlay({
       }
     });
   };
+  // 턴 넘어오면 실행하는 함수
+  // const nextTurn = (turn: number) => {
+  //   // 현재 전달받은 값으로 턴 세팅하고
+  //   setCurrentTurn(turn);
+  //   // 우선 세팅전에 턴값을 줘서
+  //   const nowTurn = turn;
+  //   // 현재턴이 내 이름과 같으면 내턴으로 세팅함
+  //   if (nowTurn === myNum) {
+  //     setMyTurn(true);
+  //     return;
+  //   }
+  // };
 
   // 최초 실행
   useEffect(() => {
-    // 유저 정보들 세팅
-    setPeopleInfo();
-    gamestart();
-    // 접을때 ..
+
+    // 접을때 주고 받는 함수
     socket.on("game_son_fold", (myNum: number) => {
       finish();
       console.log("새로운배열 갱신되고있냐?", peopleScore);
@@ -99,15 +112,38 @@ function SonPlay({
       socket.off("game_son_fold");
     };
   }, [peopleScore]);
+
+  // 초기화 함수
+  const init = () => {
+    setCurrentTurn(0);
+  };
+
   useEffect(() => {
+    // 유저 정보들 세팅
+    setPeopleInfo();
+    gamestart();
+    // 턴 넘어오는거 받는 함수
     socket.on("game_son_turn", (turn: any) => {
+      if (turn === totalCount) {
+        init();
+        return;
+      }
       console.log("턴 넘어왔냐?", turn);
+      // 턴 세팅
+      setCurrentTurn(turn);
     });
 
     return () => {
       socket.off("game_son_turn");
     };
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    // 턴 보고있다가 마이턴 세팅
+    if (currentTurn === myNum) {
+      setMyTurn(true);
+    }
+  }, [currentTurn, myNum]);
 
   //손 만들기(인원수 넘어가는 손은 가리기)
   function gamestart() {
@@ -155,20 +191,29 @@ function SonPlay({
     fold();
   };
 
-  const onClickNextTurn = () => {
-    console.log("다음턴")
-    const turn = myNum;
+  const onClickNextTurn = (event: React.MouseEvent<HTMLDivElement>) => {
+    // event.currentTarget.classList.add("hidden");
+    console.log("다음턴", myNum + 1);
+    // 턴 data에 myNum담아보냄
+    const turn = myNum + 1;
+    // 마이턴 false
+    setMyTurn(false);
     socket.emit("game_son_turn", roomName, turn);
-  }
+  };
 
   return (
     <div className={`${styles.background}`} id="background">
-      <div className={`${styles.title}`}>손병호 게임</div>
+      <div>
+        <div className={`${styles.title}`}>손병호 게임</div>
+        <div>
+          <span className="text-2xl text-purple-400 font-bold">{`${peopleName[currentTurn]}`}</span>
+        </div>
+      </div>
       <div className={`${styles.layout}`}>
         <div id="hands1" className={`${styles.hands1}`}>
           <div
             className={`w-[230px] h-[250px] flex flex-col items-center`}
-            id="txtSpan0"
+            id="0"
             ref={txtSpan0}
           >
             <img
@@ -180,7 +225,6 @@ function SonPlay({
               }
               alt="people0"
               // ref={img0}
-              id="0"
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[0]}
@@ -188,7 +232,7 @@ function SonPlay({
           </div>
           <div
             className={`w-[230px] h-[250px] flex flex-col items-center`}
-            id="txtSpan1"
+            id="1"
             ref={txtSpan1}
           >
             <img
@@ -200,7 +244,6 @@ function SonPlay({
               }
               alt="people1"
               // ref={img1}
-              id="1"
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[1]}
@@ -208,7 +251,7 @@ function SonPlay({
           </div>
           <div
             className={`w-[230px] h-[250px] flex flex-col items-center`}
-            id="txtSpan2"
+            id="2"
             ref={txtSpan2}
           >
             <img
@@ -220,7 +263,6 @@ function SonPlay({
               }
               alt="people2"
               // ref={img2}
-              id="2"
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[2]}
@@ -230,7 +272,7 @@ function SonPlay({
         <div id="hands2" className={`${styles.hands2}`}>
           <div
             className={`w-[230px] h-[250px] flex flex-col items-center`}
-            id="txtSpan3"
+            id="3"
             ref={txtSpan3}
           >
             <img
@@ -242,7 +284,6 @@ function SonPlay({
               }
               alt="people3"
               // ref={img3}
-              id="3"
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[3]}
@@ -250,7 +291,7 @@ function SonPlay({
           </div>
           <div
             className={`w-[230px] h-[250px] flex flex-col items-center`}
-            id="txtSpan4"
+            id="4"
             ref={txtSpan4}
           >
             <img
@@ -262,7 +303,6 @@ function SonPlay({
               }
               alt="people4"
               // ref={img4}
-              id="4"
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[4]}
@@ -270,7 +310,7 @@ function SonPlay({
           </div>
           <div
             className={`w-[230px] h-[250px] flex flex-col items-center`}
-            id="txtSpan5"
+            id="5"
             ref={txtSpan5}
           >
             <img
@@ -282,7 +322,6 @@ function SonPlay({
               }
               alt="people5"
               // ref={img5}
-              id="5"
             />
             <div className={`${styles.fingertext}`} id="fingertext1">
               {peopleName[5]}
@@ -299,14 +338,15 @@ function SonPlay({
             value="접기"
           />
         </div>
-        <div className={`${styles.layout2}`}>
-          <input
-            type="button"
-            className={`${styles.button}`}
-            onClick={onClickNextTurn}
-            value="턴넘기기"
-          />
-        </div>
+        {myTurn === true ? (
+          <div onClick={onClickNextTurn} ref={turnDiv}>
+            <input
+              type="button"
+              className={`${styles.button}`}
+              value="턴넘기기"
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

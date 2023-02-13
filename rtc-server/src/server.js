@@ -270,7 +270,6 @@ wsServer.on("connection", (socket) => {
     wsServer.to(roomName).emit("game_liar_signal", signalData, data);
   });
 
-
   // 밸런스 게임 Play
   socket.on("game_balance_Intro", (roomName, isBalance) => {
     wsServer.to(roomName).emit("game_balance_Intro", isBalance);
@@ -284,5 +283,9 @@ wsServer.on("connection", (socket) => {
   socket.on("game_balance_subjectChange", (roomName, themeDataList) => {
     console.log("choiceType?", themeDataList);
     wsServer.to(roomName).emit("game_balance_subjectChange", themeDataList);
-  });
-});
+  //정한 라이어 보내기
+  socket.on("game_liar_number", (roomName, data) => {
+    wsServer.to(roomName).emit("game_liar_number", data);
+    })
+  })
+})
