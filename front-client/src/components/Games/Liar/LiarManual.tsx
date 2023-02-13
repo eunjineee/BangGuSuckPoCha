@@ -1,6 +1,6 @@
-import styles from "./LiarMenual.module.css";
+import styles from "./LiarManual.module.css";
 
-function LiarMenual({
+function LiarManual({
   socket,
   pochaId,
   pochaUsers,
@@ -54,4 +54,4 @@ function LiarMenual({
   );
 }
 
-export default LiarMenual;
+export default LiarManual;

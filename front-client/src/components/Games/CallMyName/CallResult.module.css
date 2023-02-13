@@ -1,0 +1,173 @@
+.titlespan{
+  width: 652px;
+  height: 100px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 55px;
+  line-height: 85px;
+  text-align: center;
+
+  color: #FFA149;
+  margin: auto;
+  text-shadow: 0px 0px 30px #FF0000;
+}
+
+.img1{
+  z-index: 10;
+  position: absolute;
+  margin-top: 130px;
+  width: 240px;
+  height: 248px;
+}
+
+.img2{
+  z-index: 10;
+  position: absolute;
+  margin-top: 310px;
+  margin-left: 350px;
+}
+
+input.txt {
+  width:80px;
+}
+
+.box {
+  width: 54rem;
+  margin: 0 auto;
+  height: 48.9rem;
+  background-color: #000000;
+  /* border: solid 10px red; */
+  border-radius: 1rem;
+}
+
+.box2 {
+  width: 652px;
+  height: 100px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 55px;
+  line-height: 85px;
+  text-align: center;
+
+  color: #FFA149;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  text-shadow: 0px 0px 30px #FF0000;
+}
+
+.box3 {
+/* 손가락 접기 */
+  width: 700px;
+  height: 105px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  line-height: 97px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  text-shadow: 0px 0px 30px #FF0000;
+  -webkit-text-stroke: 1px #FFA149;
+
+  margin-top: 300px;
+}
+
+.box4 {
+  /* 마셔라! 마셔라! */
+  position: absolute;
+  width: 319px;
+  height: 76px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 45px;
+  line-height: 54px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  text-shadow: 0px 0px 30px #70FF00;
+  -webkit-text-stroke: 1px #007C2A;
+
+  margin-top: 530px;
+}
+
+.layout {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+} 
+
+.layout5 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 140px;
+} 
+
+.retry{
+  box-sizing: border-box;
+  border-radius: 0.3rem;
+  margin: 0 20px;
+  margin-top: -10px;
+
+  width: 207px;
+  height: 78px;
+
+  background: #131313;
+  box-shadow: 0px 0px 20px #FFA0A0;
+
+  /* PLAY */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  border: 2px solid #FFD098;
+  text-shadow: 0px 0px 15px #FF0000;
+  cursor: pointer;
+}
+
+.retry:hover{
+  box-sizing: border-box;
+  border-radius: 0.3rem;
+  margin: 0 20px;
+  margin-top: -10px;
+
+  width: 207px;
+  height: 78px;
+
+  background: #131313;
+  box-shadow: 0px 0px 20px #FFA0A0;
+
+  /* PLAY */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFA149;
+
+  border: 1px solid #FFD098;
+  text-shadow: 0px 0px 15px #FF0000;
+  cursor: pointer;
+}
+
+
+.button {
+  border: solid 1px #fff;
+}

@@ -1,64 +1,4 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropbtn {
-  display: block;
-  border: 2px solid rgb(94, 94, 94);
-  border-radius: 4px;
-  background-color: #fcfcfc;
-  font-weight: 400;
-  color: rgb(124, 124, 124);
-  padding: 12px;
-  width: 240px;
-  text-align: left;
-  cursor: pointer;
-  font-size: 12px;
-  z-index: 1;
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  font-weight: 400;
-  background-color: #fcfcfc;
-  min-width: 240px;
-  border-radius: 8px;
-  height: 160px;
-  overflow: scroll;
-  box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
-}
-
-.dropdown-content::-webkit-scrollbar {
-  width: 5px;
-  height: 10px;
-}
-
-.dropdown-content::-webkit-scrollbar-thumb {
-  border-radius: 2px;
-  background-color: rgb(194, 194, 194)
-}
-
-.dropdown-content div {
-  display: block;
-  text-decoration: none;
-  color: rgb(37, 37, 37);
-  font-size: 12px;
-  padding: 12px 20px;
-}
-
-.dropdown-content div:hover {
-  background-color: rgb(226, 226, 226);
-}
-
-.dropdown-content.show {
-  display: block;
-}
-
-.titlespan {
+.titlespan{
   position: absolute;
   width: 651px;
   height: 100px;
@@ -76,7 +16,7 @@
   align-items: center;
 }
 
-.img1 {
+.img1{
   z-index: 10;
   position: absolute;
   margin-top: 210px;
@@ -84,7 +24,7 @@
   /* margin-right: 20px; */
 }
 
-.img2 {
+.img2{
   z-index: 10;
   position: absolute;
   margin-top: 310px;
@@ -92,7 +32,7 @@
 }
 
 input.txt {
-  width: 80px;
+  width:80px;
 }
 
 .box {
@@ -122,6 +62,11 @@ input.txt {
 }
 
 .box3 {
+/* 손가락 접기 */
+  /* position: absolute; */
+  width: 196px;
+  height: 36px;
+
   font-family: 'Inter';
   font-style: normal;
   font-weight: 800;
@@ -133,38 +78,27 @@ input.txt {
 
   -webkit-text-stroke: 1px #FFA149;
   text-shadow: 0px 0px 30px #FF0000;
-  /* border: solid 2px #FF0000; */
 }
 
-.box4 {
-  font-family: 'Inter';
-  font-style: normal;
-  text-align: center;
-
-  color: #FFFFFF;
-  display: flex;
-  justify-content: center;
-  margin-top: 100px;
-}
 
 .layout {
   display: flex;
   /* justify-content: center; */
   align-items: center;
   flex-direction: column;
-}
+} 
 
 .layout2 {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 80px;
-}
+} 
 
 .layout3 {
   display: flex;
   justify-content: center;
-}
+} 
 
 .layout4 {
   display: flex;
@@ -186,24 +120,24 @@ input.txt {
   text-align: center;
 
   color: #FFFFFF;
-}
+} 
 
 .layout5 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 200px;
+  margin-top: 260px;
   margin-left: 0px;
-}
+} 
 
 .layout6 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 80px;
-}
+  margin-top: 150px;
+} 
 
-.retry {
+.retry{
   box-sizing: border-box;
   border-radius: 0.3rem;
   margin: 0 20px;
@@ -227,40 +161,36 @@ input.txt {
 
   border: 1px solid #FFD098;
   text-shadow: 0px 0px 15px #FF0000;
+  cursor: pointer;
+}
+
+.retry:hover{
+  box-sizing: border-box;
+  border-radius: 0.3rem;
+  margin: 0 20px;
+  margin-top: -10px;
+
+  width: 207px;
+  height: 78px;
+
+  background: #131313;
+  box-shadow: 0px 0px 20px #FFA0A0;
+
+  /* PLAY */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFA149;
+
+  border: 1px solid #FFD098;
+  text-shadow: 0px 0px 15px #FF0000;
+  cursor: pointer;
 }
 
 .button {
   border: solid 1px #fff;
-}
-
-.text1 {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 150px;
-  line-height: 35px;
-
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
-/* //////////////////// */
-.dropdown-content {
-  display: none;
-  font-weight: 400;
-  position: absolute;
-  background-color: #fcfcfc;
-  min-width: 240px;
-  border-radius: 8px;
-  height: 160px;
-  overflow: scroll;
-  box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
-}
-
-.dropbtn_click_style{
-  font-family: Material Icons; 
-  font-size : 16px; 
-  color : #3b3b3b; 
-  float:right;
 }
