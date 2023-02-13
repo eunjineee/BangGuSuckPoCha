@@ -58,9 +58,16 @@ function Balance({
   // 종료
   function exit() {
     setIstStart(false)
+    setSubjectDiv('flex')
+    
     setQuestionSentence("Q. 당신의 선택은?")
   }
+  
+  useEffect(()=> {
+    console.log('버튼 값: ',qDiv);
 
+  },[qDiv])
+    
   // play
   var audio = new Audio();
   audio.src = "뿅.mp3"
@@ -150,17 +157,20 @@ function Balance({
         <div className="subjects">
           <div className="select selectA">
             <div className="sub">A</div>
-            <div className={`subject ${subjectDiv}`} onClick={romantic}>연애</div>
-            <div className={`${qDiv} q1 `} onClick={play}>{q1Div}</div>
+            <div className={`subject ${subjectDiv} romOrNor`} onClick={romantic}>연애</div>
+            <div className={`${qDiv} romOrNor q1 `} onClick={play}>{q1Div}</div>
           </div>
           <div className="select">
             <div className="sub">B</div>
-            <div className={`subject ${subjectDiv}`} onClick={general}>일반</div>
-            <div className={`${qDiv} q2 `} onClick={play}>{q2Div}</div>
-          </div>
+            <div className={`subject ${subjectDiv} romOrNor`} onClick={general}>일반</div>
+            <div className={`${qDiv} romOrNor q2 `} onClick={play}>{q2Div}</div>
+          </div> 
         </div>
         <div className={`${qDiv} buttons`}>
-          <div onClick={exit}>EXIT</div>
+          <div onClick={()=> {
+            setQDiv('hidden')
+            exit()
+          }}>EXIT</div>
           <div onClick={next}>NEXT</div>
         </div>
       </div>

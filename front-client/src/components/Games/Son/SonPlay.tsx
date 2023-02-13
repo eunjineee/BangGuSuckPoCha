@@ -30,7 +30,7 @@ function SonPlay({
   // 내 번호 세팅
   const [myNum, setMyNum] = useState<number>(0);
   // 현재 턴 세팅
-  const [turn, setTurn] = useState<number>(0);
+  const [currentTurn, setCurrentTurn] = useState<number>(0);
   // 손가락들 가져옴
   const txtSpan0 = useRef<any>(null);
   const txtSpan1 = useRef<any>(null);
@@ -46,6 +46,7 @@ function SonPlay({
     txtSpan4,
     txtSpan5,
   ]);
+  const turnDiv = useRef<HTMLDivElement>(null);
 
   // 이미지들 가져옴
   // const img0 = useRef<any>(null);
@@ -74,13 +75,43 @@ function SonPlay({
       }
     });
   };
+  const nextTurn = (turn: number) => {
+    setCurrentTurn(turn)
+    turnDiv.current!.classList.remove("hidden");
+    switch (turn) {
+      case 0:
+        txtSpan0.current.classList.remove("text-lime-300");
+        txtSpan1.current.classList.add("text-lime-300");
+        break
+      case 1:
+        txtSpan1.current.classList.remove("text-lime-300");
+        txtSpan2.current.classList.add("text-lime-300");
+        break
+      case 2:
+        txtSpan2.current.classList.remove("text-lime-300");
+        txtSpan3.current.classList.add("text-lime-300");
+        break
+      case 3:
+        txtSpan3.current.classList.remove("text-lime-300");
+        txtSpan4.current.classList.add("text-lime-300");
+        break
+      case 4:
+        txtSpan4.current.classList.remove("text-lime-300");
+        txtSpan5.current.classList.add("text-lime-300");
+        break
+      case 5:
+        txtSpan5.current.classList.remove("text-lime-300");
+        txtSpan0.current.classList.add("text-lime-300");
+        break
+    }
+  }
 
   // 최초 실행
   useEffect(() => {
     // 유저 정보들 세팅
     setPeopleInfo();
     gamestart();
-    // 접을때 ..
+    // 접을때 주고 받는 함수
     socket.on("game_son_fold", (myNum: number) => {
       finish();
       console.log("새로운배열 갱신되고있냐?", peopleScore);
@@ -99,9 +130,17 @@ function SonPlay({
       socket.off("game_son_fold");
     };
   }, [peopleScore]);
+
+  
   useEffect(() => {
+    if (currentTurn === myNum) {
+      turnDiv.current!.classList.remove("hidden");
+    }
+
+    // 턴 넘어오는거 받는 함수
     socket.on("game_son_turn", (turn: any) => {
       console.log("턴 넘어왔냐?", turn);
+      nextTurn(turn);
     });
 
     return () => {
@@ -155,7 +194,8 @@ function SonPlay({
     fold();
   };
 
-  const onClickNextTurn = () => {
+  const onClickNextTurn = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.add("hidden");
     console.log("다음턴")
     const turn = myNum;
     socket.emit("game_son_turn", roomName, turn);
@@ -167,7 +207,7 @@ function SonPlay({
       <div className={`${styles.layout}`}>
         <div id="hands1" className={`${styles.hands1}`}>
           <div
-            className={`w-[230px] h-[250px] flex flex-col items-center`}
+            className={`w-[230px] h-[250px] flex flex-col items-center text-lime-300`}
             id="txtSpan0"
             ref={txtSpan0}
           >
@@ -299,11 +339,10 @@ function SonPlay({
             value="접기"
           />
         </div>
-        <div className={`${styles.layout2}`}>
+        <div onClick={onClickNextTurn} className={`hidden`} ref={turnDiv}>
           <input
             type="button"
             className={`${styles.button}`}
-            onClick={onClickNextTurn}
             value="턴넘기기"
           />
         </div>
