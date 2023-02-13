@@ -522,6 +522,39 @@ const isLadder = createSlice({
   }
 })
 
+// 밸런스 게임 스타트 체크
+const isBalance = createSlice({
+  name: "isBalance",
+  initialState: false,
+  reducers: {
+    balanceChange(state, action) {
+      return state = action.payload
+    }
+  }
+})
+
+// 밸런스 게임 연애인지 일반인지 체크
+const isRomanNormal = createSlice({
+  name: "isRomanNormal",
+  initialState: null,
+  reducers: {
+    isRomanNormalChange(state, action) {
+      return state = action.payload
+    }
+  }
+})
+
+// 밸런스 게임 밸런스 질문
+const balanceQuestion = createSlice({
+  name: "balanceQuestion",
+  initialState: [],
+  reducers: {
+    balanceQuestionChange(state, action) {
+      return state = action.payload
+    }
+  }
+})
+
 //
 export const store = configureStore({
   // store에서 만든 state를 전역에서 사용할 수 있도록 등록하기
@@ -587,6 +620,9 @@ export const store = configureStore({
     gameSelectModal: gameSelectModal.reducer,
     selectGameId: selectGameId.reducer,
     isLadder: isLadder.reducer,
+    isBalance: isBalance.reducer,
+    isRomanNormal: isRomanNormal.reducer,
+    balanceQuestion: balanceQuestion.reducer,
   },
 });
 //주석추가
@@ -659,6 +695,9 @@ export const { showRouletteResultModal } = rouletteResultModal.actions;
 export const { showGameSelectModal } = gameSelectModal.actions;
 export const { selectGame } = selectGameId.actions;
 export const { LadderChange } = isLadder.actions;
+export const { balanceChange } = isBalance.actions;
+export const { isRomanNormalChange } = isRomanNormal.actions;
+export const { balanceQuestionChange } = balanceQuestion.actions;
 
 // store의 타입 미리 export 해둔 것.
 export type RootState = ReturnType<typeof store.getState>;
