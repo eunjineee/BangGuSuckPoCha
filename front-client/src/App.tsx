@@ -35,9 +35,9 @@ function App() {
         icon={({ type }) => {
           switch (type) {
             case "success":
-              return "🗨";
+              return "💚";
             case "error":
-              return "💙";
+              return "❗";
             case "info":
               return "🗨";
           }

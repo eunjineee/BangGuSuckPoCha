@@ -44,15 +44,57 @@ function Tag(): JSX.Element {
     })
     .then((r:any)=> {
       console.log(r.data)
-      
-      const now = new Date()
-      const nowYear = now.getFullYear()
-      // 연령 파악
-      let myAge:(number|string) = nowYear-Number(r.data.data.birth?.slice(0,4))
-      // 지역 파악
-      let myRegion = r.data.data.region.split(' ')[0]
-      myAge = String(Math.floor(myAge/10)*10)+'대'
-      setAgeRegion({age:myAge, region:myRegion})
+      // 실패시
+      if (r.data.status === '401') {
+        axios({
+          method: 'get',
+          url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+          headers: {
+            refreshToken: `${refreshToken}`,
+          }
+        }).then((r)=> {
+          console.log('Tag의 r.data.status보자: ', r.data.status);
+          console.log('Tag의 r.data보자: ', r.data);
+          console.log('Tag의 r보자: ', r);
+          
+            // 돌려보내기
+          if (r.data.status === '401') {
+            localStorage.clear();
+            toast.error('인증되지 않은 유저입니다')
+            navigate('/')
+          } else {
+            // 엑세스 토큰 추가
+            localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+            axios({
+              method: 'get',
+              url:`https://i8e201.p.ssafy.io/api/user/info/${username}`,
+              headers: {
+                accessToken: `${r.data.accessToken}`,
+              }
+            }).then((r)=> {
+              const now = new Date()
+              const nowYear = now.getFullYear()
+              // 연령 파악
+              let myAge:(number|string) = nowYear-Number(r.data.data.birth?.slice(0,4))
+              // 지역 파악
+              let myRegion = r.data.data.region.split(' ')[0]
+              myAge = String(Math.floor(myAge/10)*10)+'대'
+              setAgeRegion({age:myAge, region:myRegion})
+            })
+          }
+        })
+      } else {
+        // 만료가 안됐을 경우
+        const now = new Date()
+        const nowYear = now.getFullYear()
+        // 연령 파악
+        let myAge:(number|string) = nowYear-Number(r.data.data.birth?.slice(0,4))
+        // 지역 파악
+        let myRegion = r.data.data.region.split(' ')[0]
+        myAge = String(Math.floor(myAge/10)*10)+'대'
+        setAgeRegion({age:myAge, region:myRegion})
+      }
     })
   },[])
   
@@ -76,54 +118,143 @@ function Tag(): JSX.Element {
       themeRef.current.value = '테마'
       sulRef.current.value = '술'
       hobbyRef.current.value = '태그'
-      axios.get('https://i8e201.p.ssafy.io/api/pocha/all').then((r)=> {
-        if (filter.speedEnter) {
-          const roomData:any[] = r.data.data
-          const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
-            return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
-          })
-          // 입장 가능한 방을 랜덤으로 하나 골라서 
-          const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
-          // 입장 요청
-          const username = localStorage.getItem('Username')
-          console.log('픽한 방: ', randomPickRoom)
-          const themeId = randomPickRoom.themeId
-          const pochaId = randomPickRoom.pochaId
-          console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+      // 모든 포차 조회
+      axios({
+        method:'get',
+        url: 'https://i8e201.p.ssafy.io/api/pocha/all',
+        headers: {
+          accessToken: `${accessToken}`,
+        },
+      }).then((r)=> {
+        // 요청 실패했을 경우
+        if (r.data.state === '401') {
           axios({
-            method: 'post',
-            url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
-            data: {
-              // 초대 받은거를 승인하는거라 false
-              isHost: 'false',
-              pochaId: pochaId,
-              username: username
-              },
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
             headers: {
-              accessToken: `${accessToken}`,
-            },
-            })
-            .then(()=> {
-              console.log('슬라이싱값: ',themeId.slice(0,2))
-              if (themeId.slice(0,2) === 'T0') {
-                console.log('소통방입장')
-                navigate(`/storyroom/${pochaId}`)
-              } else if (themeId.slice(0,2) === 'T1') {
-                console.log('게임방입장')
-                navigate(`/gameroom/${pochaId}`)
-              }
-            })
-
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // accessToken 담아주고 재요청
+              localStorage.setItem("accessToken", r.data.accessToken);
+              axios({
+                method:'get',
+                url: 'https://i8e201.p.ssafy.io/api/pocha/all',
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                // 재요청 후 필터가 ALL이며 빠른 입장일 경우
+                if (filter.speedEnter) {
+                  const roomData:any[] = r.data.data
+                  const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
+                    return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
+                  })
+                  // 입장 가능한 방을 랜덤으로 하나 골라서 
+                  const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
+                  // 입장 요청
+                  const username = localStorage.getItem('Username')
+                  console.log('픽한 방: ', randomPickRoom)
+                  const themeId = randomPickRoom.themeId
+                  const pochaId = randomPickRoom.pochaId
+                  console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+                  axios({
+                    method: 'post',
+                    url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
+                    data: {
+                      // 초대 받은거를 승인하는거라 false
+                      isHost: 'false',
+                      pochaId: pochaId,
+                      username: username
+                      },
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
+                  })
+                  .then((r)=> {
+                    console.log('113번줄 tag 데이터값 : ',r.data);
+                    
+                    console.log('슬라이싱값: ',themeId.slice(0,2))
+                    if (themeId.slice(0,2) === 'T0') {
+                      console.log('소통방입장')
+                      navigate(`/storyroom/${pochaId}`)
+                    } else if (themeId.slice(0,2) === 'T1') {
+                      console.log('게임방입장')
+                      navigate(`/gameroom/${pochaId}`)
+                    }
+                  }).catch((e)=> {
+                    console.log(e);
+                  })
+                } else {
+                  // const currenDataFirst = r.data.data.reverse()
+                  const currenDataFirst = r.data.data
+                  console.log(r.data)
+                  dispatch(changeMainCreateRoomList(currenDataFirst));
+                }
+              })
+            }
+          })
         } else {
-          const currenDataFirst = r.data.data.reverse()
-          console.log(r.data)
-          dispatch(changeMainCreateRoomList(currenDataFirst));
+          // 요청 실패하지 않았을 때
+            if (filter.speedEnter) {
+              const roomData:any[] = r.data.data
+              const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
+                return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
+              })
+              // 입장 가능한 방을 랜덤으로 하나 골라서 
+              const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
+              // 입장 요청
+              const username = localStorage.getItem('Username')
+              console.log('픽한 방: ', randomPickRoom)
+              const themeId = randomPickRoom.themeId
+              const pochaId = randomPickRoom.pochaId
+              console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+              axios({
+                method: 'post',
+                url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
+                data: {
+                  // 초대 받은거를 승인하는거라 false
+                  isHost: 'false',
+                  pochaId: pochaId,
+                  username: username
+                  },
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
+              })
+              .then((r)=> {
+                console.log('113번줄 tag 데이터값 : ',r.data);
+                
+                console.log('슬라이싱값: ',themeId.slice(0,2))
+                if (themeId.slice(0,2) === 'T0') {
+                  console.log('소통방입장')
+                  navigate(`/storyroom/${pochaId}`)
+                } else if (themeId.slice(0,2) === 'T1') {
+                  console.log('게임방입장')
+                  navigate(`/gameroom/${pochaId}`)
+                }
+              }).catch((e)=> {
+                console.log(e);
+              })
+            } else {
+              // const currenDataFirst = r.data.data.reverse()
+              const currenDataFirst = r.data.data
+              console.log(r.data)
+              dispatch(changeMainCreateRoomList(currenDataFirst));
+            }
         }
       }) 
     } else {
+      // 필터가 isALL이 아닌 경우
       console.log('현재 클릭한 태그정보: ',filter)
-      let age
-      let region
+      let age:any
+      let region:any
       let theme:any
       let sul
       let hobby
@@ -173,6 +304,7 @@ function Tag(): JSX.Element {
       // console.log('빠른입장 ',)
       console.log('포차 조사',filter.isAll,age,region,theme,sul,hobby, tagList,'빠른 입장 유무', fastClick)
       const sendTagList = tagList.join(',')
+      // 선택한 태그에 따른 방 데이터 가져오기
       axios({
         method: 'get',
         url: 'https://i8e201.p.ssafy.io/api/pocha',
@@ -182,59 +314,142 @@ function Tag(): JSX.Element {
         headers: {
           accessToken: `${accessToken}`,
         },
-      }).then((r)=> {
-        if (filter.speedEnter) {
-          // 전체로 선택되어있을 수도 있기에 조회된 방 데이터를 가지고 
-          // 연령(All(0)||본인 연령(ageRegion.age)), 지역(전국,본인 지역(ageRegion.region)), 잠금여부, 인원수(입장가능한 인원수) 필터해서
-          // 이후 해당 pochaId에 맞는 방으로 이동 (포차테마에 따라 다른 방으로 이동)
-          const roomData:any[] = r.data.data
-          
-          const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
-            console.log('방목록: ',data)
-            return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
-          })
-          
-          // 입장 가능한 방을 랜덤으로 하나 골라서 
-          const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
-          // 입장 요청
-          const username = localStorage.getItem('Username')
-          console.log('픽한 방: ', randomPickRoom)
-          const themeId = randomPickRoom.themeId
-          const pochaId = randomPickRoom.pochaId
-          console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+      }).then((r:any)=> {
+        // 요청 실패시
+        if (r.data.status === '401') {
           axios({
-            method: 'post',
-            url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
-            data: {
-              // 초대 받은거를 승인하는거라 false
-              isHost: 'false',
-              pochaId: pochaId,
-              username: username
-              }
-            })
-            .then(()=> {
-              console.log('슬라이싱값: ',themeId.slice(0,2))
-              if (themeId.slice(0,2) === 'T0') {
-                console.log('소통방입장')
-                navigate(`/storyroom/${pochaId}`)
-              } else if (themeId.slice(0,2) === 'T1') {
-                console.log('게임방입장')
-                navigate(`/gameroom/${pochaId}`)
-              }
-            })
-
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            console.log('Tag의 326번줄: ', r.data.status);
+              // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method: 'get',
+                url: 'https://i8e201.p.ssafy.io/api/pocha',
+                params: {
+                  age:age, region:region,themeId:theme,tag:sendTagList
+                },
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              })
+            }
+          }).then((r:any)=> {
+            if (filter.speedEnter) {
+              // 전체로 선택되어있을 수도 있기에 조회된 방 데이터를 가지고 
+              // 연령(All(0)||본인 연령(ageRegion.age)), 지역(전국,본인 지역(ageRegion.region)), 잠금여부, 인원수(입장가능한 인원수) 필터해서
+              // 이후 해당 pochaId에 맞는 방으로 이동 (포차테마에 따라 다른 방으로 이동)
+              const roomData:any[] = r.data.data
+              
+              const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
+                console.log('방목록: ',data)
+                return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
+              })
+              
+              // 입장 가능한 방을 랜덤으로 하나 골라서 
+              const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
+              // 입장 요청
+              const username = localStorage.getItem('Username')
+              console.log('픽한 방: ', randomPickRoom)
+              const themeId = randomPickRoom.themeId
+              const pochaId = randomPickRoom.pochaId
+              console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+              axios({
+                method: 'post',
+                url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
+                data: {
+                  // 초대 받은거를 승인하는거라 false
+                  isHost: 'false',
+                  pochaId: pochaId,
+                  username: username
+                  },
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  }
+                })
+                .then(()=> {
+                  console.log('슬라이싱값: ',themeId.slice(0,2))
+                  if (themeId.slice(0,2) === 'T0') {
+                    console.log('소통방입장')
+                    navigate(`/storyroom/${pochaId}`)
+                  } else if (themeId.slice(0,2) === 'T1') {
+                    console.log('게임방입장')
+                    navigate(`/gameroom/${pochaId}`)
+                  }
+                })
+    
+            } else {
+              console.log("스피드 아님")
+              // 그냥 방 해당 태그에 맞게 갱신해주기
+              dispatch(changeMainCreateRoomList(r.data.data));
+              console.log(r.data)
+            }
+          })
         } else {
-          console.log("스피드 아님")
-          // 그냥 방 해당 태그에 맞게 갱신해주기
-          dispatch(changeMainCreateRoomList(r.data.data));
-          console.log(r.data)
+          if (filter.speedEnter) {
+            // 전체로 선택되어있을 수도 있기에 조회된 방 데이터를 가지고 
+            // 연령(All(0)||본인 연령(ageRegion.age)), 지역(전국,본인 지역(ageRegion.region)), 잠금여부, 인원수(입장가능한 인원수) 필터해서
+            // 이후 해당 pochaId에 맞는 방으로 이동 (포차테마에 따라 다른 방으로 이동)
+            const roomData:any[] = r.data.data
+            
+            const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
+              console.log('방목록: ',data)
+              return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
+            })
+            
+            // 입장 가능한 방을 랜덤으로 하나 골라서 
+            const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
+            // 입장 요청
+            const username = localStorage.getItem('Username')
+            console.log('픽한 방: ', randomPickRoom)
+            const themeId = randomPickRoom.themeId
+            const pochaId = randomPickRoom.pochaId
+            console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+            axios({
+              method: 'post',
+              url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
+              data: {
+                // 초대 받은거를 승인하는거라 false
+                isHost: 'false',
+                pochaId: pochaId,
+                username: username
+                },
+                headers: {
+                  accessToken: `${accessToken}`,
+                }
+              })
+              .then(()=> {
+                console.log('슬라이싱값: ',themeId.slice(0,2))
+                if (themeId.slice(0,2) === 'T0') {
+                  console.log('소통방입장')
+                  navigate(`/storyroom/${pochaId}`)
+                } else if (themeId.slice(0,2) === 'T1') {
+                  console.log('게임방입장')
+                  navigate(`/gameroom/${pochaId}`)
+                }
+              })
+  
+          } else {
+            console.log("스피드 아님")
+            // 그냥 방 해당 태그에 맞게 갱신해주기
+            dispatch(changeMainCreateRoomList(r.data.data));
+            console.log(r.data)
+          }
         }
-      }).catch((e)=> {
-        toast.error("다시 시도해주세요");
-        console.log('에러다: ',e)
-      })
-    }
-  },[filter])
+
+    })
+  }},[filter])
 
 
   return (

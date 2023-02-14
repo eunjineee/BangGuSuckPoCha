@@ -6,23 +6,24 @@ function CallInput({
   socket,
   pochaId,
   pochaUsers,
+  nowtitle,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
+  nowtitle: any;
 }): React.ReactElement {
   const roomName = pochaId;
   
-  const [titles, setTitles] = useState<any>(null)
-  
-  const [nowtitle, setNowtitle] = useState<any>(null)
- 
   const [mynum, setMyNum] = useState<any>(null) // 내번호
 
   const myName = localStorage.getItem("Username");    // 내 이름
   // 사람들 네임
   const [peopleName, setPeopleName] = useState<string[]>([]);
 
+  const [answer, setAnswer] = useState<any>(null);
+  // pass
+  const [peopleScore, setPeopleScore] = useState<number[]>([1, 1, 1, 1, 1, 1]);
 
   const onClickClose = () => {
     const signalData = "RESULT";
@@ -34,36 +35,12 @@ function CallInput({
   const setPeopleInfo = () => {
     console.log(pochaUsers, "유저들 리스트");
     pochaUsers.forEach((user: any, index: number) => {
-      // setPeopleScore();
-      // setTxtSpanList((prev) => prev = [txtSpan0, txtSpan1, txtSpan2, txtSpan3, txtSpan4, txtSpan5]);
       setPeopleName((prev) => [...prev, user.nickname]);
       if (user.username === myName) {
         setMyNum(index);
       }
     });
   };
-
-  // 양세찬 게임 주제 받아오기
-  const getLiarSubject = async() => {
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-      });
-      setTitles(data);
-    } catch (error) {
-      console.log("양세찬 게임 주제 axios error", error);
-    }
-  }
-  
-  // 이번 턴 주제
-  const maintitle = () => {
-    if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length-1));
-      setNowtitle(titles[titleone]);
-    }
-  }
 
   // 내가 몇번째인지
   const setMyInfo = () => {
@@ -74,16 +51,60 @@ function CallInput({
     });
   };
 
+  // 정답 제출
+  function inputAnswer(){
+    if (answer === nowtitle[mynum]){
+      socket.emit("game_call_pass", roomName, mynum);
+    }
+  }
 
   useEffect(()=> {
-    getLiarSubject(); //라이어 주제 받아오기
     setPeopleInfo();  // 방참가인원 정보
     setMyInfo();
-  },[])
+    // 접을때 주고 받는 함수
+    socket.on("game_call_pass", (myNum: number) => {
+      finish();
+      console.log("새로운배열 갱신되고있냐?", peopleScore);
+      const newArray = peopleScore.map((score, index) => {
+        if (index === myNum) {
+          return score - 1;
+        }
+        return score;
+      });
+      console.log("새로운배열?", newArray);
+      setPeopleScore((prev) => [...newArray]);
+    });
 
-  useEffect(()=> {
-    maintitle();
-  },[titles])
+    return () => {
+      socket.off("game_call_pass");
+    };
+  }, [peopleScore]);
+
+
+  //게임 끝인지 확인 
+  function finish() {
+    const resultList: string[] = [];
+    const result: string[] = [];
+    console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    peopleScore.forEach((score, index) => {
+      console.log("s여기@@@@@@@@@@@@", score, index);
+      if (score === 0) {
+        resultList.push(peopleName[index]);
+        console.log("여기오냐?", peopleScore);
+      }else{
+        result.push(peopleName[index])
+      }
+    });
+    if (result.length === 1) {
+      console.log("여기오냐 결과가기전?", peopleScore);
+      const signalData = "RESULT";
+      const data = result;
+      socket.emit("game_call_result", roomName, signalData, data);
+    }
+  }
+
+
+
 
   return (
   <div className={`${styles.layout3}`}>
@@ -123,11 +144,14 @@ function CallInput({
       </div>
       <div className={`${styles.layout6}`}>
         <input 
-          type="button" 
-          onClick={onClickClose} 
-          className={`${styles.retry}`} 
-          value="NEXT" 
+          id="answer" 
+          className={`${styles.answerInput}`} 
+          type="text" 
+          onChange={(e) => {setAnswer(e.target.value)}}
         />
+          <div className="flex justify-center mr-1 ">
+            <div className={`${styles.button}`} onClick={inputAnswer}>START</div>
+        </div>
       </div>
     </div>
   </div>

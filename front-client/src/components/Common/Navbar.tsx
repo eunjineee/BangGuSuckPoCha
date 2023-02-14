@@ -11,6 +11,7 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 function Navbar(): JSX.Element {
   const navigate = useNavigate();
@@ -27,10 +28,47 @@ function Navbar(): JSX.Element {
         accessToken: `${accessToken}`,
       },
     }).then((r) => {
-      setMyData({
-        profile: r.data.data.profile,
-        nickname: r.data.data.nickname,
-      });
+      if (r.data.status === '401') {
+        axios({
+          method: 'get',
+          url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+          headers: {
+            refreshToken: `${refreshToken}`,
+          }
+        }).then((r)=> {
+          console.log('Tag의 57번줄: ', r.data.status);
+            
+            // 돌려보내기
+          if (r.data.status === '401') {
+            localStorage.clear();
+            toast.error('인증되지 않은 유저입니다')
+            navigate('/')
+          } else {
+            // 엑세스 토큰 추가
+            localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+            axios({
+              method: "get",
+              url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r)=> {
+              // 새롭게 받은 토큰 저장 후  값 저장
+              setMyData({
+                profile: r.data.data.profile,
+                nickname: r.data.data.nickname,
+              });
+            })
+          }
+        })
+      } else {
+        // 토큰이 유지 될 때
+        setMyData({
+          profile: r.data.data.profile,
+          nickname: r.data.data.nickname,
+        });
+      }      
     });
   }, []);
 
@@ -42,11 +80,13 @@ function Navbar(): JSX.Element {
         <img
           src={require("src/assets/logo/Logo.png")}
           alt="logo"
-          className={`object-contain w-[32%] cursor-pointer`}
+          className={`object-contain w-[24%] cursor-pointer`}
           onClick={() => {
             navigate("/main");
           }}
         />
+        <img className="h-16 my-16" src={require("src/assets/logo/soju.gif")}
+          alt="logo"/>
         <div className="" style={{ width: "16%" }}></div>
         <div className="grid grid-cols-1 " style={{ width: "18%" }}>
           <div></div>
@@ -113,23 +153,72 @@ function MenuOption({ profile, nickname, myData, accessToken, refreshToken }: an
                   accessToken: `${accessToken}`,
                 },
               }).then((r) => {
-                const checkFrom_id: number[] = [];
-                const setData: (number | string)[] = [];
-                const data: (number | string)[] = r.data.data;
-                data.forEach((e: any) => {
-                  if (checkFrom_id.includes(e.from_id) !== true) {
-                    checkFrom_id.push(e.from_id);
-                    setData.push(e);
+                if (r.data.status === '401') {
+                  axios({
+                    method: 'get',
+                    url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                    headers: {
+                      refreshToken: `${refreshToken}`,
+                    }
+                  }).then((r)=> {
+                    console.log('Tag의 57번줄: ', r.data.status);
+                    
+                      // 돌려보내기
+                    if (r.data.status === '401') {
+                      localStorage.clear();
+                      toast.error('인증되지 않은 유저입니다')
+                      navigate('/')
+                    } else {
+                      // 엑세스 토큰 추가
+                      localStorage.setItem("accessToken", r.data.accessToken);
+                      // 재요청
+                      axios({
+                        method: "get",
+                        url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+                        headers: {
+                          accessToken: `${accessToken}`,
+                        },
+                      }).then((r)=> {
+                        const checkFrom_id: number[] = [];
+                        const setData: (number | string)[] = [];
+                        const data: (number | string)[] = r.data.data;
+                        data.forEach((e: any) => {
+                          if (checkFrom_id.includes(e.from_id) !== true) {
+                            checkFrom_id.push(e.from_id);
+                            setData.push(e);
+                          }
+                        });
+                        dispatch(changeAlarmState());
+                        dispatch(changeAlarmClickState(0));
+                        dispatch(changeAlarmApiDataState(setData));
+                        if (menuFriendClickCheck) {
+                          dispatch(changeMenuFriendState());
+                        }
+                        if (menuFriendChatClickCheck) {
+                          dispatch(changeMenuFriendChatState(false));
+                        }
+                      })
+                    }
+                  })
+                } else {
+                  const checkFrom_id: number[] = [];
+                  const setData: (number | string)[] = [];
+                  const data: (number | string)[] = r.data.data;
+                  data.forEach((e: any) => {
+                    if (checkFrom_id.includes(e.from_id) !== true) {
+                      checkFrom_id.push(e.from_id);
+                      setData.push(e);
+                    }
+                  });
+                  dispatch(changeAlarmState());
+                  dispatch(changeAlarmClickState(0));
+                  dispatch(changeAlarmApiDataState(setData));
+                  if (menuFriendClickCheck) {
+                    dispatch(changeMenuFriendState());
                   }
-                });
-                dispatch(changeAlarmState());
-                dispatch(changeAlarmClickState(0));
-                dispatch(changeAlarmApiDataState(setData));
-                if (menuFriendClickCheck) {
-                  dispatch(changeMenuFriendState());
-                }
-                if (menuFriendChatClickCheck) {
-                  dispatch(changeMenuFriendChatState(false));
+                  if (menuFriendChatClickCheck) {
+                    dispatch(changeMenuFriendChatState(false));
+                  }
                 }
               });
             }}

@@ -130,6 +130,10 @@ const WebRTC = ({
   useEffect(() => {
     propSocket(socket);
     getUsersProfile();
+    // userCount.current = 1
+    return () => {
+      userCount.current = 1
+    }
   }, []);
 
   // 카메라들 가져오는 함수
@@ -359,7 +363,7 @@ const WebRTC = ({
       // peerFace.current[lastIndex].classList.toggle("hidden");
       
       // 정보 다시 한번 받아옴
-      getUsersProfile();
+      // getUsersProfile();
       console.log("==============>방 탈출!!!");
       console.log(id);
 
@@ -562,7 +566,7 @@ const WebRTC = ({
     // } catch (error) {
     //   console.log("포차 참여유저 데이터 axios error", error);
     // }
-
+    console.log(userCount.current, "사람수 몇명이냐@@@@@@???");
     if (userCount.current === 1) {
       div3.current!.classList.add("hidden");
       peerFace2.current!.classList.add("hidden");

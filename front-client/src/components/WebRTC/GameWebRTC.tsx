@@ -143,6 +143,10 @@ const WebRTC = ({
   useEffect(() => {
     propSocket(socket);
     getUsersProfile();
+    // userCount.current = 1
+    return () => {
+      userCount.current = 1
+    }
   }, []);
 
   const getCameras = async () => {
@@ -798,7 +802,7 @@ const WebRTC = ({
 
             <div
               ref={transitionDiv}
-              className="flex justify-center items-center min-w-fit w-[47vw] overflow-hidden mt-5 border-2 border-blue-400 rounded-[20px] transition-all duration-1000 opacity-0"
+              className="flex justify-center items-center min-w-fit w-[47vw] overflow-hidden mt-5 rounded-[20px] transition-all duration-1000 opacity-0"
             >
               {/* {pochaUsers && <LadderIntro socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>} */}
               {isGameSelect && <GameSelect socket={socket} pochaId={pochaId} />}
