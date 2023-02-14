@@ -114,12 +114,10 @@ const WebRTC = ({
   async function videoOn(videoElement: any, introduceElement: any) {
     let time = new Date(pochaInfo.createAt);
     time.setHours(time.getHours() + 9);
-    time.setSeconds(time.getSeconds() + 40);
+    time.setSeconds(time.getSeconds() + 60);
     const waitEnd = time.getTime();
 
     const now = new Date().getTime();
-    console.log("videoOn 함수---------");
-    console.log(waitEnd, now);
 
     if (waitEnd <= now) {
       videoElement.current!.style.display = "block";
@@ -376,7 +374,7 @@ const WebRTC = ({
       socket.emit("offer", offer, socketId, roomName, {
         username: user.username,
         nickname: user.nickname,
-        introduce: user.introduce,
+        introduce: localStorage.getItem("myIntroduce"),
       });
     });
 
