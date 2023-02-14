@@ -10,7 +10,8 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const username = localStorage.getItem('Username')
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   const alarmClickState = useAppSelector((state:any)=> {return state.alarmClickState})
   console.log('포차번호',pocha_id, '초대번호',invite_id );
   
@@ -32,7 +33,10 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                   .then(()=> {
                     axios({
                       method:'get',
-                      url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`
+                      url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+                      headers: {
+                        accessToken: `${accessToken}`,
+                      },
                     })
                     .then((r)=> {
                       dispatch(changeAlarmApiDataState(r.data.data))
@@ -43,7 +47,10 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
               } else if (alarmClickState === 1) {
                 axios({
                   method: 'post',
-                  url: `https://i8e201.p.ssafy.io/api/pocha/invite/accept/${invite_id}/${pocha_id}`
+                  url: `https://i8e201.p.ssafy.io/api/pocha/invite/accept/${invite_id}/${pocha_id}`,
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  },
                 })
                 .then((r)=> {
                   console.log('초대 승인해따', r.data.data);
@@ -53,7 +60,10 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                     // 다시 데이터 갱신시켜주기
                     axios({
                       method:'get',
-                      url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`
+                      url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
+                      headers: {
+                        accessToken: `${accessToken}`,
+                      },
                     })
                     .then((r)=> {
                       // 포차Id에 따른 중복제거 후 데이터 보내기
@@ -98,7 +108,10 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                                 isHost: false,
                                 pochaId: pochaId,
                                 username: username,
-                              }
+                              },
+                              headers: {
+                                accessToken: `${accessToken}`,
+                              },
                             }).then(()=> {
                               if (themeId === 'T0') {
                                 navigate(`/storyroom/${pochaId}`);
@@ -122,12 +135,18 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
               if (alarmClickState === 0) {
                 axios({
                   method: 'delete',
-                  url: `https://i8e201.p.ssafy.io/api/user/friend/refuse/${f_request_id}`
+                  url: `https://i8e201.p.ssafy.io/api/user/friend/refuse/${f_request_id}`,
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  },
                 })
                 .then(()=> {
                   axios({
                     method:'get',
-                    url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`
+                    url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
                   })
                   .then((r)=> {
                     dispatch(changeAlarmApiDataState(r.data.data))
@@ -137,12 +156,18 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
               } else if (alarmClickState === 1) {
                 axios({
                   method: 'delete',
-                  url: `https://i8e201.p.ssafy.io/api/pocha/invite/refuse/${invite_id}`
+                  url: `https://i8e201.p.ssafy.io/api/pocha/invite/refuse/${invite_id}`,
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  },
                 })
                 .then((r)=> {
                   axios({
                     method:'get',
-                    url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`
+                    url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
                   })
                   .then((r)=> {
                     dispatch(changeAlarmClickState(1))

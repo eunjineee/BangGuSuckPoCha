@@ -8,7 +8,8 @@ const RoomUserFriendDeleteModal = ({ userData }: { userData: any }) => {
   const clickUserId:number = userData.data.userId
   let dispatch = useAppDispatch();
   const { nickname } = userData.data;
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 친구신청 하는 함수
   const removeFriend = async () => {
     const username = localStorage.getItem('Username')
@@ -19,6 +20,9 @@ const RoomUserFriendDeleteModal = ({ userData }: { userData: any }) => {
         data: {
           username: username,
           you_id: clickUserId,
+        },
+        headers: {
+          accessToken: `${accessToken}`,
         },
       });
       

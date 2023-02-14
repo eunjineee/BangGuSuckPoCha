@@ -16,7 +16,8 @@ function NavbarMenu(): JSX.Element {
   let dispatch = useAppDispatch();
   // username (현재는 내꺼)
   const username = localStorage.getItem("Username");
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   const menuIcon = useRef<any>(null);
   // 메뉴 클릭 상태
   const checkMenuState: any = useAppSelector((state: any) => {
@@ -75,6 +76,9 @@ function NavbarMenu(): JSX.Element {
             axios({
               method: "get",
               url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             }).then((r) => {
               // console.log("내정보 : ", r.data.data);
               dispatch(changeMyInfo(r.data.data));
@@ -98,6 +102,9 @@ function NavbarMenu(): JSX.Element {
             axios({
               method: "get",
               url: `https://i8e201.p.ssafy.io/api/user/friend/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             }).then((r) => {
               console.log('친구 리스트 조회: ',r.data.data)
               const friendDataList:any[] = r.data.data
@@ -134,6 +141,9 @@ function NavbarMenu(): JSX.Element {
             axios({
               method: "put",
               url: `https://i8e201.p.ssafy.io/api/user/logout/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             }).then((r) => {
               const result = r.data.message;
               if ("success") {

@@ -13,7 +13,8 @@ function FriendChat():JSX.Element {
     return state.menuFriendChatClickCheck
   })
 
-  
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 채팅구역
   const chatArea = useRef<any>(null) 
   const client = useRef<any>({});
@@ -38,7 +39,13 @@ function FriendChat():JSX.Element {
   
   useEffect(()=> {
     const chat_id = localStorage.getItem('chat_id')
-    axios.get(`https://i8e201.p.ssafy.io/api/user/friend/chat/${chat_id}`).then((r)=> {
+    axios({
+      method:'get',
+      url:`https://i8e201.p.ssafy.io/api/user/friend/chat/${chat_id}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r)=> {
       setMessage(r.data.data)
       setTimeout(() => {
         scrollToBottom()

@@ -18,7 +18,8 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
   // 메뉴 클릭시
   const dispatch = useAppDispatch();
   const [modalData, setModalData] = useState<any>(null);
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 친구 검색
   const [searchFriend,setSearchFriend] = useState<any>()
   
@@ -46,6 +47,9 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/friend/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     }).then((r) => {
       // console.log('친구 리스트 조회: ',r.data.data)
       const friendDataList:any[] = r.data.data
@@ -73,6 +77,9 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
     axios({
       method: 'get',
       url: `https://i8e201.p.ssafy.io/api/user/info/${f_username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     })
     .then((r)=> {
       console.log('넣어따', r.data)
@@ -88,6 +95,9 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
       axios({
         method: 'get',
         url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${searchFriend}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       }).then((r:any)=> {
         // console.log('요청한 친구: ',r.data.data)
         setMyFriends(r.data.data)
@@ -131,7 +141,10 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
       // 배프 요청
       axios({
         method: 'put',
-        url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${e.you_id}`
+        url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${e.you_id}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       })
       .then((r)=> {
         // console.log('베프니? ',checkBestFriend)

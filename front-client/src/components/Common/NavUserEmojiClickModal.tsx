@@ -13,6 +13,8 @@ import RoomUserFriendModal from "./RoomUserFriendModal";
 const NavUserEmojiClickModal = ({ userData }: { userData: any }) => {
   // console.log('클릭한 유저데이터 닉네임: ',userData.data.profile)
   let dispatch = useAppDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   const username = localStorage.getItem('Username')
   let { manner, gender, birth, region, comment } = userData.data;
   console.log('이거는 매너입니다: ', manner);
@@ -48,6 +50,9 @@ const NavUserEmojiClickModal = ({ userData }: { userData: any }) => {
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/friend/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     }).then((r) => {
       console.log('친구 리스트 조회: ',r.data.data)
       const friendDataList:any[] = r.data.data
@@ -75,7 +80,10 @@ const NavUserEmojiClickModal = ({ userData }: { userData: any }) => {
       params: {
         f_nickname: nickname,
         username: username
-      }
+      },
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     })
     .then((r)=> {
       if (r.data.data.length === 0) {

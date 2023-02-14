@@ -18,6 +18,8 @@ const PublicModal = ({
   console.log("여기까지는 오니??ㅇㅇ", data);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 내 아이디
   const myName = localStorage.getItem("Username");
   const bgDiv = useRef<HTMLDivElement>(null);
@@ -38,7 +40,8 @@ const PublicModal = ({
   const api = axios.create({
     baseURL: "https://i8e201.p.ssafy.io/api",
     headers: {
-      "Content-Type": "application/json;charset=utf-8",      
+      "Content-Type": "application/json;charset=utf-8",
+      accessToken: `${accessToken}`,
     },
   });
 
@@ -127,6 +130,9 @@ const PublicModal = ({
           fromUsername: myName,
           pochaId: roomName,
           youId: toUsername,
+        },
+        headers: {
+          accessToken: `${accessToken}`,
         },
       });
       toast.success(`${nickname}님에게 초대요청을 보냈습니다`);
