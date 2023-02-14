@@ -30,8 +30,8 @@ function Tag(): JSX.Element {
   const createThemeRoomCheck: number = useAppSelector((state) => {
     return state.createThemeRoomCheck;
   });
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  let accessToken = localStorage.getItem("accessToken");
+  let refreshToken = localStorage.getItem("refreshToken");
   // 유저 정보(연령, 지역)조사
   useEffect(()=> {
     
@@ -44,27 +44,54 @@ function Tag(): JSX.Element {
     })
     .then((r:any)=> {
       console.log(r.data)
+      // 실패시
       if (r.data.status === '401') {
         axios({
           method: 'get',
           url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
           headers: {
             refreshToken: `${refreshToken}`,
-            accessToken: `${accessToken}`
           }
+          
         }).then((r)=> {
-          console.log('55번줄 e: ', r.data);
+          // 엑세스 토큰 추가
+          if (r.data.status === '403') {
+            localStorage.clear();
+            toast.error('인증되지 않은 유저입니다')
+            navigate('/')
+          } else {
+            // accessToken= r.data.accessToken;
+            localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+            axios({
+              method: 'get',
+              url:`https://i8e201.p.ssafy.io/api/user/info/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              }
+            }).then((r)=> {
+              const now = new Date()
+              const nowYear = now.getFullYear()
+              // 연령 파악
+              let myAge:(number|string) = nowYear-Number(r.data.data.birth?.slice(0,4))
+              // 지역 파악
+              let myRegion = r.data.data.region.split(' ')[0]
+              myAge = String(Math.floor(myAge/10)*10)+'대'
+              setAgeRegion({age:myAge, region:myRegion})
+            })
+          }
         })
+      } else {
+        // 만료가 안됐을 경우
+        const now = new Date()
+        const nowYear = now.getFullYear()
+        // 연령 파악
+        let myAge:(number|string) = nowYear-Number(r.data.data.birth?.slice(0,4))
+        // 지역 파악
+        let myRegion = r.data.data.region.split(' ')[0]
+        myAge = String(Math.floor(myAge/10)*10)+'대'
+        setAgeRegion({age:myAge, region:myRegion})
       }
-      
-      const now = new Date()
-      const nowYear = now.getFullYear()
-      // 연령 파악
-      let myAge:(number|string) = nowYear-Number(r.data.data.birth?.slice(0,4))
-      // 지역 파악
-      let myRegion = r.data.data.region.split(' ')[0]
-      myAge = String(Math.floor(myAge/10)*10)+'대'
-      setAgeRegion({age:myAge, region:myRegion})
     })
   },[])
   
@@ -95,51 +122,81 @@ function Tag(): JSX.Element {
           accessToken: `${accessToken}`,
         },
       }).then((r)=> {
-        if (filter.speedEnter) {
-          const roomData:any[] = r.data.data
-          const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
-            return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
-          })
-          // 입장 가능한 방을 랜덤으로 하나 골라서 
-          const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
-          // 입장 요청
-          const username = localStorage.getItem('Username')
-          console.log('픽한 방: ', randomPickRoom)
-          const themeId = randomPickRoom.themeId
-          const pochaId = randomPickRoom.pochaId
-          console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+        // 요청 실패했을 경우
+        if (r.data.state === '401') {
           axios({
-            method: 'post',
-            url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
-            data: {
-              // 초대 받은거를 승인하는거라 false
-              isHost: 'false',
-              pochaId: pochaId,
-              username: username
-              },
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
             headers: {
-              accessToken: `${accessToken}`,
-            },
-            })
-            .then((r)=> {
-              console.log('113번줄 tag 데이터값 : ',r.data);
-              
-              console.log('슬라이싱값: ',themeId.slice(0,2))
-              if (themeId.slice(0,2) === 'T0') {
-                console.log('소통방입장')
-                navigate(`/storyroom/${pochaId}`)
-              } else if (themeId.slice(0,2) === 'T1') {
-                console.log('게임방입장')
-                navigate(`/gameroom/${pochaId}`)
-              }
-            }).catch((e)=> {
-              console.log(e);
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            if (r.data.status === '403') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+              axios({
+                method:'get',
+                url: 'https://i8e201.p.ssafy.io/api/pocha/all',
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
+              }).then((r)=> {
+                // 재요청 후 필터가 ALL이며 빠른 입장일 경우
+                if (filter.speedEnter) {
+                  const roomData:any[] = r.data.data
+                  const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
+                    return ((data.age === 0 || data.age === ageRegion.age) && (data.region === '전국' || data.region === ageRegion.region) && (data.themeId !== "T2B0") && (data.isPrivate === false) && (data.limitUser>data.totalCount))
+                  })
+                  // 입장 가능한 방을 랜덤으로 하나 골라서 
+                  const randomPickRoom:any = enterPossibleRoomList[Math.floor(Math.random()*enterPossibleRoomList.length)]
+                  // 입장 요청
+                  const username = localStorage.getItem('Username')
+                  console.log('픽한 방: ', randomPickRoom)
+                  const themeId = randomPickRoom.themeId
+                  const pochaId = randomPickRoom.pochaId
+                  console.log('==============','username:', username, 'pochaId: ', pochaId, 'themeId: ', themeId)
+                  axios({
+                    method: 'post',
+                    url: 'https://i8e201.p.ssafy.io/api/pocha/enter',
+                    data: {
+                      // 초대 받은거를 승인하는거라 false
+                      isHost: 'false',
+                      pochaId: pochaId,
+                      username: username
+                      },
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
+                    })
+                    .then((r)=> {
+                      console.log('113번줄 tag 데이터값 : ',r.data);
+                      
+                      console.log('슬라이싱값: ',themeId.slice(0,2))
+                      if (themeId.slice(0,2) === 'T0') {
+                        console.log('소통방입장')
+                        navigate(`/storyroom/${pochaId}`)
+                      } else if (themeId.slice(0,2) === 'T1') {
+                        console.log('게임방입장')
+                        navigate(`/gameroom/${pochaId}`)
+                      }
+                    }).catch((e)=> {
+                      console.log(e);
+                  })
+                } else {
+                  // const currenDataFirst = r.data.data.reverse()
+                  const currenDataFirst = r.data.data
+                  console.log(r.data)
+                  dispatch(changeMainCreateRoomList(currenDataFirst));
+                }
+              })
+            }
           })
         } else {
-          // const currenDataFirst = r.data.data.reverse()
-          const currenDataFirst = r.data.data
-          console.log(r.data)
-          dispatch(changeMainCreateRoomList(currenDataFirst));
+          // 요청 실패하지 않았을 때
         }
       }) 
     } else {
