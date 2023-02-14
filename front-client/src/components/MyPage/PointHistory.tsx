@@ -18,9 +18,13 @@ const PointHistory = () => {
   });
 
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/point/${Username}`,
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       console.log(r.data.data);
       setHistory(r.data.data);
@@ -29,6 +33,9 @@ const PointHistory = () => {
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/myinfo/${Username}`,
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       console.log(r.data.data);
       setMyInfo(r.data.data);
@@ -88,8 +95,7 @@ const PointHistory = () => {
                             <div className="flex flex-row justify-between w-[90%] h-[100px] bg-white rounded-2xl border-2">
                               <div className="flex flex-col pt-5 w-[30%] text-center h-full">
                                 <div className="font-bold text-[20px] text-black">
-                                  {it.content ===
-                                  "출석체크" ? (
+                                  {it.content === "출석체크" ? (
                                     <>출석체크</>
                                   ) : it.content.split("-")[0] === "썰 변경" ? (
                                     <>썰변경</>
