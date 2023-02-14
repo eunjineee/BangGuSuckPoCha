@@ -133,7 +133,7 @@ function CallIntro({
   },[titles])
   
   const titlechoice = () => {
-    for (var i = 0; i < pochaInfo.totalCount ; i++) {
+    for (var i = 0; i < 6 ; i++) {
       if (titles){
         var newnum = Math.floor(Math.random()* (titles.length))
         nowtitle.push(titles[newnum]);
