@@ -121,7 +121,7 @@ function Tag(): JSX.Element {
             })
 
         } else {
-          const currenDataFirst = r.data.data.reverse()
+          const currenDataFirst = r.data.data
           console.log(r.data)
           dispatch(changeMainCreateRoomList(currenDataFirst));
         }
