@@ -17,9 +17,8 @@
   font-size: 0.95rem;
 }
 
-
 .tagBtn {
-  border: solid 1px #FFCC66;
+  border: solid 1px #FFEE58;
   box-shadow: 0 0 5px #a97000,
               0 0 10px #c78400;
   transition: all 0.4s;
@@ -41,7 +40,7 @@
 
 .tagSelect:focus {
   color: #272727;
-  background-color: #FFCC66;
+  background-color: #FFEE58;
 }
 
 .tagFixed {

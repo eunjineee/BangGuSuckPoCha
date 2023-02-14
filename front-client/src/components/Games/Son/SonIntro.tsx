@@ -3,22 +3,39 @@ import { useState, useEffect } from "react";
 import SonMenual from "./SonMenual";
 import SonPlay from "./SonPlay";
 import axios from "axios";
+import SonResult from "./SonResult";
 
 function SonIntro({
   socket,
   pochaId,
-  pochaUsers,
 }: {
   socket: any;
   pochaId: string;
-  pochaUsers: any;
 }): React.ReactElement {
   // 방 이름
   const roomName = pochaId;
   // 메뉴얼 클릭
   const [signal, setSignal] = useState<string>("INTRO");
+  const [resultData, setResultData] = useState<any>(null);
+  // 포차 정보
+  const [pochaInfo, setPochaInfo] = useState<any>(null);
+  // 포차 유저 정보
+  const [pochaUsers, setPochaUsers] = useState<any>(null);
 
-  const [pochaInfo, setPochaInfo] = useState<any>(null)
+
+  // 포차 유저 정보 요청
+  const getPochaUsers = async () => {
+    try {
+      const {data: {data}} = await axios({
+        method: "GET",
+        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`
+      })
+      console.log("포차유저정보왔냐",data)
+      setPochaUsers(data);
+    } catch(error) {
+      console.log("손병호intro", error);
+    }
+  } 
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
@@ -27,7 +44,7 @@ function SonIntro({
         method: "GET",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
       })
-      console.log("포차정보 데이터 잘 오냐!? SON",data);
+      console.log("포차정보 데이터 잘 오냐!? SON에서",data);
       setPochaInfo(data);
     } catch(error) {
       console.log("Son게임에서 포차정보 에러", error);
@@ -35,11 +52,14 @@ function SonIntro({
   }
 
   useEffect(() => {
+    getPochaUsers();
     // 손병호 게임 시그널받기
-    socket.on("game_son_signal", (signalData: string) => {
+    socket.on("game_son_signal", (signalData: string, data: any) => {
+      console.log("끝나는 시그널?", signalData);
       getPochaInfo();
       setTimeout(() => {
         setSignal(signalData);
+        setResultData(data);
       }, 1000);
     });
     return () => {
@@ -61,9 +81,10 @@ function SonIntro({
 
   return (
     <>
-      {signal === "PLAY" ? (
+      {signal === "PLAY" &&  pochaUsers ? (
         <SonPlay socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} />
       ) : null}
+      {signal === "RESULT" ? <SonResult socket={socket} pochaId={pochaId} resultData={resultData}/> : null}
       {signal === "MENUAL" ? (
         <SonMenual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} />
       ) : null}

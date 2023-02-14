@@ -38,7 +38,7 @@ const UpdateChangeStoryAndGame = ({
     setShowModal(false);
   };
 
-  const roomTitle = "포차정보수정";
+  const roomTitle = "포차변경";
   // 후에 내 지역과 내 나이 세팅해야함
   const regionOption = ["지역", "전국", "부산광역시"];
   const ageOption = ["나이", "ALL", "20대"];
@@ -177,7 +177,7 @@ const UpdateChangeStoryAndGame = ({
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
         data: {
           age: createRoomChoiceAge,
-          isPrivate: false,
+          isPrivate: pochaInfo.isPrivate,
           limitUser: createRoomChoicePeople,
           region: createRoomChoiceRegion,
           tagList: choiceTagList,
@@ -185,7 +185,7 @@ const UpdateChangeStoryAndGame = ({
         },
       });
       console.log("포차정보수정????", updateInfo);
-      socket.emit("pocha_change", pochaId);
+      socket.emit("pocha_change", pochaId, true);
     } catch (error) {
       console.log("포차정보수정", error);
     }

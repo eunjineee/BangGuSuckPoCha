@@ -463,6 +463,7 @@ const NewMyPage = () => {
                               }).then((r) => {
                                 toast.success("수정에 성공하셨습니다");
                                 // navigate("/main");
+                                window.location.reload();
                               });
                             }}
                           >

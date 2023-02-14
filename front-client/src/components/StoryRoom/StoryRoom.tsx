@@ -25,7 +25,9 @@ function StoryRoom(): JSX.Element {
   const [isHost, setIsHost] = useState<boolean>(false);
   // 친구 요청 검색 모달
   const friendSearchState = useAppSelector((state)=> {return  state.friendSearchState})
-  console.log("pochaInfo", pochaInfo);
+  // console.log("pochaInfo", pochaInfo);
+
+  
 
   const navAlarmReviewEmojiUserData: any = useAppSelector((state: any) => {
     return state.navAlarmReviewEmojiUserData;
@@ -33,6 +35,7 @@ function StoryRoom(): JSX.Element {
   const RoomUserProfileClickCheck: any = useAppSelector((state: any) => {
     return state.RoomUserProfileClickCheck;
   });
+
 
   const propSocket = (socket: any) => {
     setSocket(socket);
@@ -63,7 +66,7 @@ function StoryRoom(): JSX.Element {
           break;
         case "T1B0":
           navigate(`/gameroom/${PochaId}`);
-          toast.success("포차 설정이 변경되었습니다");
+          // toast.success("포차 설정이 변경되었습니다");
           break;
       }
       setIsLoading(false);
@@ -74,9 +77,13 @@ function StoryRoom(): JSX.Element {
 
   useEffect(() => {
     getPochaInfo();
+
   }, []);
 
 
+  // console.log('네브 알람 리뷰 이모지 정보: ',navAlarmReviewEmojiUserData);
+  // console.log('방 유저 프로필 클릭 체크: ',RoomUserProfileClickCheck);
+  
   return (
     <>
       {isLoading ? (
@@ -94,6 +101,7 @@ function StoryRoom(): JSX.Element {
           {RoomUserProfileClickCheck ? (
             <NavUserEmojiClickModal userData={navAlarmReviewEmojiUserData} />
           ) : null}
+
           {/* 화면 및 게임 공간 */}
           <div className="min-h-[90vh]">
             <WebRTC

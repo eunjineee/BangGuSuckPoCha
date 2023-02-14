@@ -153,7 +153,15 @@ public class PochaServiceImpl implements PochaService{
     @Override
     public void pochaEnter(PochaParticipantRequestDto requestDto) {
         Pocha pocha = pochaRepository.findByPochaId(requestDto.getPochaId());
+
+        // 만약, 나가지 않았다면 추가하지 않음.
         User user = userRepository.findByUsername(requestDto.getUsername());
+        for(Participant p : pocha.getParticipant()){
+            if(p.getUser().getUserId() == user.getUserId() && p.getExitAt() == null){
+                return;
+            }
+        }
+
         Participant participant = Participant.builder()
                 .pocha(pocha)
                 .user(user)

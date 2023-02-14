@@ -6,6 +6,10 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  balanceChange,
+  balanceQuestionChange,
+  changeNavAlarmReviewEmojiUserData,
+  isRomanNormalChange,
   isRtcLoading,
   selectGame,
   showGameSelectModal,
@@ -16,10 +20,13 @@ import {
 import Loading from "../Common/Loading";
 import RoomUserProfile from "../Common/RoomUserProfile";
 import Balance from "../Games/Balance/Balance";
+import CallIntro from "../Games/CallMyName/CallIntro";
 import GameSelect from "../Games/GameSelect/GameSelect";
 import LadderIntro from "../Games/Ladder/LadderIntro";
+import LiarIntro from "../Games/Liar/LiarIntro";
 import Roulette from "../Games/Roulette/Roulette";
 import SonIntro from "../Games/Son/SonIntro";
+import TwentyIntro from "../Games/Twenty/TwentyIntro";
 // webRTC관련
 const socket = io("https://pocha.online");
 
@@ -58,6 +65,14 @@ const WebRTC = ({
   const peerFace4 = useRef<any>(null);
   const peerFace5 = useRef<any>(null);
 
+  // useRef 배열
+  const div1 = useRef<HTMLDivElement>(null);
+  const div2 = useRef<HTMLDivElement>(null);
+  const div3 = useRef<HTMLDivElement>(null);
+  const div4 = useRef<HTMLDivElement>(null);
+  const div5 = useRef<HTMLDivElement>(null);
+  const div6 = useRef<HTMLDivElement>(null);
+  
   const myStream = useRef<any>(null);
   // let myStream: any;
   const roomName: any = pochaId;
@@ -179,6 +194,7 @@ const WebRTC = ({
       }
       console.log("마이스트림 오냐?", myStream.current);
       myFace.current!.srcObject = myStream.current;
+      myFace.current!.volume = 0;
       if (!deviceId) {
         await getCameras();
       }
@@ -405,7 +421,7 @@ const WebRTC = ({
     });
 
     socket.on("room_full", () => {
-      toast.info("풀방입니다");
+      toast.info("인원이 가득찬 포차입니다");
       navigate(`/main`);
     });
 
@@ -421,7 +437,7 @@ const WebRTC = ({
   }, []);
 
   // ------------ 포차 기능 code --------------
-
+  const [jjanImg, setJjanImg] = useState<any>(require("src/assets/theme/jjan1.png"));
   //  axios
   // const api = axios.create({
   //   baseURL: "https://i8e201.p.ssafy.io/api",
@@ -433,18 +449,20 @@ const WebRTC = ({
   const jjan = () => {
     let time: number = 3;
     setCount(String(time));
+    setJjanImg(require("src/assets/theme/jjan1.png"));
     const interval = setInterval(() => {
       time -= 1;
       setCount(String(time));
     }, 1000);
     setTimeout(() => {
       clearInterval(interval);
+      setJjanImg(require("src/assets/theme/jjan2.png"));
       setCount("짠!!!!");
-    }, 3900);
+    }, 3000);
     setTimeout(() => {
       setCount("");
       dispatch(showPublicModal(false));
-    }, 5000);
+    }, 4000);
   };
 
   useEffect(() => {
@@ -453,7 +471,8 @@ const WebRTC = ({
       console.log("포차 설정 변경!----------------------");
       // 방 설정 다시 불러오기!!! 테스트
       getPochaInfo();
-      window.location.reload();
+      toast.success("포차 설정이 변경되었습니다");
+      // window.location.reload();
       // toast.success("포차 정보가 변경되었습니다");
       // await pocha_config_update("3");
     });
@@ -526,21 +545,68 @@ const WebRTC = ({
 
     console.log("사람수ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ", indexData);
 
+    // if (userCount.current === 1) {
+    //   peerFace1.current.srcObject = stream;
+    //   peerFace1.current.id = username;
+    // } else if (userCount.current === 2) {
+    //   peerFace2.current.srcObject = stream;
+    //   peerFace2.current.id = username;
+    // } else if (userCount.current === 3) {
+    //   peerFace3.current.srcObject = stream;
+    //   peerFace3.current.id = username;
+    // } else if (userCount.current === 4) {
+    //   peerFace4.current.srcObject = stream;
+    //   peerFace4.current.id = username;
+    // } else if (userCount.current === 5) {
+    //   peerFace5.current.srcObject = stream;
+    //   peerFace5.current.id = username;
+    // }
     if (userCount.current === 1) {
-      peerFace1.current.srcObject = stream;
-      peerFace1.current.id = username;
+      div3.current!.classList.add("hidden");
+      peerFace2.current!.classList.add("hidden");
+      peerFace1.current!.srcObject = stream;
+      peerFace1.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace1.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 2) {
-      peerFace2.current.srcObject = stream;
-      peerFace2.current.id = username;
+      div3.current!.classList.remove("hidden");
+      peerFace2.current!.classList.remove("hidden");
+      div4.current!.classList.add("hidden");
+      peerFace3.current!.classList.add("hidden");
+      peerFace2.current!.srcObject = stream;
+      peerFace2.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace2.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 3) {
-      peerFace3.current.srcObject = stream;
-      peerFace3.current.id = username;
+      div4.current!.classList.remove("hidden");
+      peerFace3.current!.classList.remove("hidden");
+      div5.current!.classList.add("hidden");
+      peerFace4.current!.classList.add("hidden");
+      peerFace3.current!.srcObject = stream;
+      peerFace3.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace3.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 4) {
-      peerFace4.current.srcObject = stream;
-      peerFace4.current.id = username;
+      div5.current!.classList.remove("hidden");
+      peerFace4.current!.classList.remove("hidden");
+      div6.current!.classList.add("hidden");
+      peerFace5.current!.classList.add("hidden");
+      peerFace4.current!.srcObject = stream;
+      peerFace4.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace4.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 5) {
-      peerFace5.current.srcObject = stream;
-      peerFace5.current.id = username;
+      div6.current!.classList.remove("hidden");
+      peerFace5.current!.classList.remove("hidden");
+      peerFace5.current!.srcObject = stream;
+      peerFace5.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace5.current!.classList.add("border-8")
+      // }
     }
 
     userCount.current += 1;
@@ -555,9 +621,10 @@ const WebRTC = ({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
       });
       console.log("모달용 데이터?", data);
-      setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
+      dispatch(changeNavAlarmReviewEmojiUserData(data))
       dispatch(showRoomUserProfile());
+      // setUserProfileData(data);
+      // dispatch(isRtcLoading(false));
     }
   };
   // ---------------- 게임 관련 --------------------
@@ -606,12 +673,45 @@ const WebRTC = ({
       }, 1000);
     });
 
+    // 스무고개 시그널 받기
+    socket.on("game_twenty_signal", (signalData) => {
+      transitionDiv.current!.classList.add("opacity-0");
+      console.log("twenty : 시그널 gameWebRTC에서 받았냐?", signalData);
+      setTimeout(() => {
+        transitionDiv.current!.classList.remove("opacity-0");
+      }, 1000);
+    });
+
+    // 밸런스 게임 시그널받기
+    socket.on("game_balance_Intro", (isBalance) => {
+      console.log("WebRTC에서 roomName에서 받았나?", isBalance);
+      dispatch(balanceChange(isBalance))
+    });
+
+    // 밸런스 게임 시그널받기
+    socket.on("game_balance_typeChange", (choiceType) => {
+      if (choiceType === 'EXIT') {
+        dispatch(isRomanNormalChange(null))
+      } else {
+        dispatch(isRomanNormalChange(choiceType))
+      }
+      console.log("choiceType?", choiceType);
+    });
+
+    // 밸런스 게임 테마별 질문 변경
+    socket.on("game_balance_subjectChange", (themeDataList) => {
+      dispatch(balanceQuestionChange(themeDataList))
+    });
+
     return () => {
       socket.off("game_select");
       socket.off("game_back_select");
       socket.off("game_son_signal");
+      socket.off("game_twenty_signal");
     };
   }, []);
+
+  
 
   // 게임 선택창 상태
   const isGameSelect = useAppSelector((state) => {
@@ -636,36 +736,37 @@ const WebRTC = ({
               socket={socket}
             />
           )}
-          {count && (
-            <div className="bg-orange-500 bg-opacity-30 flex justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
-              <div className="text-7xl font-bold text-white">{count}</div>
+          {count ? (
+            <div className=" bg-black bg-opacity-70 flex flex-col justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
+              <img src={jjanImg} alt="jjan" />
+              <div className="text-7xl font-bold text-white fixed top-28 z-30">{count}</div>
             </div>
-          )}
-          <div className="text-white w-full min-h-[85vh] flex justify-center">
-            <div className="flex flex-col justify-evenly items-center">
+          ) : null}
+          <div className="text-white w-full min-h-[85vh] flex justify-evenly">
+            <div className="flex flex-col justify-evenly items-center ">
               {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
               {/* 내 비디오 공간 */}
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div ref={div1} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
-                  className="h-[17rem]"
+                  className="object-fill"
                   ref={myFace}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div ref={div3} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace2}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div ref={div5} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace4}
                   playsInline
                   autoPlay
@@ -694,7 +795,6 @@ const WebRTC = ({
                     <SonIntro
                       socket={socket}
                       pochaId={pochaId}
-                      pochaUsers={pochaUsers}
                     />
                   )
                 : null}
@@ -706,42 +806,59 @@ const WebRTC = ({
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}
-              {selectedId === "ladder"
+                : null}   
+              {selectedId === "liar"
                 ? pochaUsers && (
-                    <LadderIntro
+                    <LiarIntro
                       socket={socket}
                       pochaId={pochaId}
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}
+                : null}   
+              {selectedId === "call"
+                ? pochaUsers && (
+                    <CallIntro
+                      socket={socket}
+                      pochaId={pochaId}
+                      pochaUsers={pochaUsers}
+                    />
+                  )
+                : null}   
+              {selectedId === "twenty"
+                ? pochaUsers && (
+                    <TwentyIntro
+                      socket={socket}
+                      pochaId={pochaId}
+                    />
+                  )
+                : null}  
             </div>
 
             {/* 사람 공간 */}
             <div className="flex flex-col justify-evenly items-center">
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div ref={div2} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace1}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div ref={div4} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace3}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div ref={div6} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace5}
                   playsInline
                   autoPlay
