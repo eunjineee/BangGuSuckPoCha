@@ -185,7 +185,7 @@ const UpdateChangeStoryAndGame = ({
         },
       });
       console.log("포차정보수정????", updateInfo);
-      socket.emit("pocha_change", pochaId);
+      socket.emit("pocha_change", pochaId, true);
     } catch (error) {
       console.log("포차정보수정", error);
     }
