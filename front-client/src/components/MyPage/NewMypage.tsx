@@ -141,15 +141,11 @@ const NewMyPage = () => {
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
-          data: {
-            accessToken: accessToken,
+          headers: {
             refreshToken: refreshToken,
           },
-          headers: {
-            accessToken: accessToken,
-          },
-        }).then((r) => {          
-          console.log("해치웠나?",r.data);
+        }).then((r) => {
+          console.log("해치웠나?", r.data);
         });
       }
 
