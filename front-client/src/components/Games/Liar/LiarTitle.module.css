@@ -1,0 +1,215 @@
+.titlespan{
+  position: absolute;
+  width: 651px;
+  height: 100px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 73px;
+  text-align: center;
+
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img1{
+  z-index: 10;
+  position: absolute;
+  margin-top: 210px;
+  /* bottom: 0; */
+  /* margin-right: 20px; */
+}
+
+.img2{
+  z-index: 10;
+  position: absolute;
+  margin-top: 310px;
+  margin-left: 350px;
+}
+
+input.txt {
+  width:80px;
+}
+
+.box {
+  width: 54rem;
+  margin: 0 auto;
+  height: 48.9rem;
+  background-color: #000000;
+  /* border: solid 10px red; */
+  border-radius: 1rem;
+}
+
+.box2 {
+  position: absolute;
+  width: 652px;
+  height: 92px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 85px;
+  text-align: center;
+
+  color: #FFA149;
+
+  text-shadow: 0px 0px 30px #FF0000;
+}
+
+.box3 {
+/* 손가락 접기 */
+  /* position: absolute; */
+  width: 130px;
+  height: 36px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  -webkit-text-stroke: 1px #FFA149;
+  text-shadow: 0px 0px 30px #FF0000;
+  /* border: solid 2px #FF0000; */
+}
+
+.box4 {
+  height: 36px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  -webkit-text-stroke: 1px #FFA149;
+  text-shadow: 0px 0px 30px #FF0000;
+  /* border: solid 2px #FF0000; */
+}
+
+.layout {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+} 
+
+.layout2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+} 
+
+.layout3 {
+  display: flex;
+  justify-content: center;
+} 
+
+.layout4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 755px;
+  height: 100px;
+  border-radius: 0.7rem;
+  border: 1px solid #FFD098;
+  box-shadow: 0px 0px 30px #FFD687;
+  margin-top: 50px;
+
+  /* 주제 */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+} 
+
+.layout5 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 200px;
+  margin-left: 0px;
+} 
+
+.layout6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+} 
+
+.retry{
+  box-sizing: border-box;
+  border-radius: 0.3rem;
+  margin: 0 20px;
+  margin-top: -10px;
+
+  width: 207px;
+  height: 78px;
+
+  background: #131313;
+  box-shadow: 0px 0px 20px #FFA0A0;
+
+  /* PLAY */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  border: 1px solid #FFD098;
+  text-shadow: 0px 0px 15px #FF0000;
+  cursor: pointer;
+}
+
+.retry:hover{
+  color: #FFA149;
+
+  border: 1px solid #FFD098;
+  text-shadow: 0px 0px 15px #FF0000;
+  cursor: pointer;
+}
+
+.button {
+  border: solid 1px #fff;
+}
+
+.text1{
+  width: 512px;
+
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 35px;
+
+
+  text-align: center;
+
+  color: #FFFFFF;
+  display : flex;
+
+  justify-content : center;
+
+  margin-top: 90px;
+}

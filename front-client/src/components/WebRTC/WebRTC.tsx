@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  changeNavAlarmReviewEmojiUserData,
   isRtcLoading,
   showPublicModal,
   showRoomUserProfile,
@@ -46,6 +47,12 @@ const WebRTC = ({
   // const [updateCheck, setUpdateCheck] = useState<boolean>(false);
   // const currentUsers = useRef<any>([1]);
   // useRef 배열
+  const div1 = useRef<HTMLDivElement>(null);
+  const div2 = useRef<HTMLDivElement>(null);
+  const div3 = useRef<HTMLDivElement>(null);
+  const div4 = useRef<HTMLDivElement>(null);
+  const div5 = useRef<HTMLDivElement>(null);
+  const div6 = useRef<HTMLDivElement>(null);
   // const peerFace = useRef<any>([]);
   const peerFace1 = useRef<HTMLVideoElement>(null);
   const peerFace2 = useRef<HTMLVideoElement>(null);
@@ -63,6 +70,9 @@ const WebRTC = ({
 
   // 방장 체크
   const [isHost, setIsHost] = useState<boolean>(false);
+  // useEffect(() => {
+  //   console.log("방ㅈㅈㅈㅈㅈㅈㅈ장 맞습니까?", isHost);
+  // }, [isHost])
 
   // webRTC Loading 상태 가져옴
   const isLoading = useAppSelector((state) => {
@@ -231,7 +241,7 @@ const WebRTC = ({
     // event : React.FormEvent<HTMLFormElement>
     // event.preventDefault();
     await getMedia();
-    console.log("@@@@@@@@@@@@@@@@", userData);
+    // console.log("@@@@@@@@@@@@@@@@", userData);
     socket.emit("join_room", {
       roomName,
       username: userData.username,
@@ -245,17 +255,17 @@ const WebRTC = ({
   // Socket Code
   useEffect(() => {
     socket.on("users_of_room", async (users) => {
-      console.log("--------------------");
+      // console.log("--------------------");
       await users.forEach((user: any) => {
         console.log(user);
         myPeerConnections.current[user.id] = {
           username: user.username,
           nickname: user.nickname,
         };
-        console.log(
-          "방 입장--------------",
-          myPeerConnections.current[user.id]
-        );
+        // console.log(
+        //   "방 입장--------------",
+        //   myPeerConnections.current[user.id]
+        // );
       });
     });
 
@@ -343,7 +353,9 @@ const WebRTC = ({
       // const lastIndex = userCount.current - 2;
       // const lastIndex = userCount - 2
       // peerFace.current[lastIndex].classList.toggle("hidden");
-
+      
+      // 정보 다시 한번 받아옴
+      getUsersProfile();
       console.log("==============>방 탈출!!!");
       console.log(id);
 
@@ -371,7 +383,6 @@ const WebRTC = ({
         );
       }
 
-      console.log(userCount + "==================");
       let temp = userCount.current;
       // let temp = userCount;
       if (temp < 6) {
@@ -401,7 +412,7 @@ const WebRTC = ({
     });
 
     socket.on("room_full", () => {
-      toast.info("풀방입니다");
+      toast.info("인원이 가득찬 포차입니다");
       navigate(`/main`);
     });
 
@@ -419,6 +430,9 @@ const WebRTC = ({
   // ------------ 포차 기능 code --------------
   const ssulTitle = useRef<HTMLDivElement>(null);
   const [ssul, setSsul] = useState<string>("");
+  const [jjanImg, setJjanImg] = useState<any>(
+    require("src/assets/theme/jjan1.png")
+  );
 
   // //  axios
   // const api = axios.create({
@@ -432,18 +446,20 @@ const WebRTC = ({
   const jjan = () => {
     let time: number = 3;
     setCount(String(time));
+    setJjanImg(require("src/assets/theme/jjan1.png"));
     const interval = setInterval(() => {
       time -= 1;
       setCount(String(time));
     }, 1000);
     setTimeout(() => {
       clearInterval(interval);
+      setJjanImg(require("src/assets/theme/jjan2.png"));
       setCount("짠!!!!");
-    }, 3900);
+    }, 3000);
     setTimeout(() => {
       setCount("");
       dispatch(showPublicModal(false));
-    }, 5000);
+    }, 4000);
   };
 
   useEffect(() => {
@@ -460,8 +476,7 @@ const WebRTC = ({
       console.log("포차 설정 변경!----------------------");
       // setUpdateCheck((prev) => !prev);
       getPochaInfo();
-      window.location.reload();
-      // toast.success("포차 정보가 변경되었습니다");
+      toast.success("포차 설정이 변경되었습니다");
       // 방 설정 다시 불러오기!!! 테스트
       // await pocha_config_update("3");
     });
@@ -487,7 +502,7 @@ const WebRTC = ({
         navigate(`/main`);
         window.location.reload();
       }
-    })
+    });
     return () => {
       socket.off("pocha_change");
       socket.off("pocha_extension");
@@ -495,7 +510,6 @@ const WebRTC = ({
       socket.off("ban");
     };
   }, []);
-
 
   // ------------- RTC Code --------------
   function makeConnection() {
@@ -528,59 +542,91 @@ const WebRTC = ({
   }
 
   // addStream 이벤트시 실행 함수
-  function handleAddStream(stream: any, username: string, nickname: string) {
+  async function handleAddStream(stream: any, username: string, nickname: string) {
     console.log("handleAddStream---------------------", username);
-    const indexData = userCount.current;
-    // const indexData = userCount;
-    // peerFace.current[indexData - 1].classList.toggle("hidden");
-    // peerFace.current[indexData - 1].srcObject = stream;
-    console.log("사람수ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ", indexData);
+
+    // filter로 username의 정보 가져옴
+    // let peerInfo = null;
+    // try {
+    //   const {
+    //     data: { data },
+    //   } = await axios({
+    //     url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+    //   });
+      
+    //   peerInfo = data.filter((user:any) => user.username === username)[0];
+    // } catch (error) {
+    //   console.log("포차 참여유저 데이터 axios error", error);
+    // }
 
     if (userCount.current === 1) {
+      div3.current!.classList.add("hidden");
       peerFace2.current!.classList.add("hidden");
       peerFace1.current!.srcObject = stream;
       peerFace1.current!.id = username;
-      console.log("비디오 아이디 유저네임1", username);
+      // if(peerInfo.isHost){
+      //   peerFace1.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 2) {
+      div3.current!.classList.remove("hidden");
       peerFace2.current!.classList.remove("hidden");
+      div4.current!.classList.add("hidden");
       peerFace3.current!.classList.add("hidden");
       peerFace2.current!.srcObject = stream;
       peerFace2.current!.id = username;
-      console.log("비디오 아이디 유저네임2", username);
+      // if(peerInfo.isHost){
+      //   peerFace2.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 3) {
+      div4.current!.classList.remove("hidden");
       peerFace3.current!.classList.remove("hidden");
+      div5.current!.classList.add("hidden");
       peerFace4.current!.classList.add("hidden");
       peerFace3.current!.srcObject = stream;
       peerFace3.current!.id = username;
-      console.log("비디오 아이디 유저네임3", username);
+      // if(peerInfo.isHost){
+      //   peerFace3.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 4) {
+      div5.current!.classList.remove("hidden");
       peerFace4.current!.classList.remove("hidden");
+      div6.current!.classList.add("hidden");
       peerFace5.current!.classList.add("hidden");
       peerFace4.current!.srcObject = stream;
       peerFace4.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace4.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 5) {
+      div6.current!.classList.remove("hidden");
       peerFace5.current!.classList.remove("hidden");
       peerFace5.current!.srcObject = stream;
       peerFace5.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace5.current!.classList.add("border-8")
+      // }
     }
     userCount.current += 1;
   }
 
   // 유저들 프로파일 모달 띄우기
   const ShowUserProfile = async (event: React.MouseEvent<any>) => {
-    if(userCount.current >= 2) {
+    if (userCount.current >= 2) {
       const username = event.currentTarget.id;
-  
+      console.log("여긴 이벤트: ", event);
+
       // console.log("모달용 데이터 닉?", username);
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
       });
       console.log("모달용 데이터?", data);
-      setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
+      dispatch(changeNavAlarmReviewEmojiUserData(data));
       dispatch(showRoomUserProfile());
+      // setUserProfileData(data);
+      // dispatch(isRtcLoading(false));
     }
   };
+  
 
   return (
     <>
@@ -596,60 +642,78 @@ const WebRTC = ({
               socket={socket}
             />
           )}
-          {count && (
-            <div className="bg-orange-500 bg-opacity-30 flex justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
-              <div className="text-7xl font-bold text-white">{count}</div>
+          {/* 여기가 짠 나타나는곳 */}
+          {count ? (
+            <div className=" bg-black bg-opacity-70 flex flex-col justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
+              <img src={jjanImg} alt="jjan" />
+              <div className="text-7xl font-bold text-white fixed top-28 z-30">
+                {count}
+              </div>
             </div>
-          )}
+          ) : null}
           <div className="text-white w-full min-h-[85vh]">
-            <span
-              className="font-bold text-3xl fixed left-0 right-0 top-10"
-              ref={ssulTitle}
-            >{`:: ${ssul} ::`}</span>
+            {ssul && (
+              <span
+                className="font-bold text-3xl fixed left-0 right-0 top-10"
+                ref={ssulTitle}
+              >{`💬${ssul}`}</span>
+            )}
             <div className="flex flex-wrap justify-evenly items-center p-24 min-h-[85vh]">
               {/* 내 비디오 공간 */}
-              <video
-                className="w-[30rem] h-80 py-3"
-                ref={myFace}
-                playsInline
-                autoPlay
-              ></video>
+              <div ref={div1} className="rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3">
+                <video
+                  className="object-fill"
+                  ref={myFace}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
               {/* 다른 사람들 비디오 공간 */}
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer"
-                ref={peerFace1}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer hidden"
-                ref={peerFace2}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer hidden"
-                ref={peerFace3}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer hidden"
-                ref={peerFace4}
-                playsInline
-                autoPlay
-              ></video>
-              <video
-                onClick={ShowUserProfile}
-                className="w-[30rem] h-80 py-3 cursor-pointer hidden"
-                ref={peerFace5}
-                playsInline
-                autoPlay
-              ></video>
+              <div ref={div2} className={userCount.current >= 2 ? "rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3" : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"}>
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer"
+                  ref={peerFace1}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div3} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace2}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div4} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace3}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div5} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace4}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div ref={div6} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3">
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace5}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
             </div>
             <div className="flex justify-center items-center ">
               <div className="flex w-fit">

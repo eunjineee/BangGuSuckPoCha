@@ -15,6 +15,8 @@ const NavUserEmojiClickModal = ({ userData }: { userData: any }) => {
   let dispatch = useAppDispatch();
   const username = localStorage.getItem('Username')
   let { manner, gender, birth, region, comment } = userData.data;
+  console.log('이거는 매너입니다: ', manner);
+  
   const { nickname } = userData.data;
   // 백그라운드 div
   const bgDiv = useRef<any>();

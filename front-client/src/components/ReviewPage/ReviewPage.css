@@ -41,3 +41,18 @@
     font-weight: 800;
   }
 }
+
+.reviewClick {
+  transition: all 0.7s;
+  border-bottom: groove 4px #6185EE;
+  color: #6185EE;
+  font-weight: bold;
+  opacity: 1;
+}
+.reviewdefault {
+  transition: all 0.7s;
+  border-bottom: groove 4px #FFFFFF;
+  color: #FFFFFF;
+  opacity: 0.5;
+}
+

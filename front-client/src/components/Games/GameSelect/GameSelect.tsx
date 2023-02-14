@@ -14,7 +14,7 @@ function GameSelect({
   const roomName = pochaId;
   // 이미지들 잡자
   const balance = useRef<HTMLImageElement>(null);
-  const ladder = useRef<HTMLImageElement>(null);
+  const twenty = useRef<HTMLImageElement>(null);
   const son = useRef<HTMLImageElement>(null);
   const yang = useRef<HTMLImageElement>(null);
   const liar = useRef<HTMLImageElement>(null);
@@ -22,7 +22,7 @@ function GameSelect({
   // 이미지들 리스트
   const [imgLists, setImgLists] = useState<any[]>([
     balance,
-    ladder,
+    twenty,
     son,
     yang,
     liar,
@@ -51,7 +51,7 @@ function GameSelect({
   };
 
   useEffect(() => {
-    setImgLists([balance, ladder, son, yang, liar, roul]);
+    setImgLists([balance, twenty, son, yang, liar, roul]);
 
     // 게임 버튼 호버할때
     socket.on("game_btn_hover", (elementId: string) => {
@@ -109,8 +109,8 @@ function GameSelect({
             onMouseLeave={goWebRTC}
             className={`transition-all duration-300 rounded-lg cursor-pointer`}
             src={require("src/assets/game_select/yang.png")}
-            alt="yang"
-            id="yang"
+            alt="call"
+            id="call"
             ref={yang}
           />
         </div>
@@ -120,10 +120,10 @@ function GameSelect({
             onMouseOver={goWebRTC}
             onMouseLeave={goWebRTC}
             className={`transition-all duration-300 rounded-lg cursor-pointer`}
-            src={require("src/assets/game_select/ladder.png")}
-            alt="ladder"
-            id="ladder"
-            ref={ladder}
+            src={require("src/assets/game_select/twenty.png")}
+            alt="twenty"
+            id="twenty"
+            ref={twenty}
           />
           <img
             onClick={selectGame}

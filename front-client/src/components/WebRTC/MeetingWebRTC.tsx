@@ -5,7 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
-import { isRtcLoading, showRoomUserProfile } from "../../store/store";
+import {
+  changeNavAlarmReviewEmojiUserData,
+  isRtcLoading,
+  showRoomUserProfile,
+} from "../../store/store";
 import Loading from "../Common/Loading";
 import RoomUserProfile from "../Common/RoomUserProfile";
 import LadderIntro from "../Games/Ladder/LadderIntro";
@@ -14,11 +18,13 @@ const WebRTC = ({
   pochaId,
   socket,
   propIsHost,
+  pochaInfo,
   getPochaInfo,
 }: {
   pochaId: string;
   socket: any;
   propIsHost: Function;
+  pochaInfo: any;
   getPochaInfo: Function;
 }) => {
   const dispatch = useAppDispatch();
@@ -28,6 +34,7 @@ const WebRTC = ({
   // const socket = io("https://pocha.online");
   // 나의 비디오 ref
   const myFace = useRef<HTMLVideoElement>(null);
+  const myIntroduce = useRef<HTMLDivElement>(null);
   const myHeart = useRef<HTMLDivElement>(null);
   // 음소거 버튼
   const muteBtn = useRef<HTMLButtonElement>(null);
@@ -46,9 +53,14 @@ const WebRTC = ({
     // peerHeart4: 0,
     // peerHeart5: 0,
   });
-  const [heartUser, setHeartUser] = useState<any>({
-    myHeart: myUserName,
+  const [peerUser, setPeerUser] = useState<any>({
+    my: myUserName,
   });
+  // 자기소개 정보
+  const [introduceInfo, setIntroduceInfo] = useState<any>({});
+
+  //비디오 시작
+  const [videoOnTime, setVideoOnTime] = useState<any>(null);
   // 사람수 체크 리스트(카메라 생성용);
   // const currentUsers = useRef<number[]>([1, 2, 3, 4, 5]);
   // const currentUsers = useRef<any>([1]);
@@ -66,6 +78,12 @@ const WebRTC = ({
   const peerHeart4 = useRef<any>(null);
   const peerHeart5 = useRef<any>(null);
 
+  const peerIntroduce1 = useRef<HTMLDivElement>(null);
+  const peerIntroduce2 = useRef<HTMLDivElement>(null);
+  const peerIntroduce3 = useRef<HTMLDivElement>(null);
+  const peerIntroduce4 = useRef<HTMLDivElement>(null);
+  const peerIntroduce5 = useRef<HTMLDivElement>(null);
+
   const myStream = useRef<any>(null);
 
   // let myStream: any;
@@ -79,9 +97,7 @@ const WebRTC = ({
   const [isHost, setIsHost] = useState<boolean>(false);
 
   // webRTC Loading 상태 가져옴
-  const isLoading = useAppSelector((state) => {
-    return state.webRtcLoading;
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 유저들 프로파일 모달 상태 가져옴
   const isRoomUserProfile = useAppSelector((state) => {
@@ -93,6 +109,28 @@ const WebRTC = ({
 
   // 요청한 포차참여 유저들 데이터
   // const [pochaUsers, setPochaUsers] = useState<any>(null);
+
+  // 비디오, 자기소개 보여주기
+  async function videoOn(videoElement: any, introduceElement: any) {
+    let time = new Date(pochaInfo.createAt);
+    time.setHours(time.getHours() + 9);
+    time.setSeconds(time.getSeconds() + 60);
+    const waitEnd = time.getTime();
+
+    const now = new Date().getTime();
+
+    if (waitEnd <= now) {
+      videoElement.current!.style.display = "block";
+      introduceElement.current!.style.display = "none";
+    } else {
+      videoElement.current!.style.display = "none";
+      introduceElement.current!.style.display = "block";
+      setTimeout(() => {
+        videoElement.current!.style.display = "block";
+        introduceElement.current!.style.display = "none";
+      }, waitEnd - now);
+    }
+  }
 
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfile() {
@@ -130,7 +168,15 @@ const WebRTC = ({
   // 최초실행
   useEffect(() => {
     //propSocket(socket);
+    setIsLoading(false);
     getUsersProfile();
+    setVideoOnTime(() => {
+      let waitEnd = new Date(pochaInfo.createAt);
+      waitEnd.setHours(waitEnd.getHours() + 9);
+      waitEnd.setSeconds(waitEnd.getSeconds() + 20);
+
+      return waitEnd.getTime();
+    });
   }, []);
 
   const getCameras = async () => {
@@ -193,6 +239,7 @@ const WebRTC = ({
         "value",
         myUserName == null ? "" : myUserName
       );
+      videoOn(myFace, myIntroduce);
       if (!deviceId) {
         await getCameras();
       }
@@ -249,13 +296,20 @@ const WebRTC = ({
     await getMedia();
     console.log("@@@@@@@@@@@@@@@@", userData);
     setHeartInfo((hearts: any) => {
-      hearts[heartUser.myHeart] = 0;
-      return hearts;
+      hearts[peerUser.my] = 0;
+      return { ...hearts };
+    });
+    setIntroduceInfo((prev: any) => {
+      const locaIntroduce = localStorage.getItem("myIntroduce");
+      const introduce = locaIntroduce ? locaIntroduce : "[]";
+      prev[peerUser.my] = JSON.parse(introduce);
+      return { ...prev };
     });
     socket.emit("join_room", {
       roomName,
       username: userData.username,
       nickname: userData.nickname,
+      introduce: localStorage.getItem("myIntroduce"),
     });
     // roomName = welcomeInput.current?.value;
     // welcomeInput.current!.value = "";
@@ -289,6 +343,10 @@ const WebRTC = ({
         username: user.username,
         nickname: user.nickname,
       };
+      myPeerConnections.current[socketId].introduce = JSON.parse(
+        user.introduce
+      );
+
       console.log(
         "환영!!!!----------------------------",
         myPeerConnections.current[socketId]
@@ -308,18 +366,23 @@ const WebRTC = ({
       handleAddStream(
         peerStream,
         myPeerConnections.current[socketId].username,
-        myPeerConnections.current[socketId].nickname
+        myPeerConnections.current[socketId].nickname,
+        myPeerConnections.current[socketId].introduce
       );
       console.log("sent the offer");
 
       socket.emit("offer", offer, socketId, roomName, {
         username: user.username,
         nickname: user.nickname,
+        introduce: localStorage.getItem("myIntroduce"),
       });
     });
 
     socket.on("offer", async (offer: any, socketId: any, userInfo: any) => {
       console.log("received the offer");
+      myPeerConnections.current[socketId]["introduce"] = JSON.parse(
+        userInfo.introduce
+      );
       myPeerConnections.current[socketId]["peer"] = makeConnection();
       myPeerConnections.current[socketId]["peer"].setRemoteDescription(offer);
       const answer = await myPeerConnections.current[socketId][
@@ -336,7 +399,8 @@ const WebRTC = ({
       handleAddStream(
         peerStream,
         myPeerConnections.current[socketId].username,
-        myPeerConnections.current[socketId].nickname
+        myPeerConnections.current[socketId].nickname,
+        myPeerConnections.current[socketId].introduce
       );
 
       socket.emit("answer", answer, socketId, roomName);
@@ -365,7 +429,7 @@ const WebRTC = ({
         delete prev[deleteUsername];
         return { ...prev };
       });
-      setHeartUser({ myHeart: myUserName });
+      setPeerUser({ my: myUserName });
 
       delete myPeerConnections.current[id];
       // 사람수 - 2 해야 마지막인덱스값
@@ -396,7 +460,8 @@ const WebRTC = ({
         handleAddStream(
           peerStream,
           myPeerConnections.current[socketID].username,
-          myPeerConnections.current[socketID].nickname
+          myPeerConnections.current[socketID].nickname,
+          myPeerConnections.current[socketID].introduce
         );
       }
 
@@ -523,7 +588,12 @@ const WebRTC = ({
   }
 
   // addStream 이벤트시 실행 함수
-  function handleAddStream(stream: any, username: string, nickname: string) {
+  function handleAddStream(
+    stream: any,
+    username: string,
+    nickname: string,
+    introduce: any
+  ) {
     console.log("handleAddStream---------------------");
     const indexData = userCount.current;
     // const indexData = userCount;
@@ -538,50 +608,59 @@ const WebRTC = ({
     //   peerFace.current[2].srcObject = data.stream;
     // }
     setHeartInfo((hearts: any) => {
-      hearts[username] = 0;
+      hearts[username] = hearts[username] ? hearts[username] : 0;
       return { ...hearts };
     });
+    setIntroduceInfo((prev: any) => {
+      prev[username] = prev[username] ? prev[username] : introduce;
+      return { ...prev };
+    });
+
     if (userCount.current === 1) {
       peerFace1.current.srcObject = stream;
       peerFace1.current.id = username;
-      setHeartUser((prev: any) => {
-        prev.peerHeart1 = username;
-        return prev;
+      setPeerUser((prev: any) => {
+        return { ...prev, peer1: username };
       });
       peerHeart1.current.setAttribute("value", username);
       peerHeart1.current.style.display = "block";
+      videoOn(peerFace1, peerIntroduce1);
     } else if (userCount.current === 2) {
       peerFace2.current.srcObject = stream;
       peerFace2.current.id = username;
-      setHeartUser((prev: any) => {
-        return { ...prev, peerHeart2: username };
+      setPeerUser((prev: any) => {
+        return { ...prev, peer2: username };
       });
       peerHeart2.current.setAttribute("value", username);
       peerHeart2.current.style.display = "block";
+      videoOn(peerFace2, peerIntroduce2);
     } else if (userCount.current === 3) {
       peerFace3.current.srcObject = stream;
       peerFace3.current.id = username;
-      setHeartUser((prev: any) => {
-        return { ...prev, peerHeart3: username };
+      setPeerUser((prev: any) => {
+        return { ...prev, peer3: username };
       });
       peerHeart3.current.setAttribute("value", username);
       peerHeart3.current.style.display = "block";
+      videoOn(peerFace3, peerIntroduce3);
     } else if (userCount.current === 4) {
       peerFace4.current.srcObject = stream;
       peerFace4.current.id = username;
-      setHeartUser((prev: any) => {
-        return { ...prev, peerHeart4: username };
+      setPeerUser((prev: any) => {
+        return { ...prev, peer4: username };
       });
       peerHeart4.current.setAttribute("value", username);
       peerHeart4.current.style.display = "block";
+      videoOn(peerFace4, peerIntroduce4);
     } else if (userCount.current === 5) {
       peerFace5.current.srcObject = stream;
       peerFace5.current.id = username;
-      setHeartUser((prev: any) => {
-        return { ...prev, peerHeart5: username };
+      setPeerUser((prev: any) => {
+        return { ...prev, peer5: username };
       });
       peerHeart5.current.setAttribute("value", username);
       peerHeart5.current.style.display = "block";
+      videoOn(peerFace5, peerIntroduce5);
     }
 
     // console.log("여기 오ㅗㅗㅗㅗㅗㅗㅗㅗㅗ냐?", userCount.current);
@@ -602,26 +681,16 @@ const WebRTC = ({
       url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
     });
     console.log("모달용 데이터?", data);
-    setUserProfileData(data);
-    // dispatch(isRtcLoading(false));
+    dispatch(changeNavAlarmReviewEmojiUserData(data));
     dispatch(showRoomUserProfile());
+    // setUserProfileData(data);
+    // dispatch(isRtcLoading(false));
   };
 
   // 하트 시그널 클릭
   const addHeart = (event: any) => {
     const targetUser = event.target.getAttribute("value");
     socket.emit("add_heart", { roomName, targetUser });
-  };
-
-  // 하트 시그널 증가
-  const tempHeart = (event: any) => {
-    setHeartInfo((hearts: any) => {
-      const targetUser = event.target.getAttribute("value");
-      console.log(hearts);
-      hearts[targetUser] = hearts[targetUser] + 1;
-      console.log(hearts);
-      return { ...hearts };
-    });
   };
 
   return (
@@ -638,131 +707,174 @@ const WebRTC = ({
               socket={socket}
             />
           )}
-          <div className="text-white w-full min-h-[85vh] flex justify-center">
-            <div className="flex flex-col justify-evenly items-center">
-              {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
-              {/* 내 비디오 공간 */}
-              <video
-                className=" h-[17rem] py-3"
-                ref={myFace}
-                playsInline
-                autoPlay
-              ></video>
-              <div ref={myHeart}>💖 x {heartInfo[heartUser.myHeart]}</div>
-              <video
-                onClick={ShowUserProfile}
-                className=" h-[17rem] py-3 cursor-pointer"
-                ref={peerFace2}
-                playsInline
-                autoPlay
-              ></video>
-              <div
-                ref={peerHeart2}
-                className="cursor-pointer"
-                onClick={addHeart}
-                style={{ display: "none" }}
-              >
-                💖 x {heartInfo[heartUser.peerHeart2]}
-              </div>
-              <video
-                onClick={ShowUserProfile}
-                className=" h-[17rem] py-3 cursor-pointer"
-                ref={peerFace4}
-                playsInline
-                autoPlay
-              ></video>
-              <div
-                ref={peerHeart4}
-                className="cursor-pointer"
-                onClick={addHeart}
-                style={{ display: "none" }}
-              >
-                💖 x {heartInfo[heartUser.peerHeart4]}
-              </div>
-            </div>
-            {/* 게임 공간 */}
+          {pochaInfo && videoOnTime && (
+            <>
+              <div className="text-white w-full min-h-[85vh] flex justify-center">
+                <div className="flex flex-col justify-evenly items-center">
+                  {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
+                  {/* 내 비디오 공간 */}
+                  <video
+                    className=" h-[17rem] py-3"
+                    ref={myFace}
+                    playsInline
+                    autoPlay
+                  ></video>
+                  <div ref={myIntroduce} className="border-2 h-[17rem] py-3">
+                    {introduceInfo[peerUser.my]}
+                  </div>
+                  <div ref={myHeart}>💖 x {heartInfo[peerUser.my]}</div>
+                  <video
+                    onClick={ShowUserProfile}
+                    className=" h-[17rem] py-3 cursor-pointer"
+                    style={{ display: "none" }}
+                    ref={peerFace2}
+                    playsInline
+                    autoPlay
+                  ></video>
+                  <div
+                    ref={peerIntroduce2}
+                    className="border-2 h-[17rem] py-3"
+                    style={{ display: "none" }}
+                  >
+                    {introduceInfo[peerUser.peer2]}
+                  </div>
+                  <div
+                    ref={peerHeart2}
+                    className="cursor-pointer"
+                    onClick={addHeart}
+                    style={{ display: "none" }}
+                  >
+                    💖 x {heartInfo[peerUser.peer2]}
+                  </div>
+                  <video
+                    onClick={ShowUserProfile}
+                    className=" h-[17rem] py-3 cursor-pointer"
+                    ref={peerFace4}
+                    playsInline
+                    autoPlay
+                  ></video>
+                  <div
+                    ref={peerIntroduce4}
+                    className="border-2 h-[17rem] py-3"
+                    style={{ display: "none" }}
+                  >
+                    {introduceInfo[peerUser.peer4]}
+                  </div>
+                  <div
+                    ref={peerHeart4}
+                    className="cursor-pointer"
+                    onClick={addHeart}
+                    style={{ display: "none" }}
+                  >
+                    💖 x {heartInfo[peerUser.peer4]}
+                  </div>
+                </div>
+                {/* 게임 공간 */}
 
-            <div className="flex justify-center min-w-fit w-[48vw] items-center border-2 border-blue-400 rounded-[20px]">
-              {/* <LadderIntro /> */}
-            </div>
+                <div className="flex justify-center min-w-fit w-[48vw] items-center border-2 border-blue-400 rounded-[20px]">
+                  {/* <LadderIntro /> */}
+                </div>
 
-            {/* 사람 공간 */}
-            <div className="flex flex-col justify-evenly items-center">
-              <video
-                onClick={ShowUserProfile}
-                className=" h-[17rem] py-3 cursor-pointer"
-                ref={peerFace1}
-                playsInline
-                autoPlay
-              ></video>
-              <div
-                ref={peerHeart1}
-                className="cursor-pointer"
-                onClick={addHeart}
-                style={{ display: "none" }}
-              >
-                💖 x {heartInfo[heartUser.peerHeart1]}
+                {/* 사람 공간 */}
+                <div className="flex flex-col justify-evenly items-center">
+                  <video
+                    onClick={ShowUserProfile}
+                    className=" h-[17rem] py-3 cursor-pointer"
+                    ref={peerFace1}
+                    playsInline
+                    autoPlay
+                  ></video>
+                  <div
+                    ref={peerIntroduce1}
+                    className="border-2 h-[17rem] py-3"
+                    style={{ display: "none" }}
+                  >
+                    {introduceInfo[peerUser.peer1]}
+                  </div>
+                  <div
+                    ref={peerHeart1}
+                    className="cursor-pointer"
+                    onClick={addHeart}
+                    style={{ display: "none" }}
+                  >
+                    💖 x {heartInfo[peerUser.peer1]}
+                  </div>
+                  <video
+                    onClick={ShowUserProfile}
+                    className=" h-[17rem] py-3 cursor-pointer"
+                    ref={peerFace3}
+                    playsInline
+                    autoPlay
+                  ></video>
+                  <div
+                    ref={peerIntroduce3}
+                    className="border-2 h-[17rem] py-3"
+                    style={{ display: "none" }}
+                  >
+                    {introduceInfo[peerUser.peer3]}
+                  </div>
+                  <div
+                    ref={peerHeart3}
+                    className="cursor-pointer"
+                    onClick={addHeart}
+                    style={{ display: "none" }}
+                  >
+                    💖 x {heartInfo[peerUser.peer3]}
+                  </div>
+                  <video
+                    onClick={ShowUserProfile}
+                    className=" h-[17rem] py-3 cursor-pointer"
+                    ref={peerFace5}
+                    playsInline
+                    autoPlay
+                  ></video>
+                  <div
+                    ref={peerIntroduce5}
+                    className="border-2 h-[17rem] py-3"
+                    style={{ display: "none" }}
+                  >
+                    {introduceInfo[peerUser.peer5]}
+                  </div>
+                  <div
+                    ref={peerHeart5}
+                    className="cursor-pointer"
+                    onClick={addHeart}
+                    style={{ display: "none" }}
+                  >
+                    💖 x {heartInfo[peerUser.peer5]}
+                  </div>
+                </div>
               </div>
-              <video
-                onClick={ShowUserProfile}
-                className=" h-[17rem] py-3 cursor-pointer"
-                ref={peerFace3}
-                playsInline
-                autoPlay
-              ></video>
-              <div
-                ref={peerHeart3}
-                className="cursor-pointer"
-                onClick={addHeart}
-                style={{ display: "none" }}
-              >
-                💖 x {heartInfo[heartUser.peerHeart3]}
+              <div className="flex justify-center items-center ">
+                <div className="flex w-fit text-white">
+                  {/* 뮤트 */}
+                  <button
+                    className="border-2 px-3"
+                    onClick={handleMuteClick}
+                    ref={muteBtn}
+                  >
+                    🔊
+                  </button>
+                  {/* 카메라 */}
+                  <button
+                    className="border-2 px-3"
+                    onClick={handleCameraClick}
+                    ref={cameraBtn}
+                  >
+                    Camera Off
+                  </button>
+                  {/* 카메라 옵션 */}
+                  <select
+                    className="text-black"
+                    onInput={handleCameraChange}
+                    ref={cameraSelect}
+                  >
+                    {optionList}
+                  </select>
+                </div>
               </div>
-              <video
-                onClick={ShowUserProfile}
-                className=" h-[17rem] py-3 cursor-pointer"
-                ref={peerFace5}
-                playsInline
-                autoPlay
-              ></video>
-              <div
-                ref={peerHeart5}
-                className="cursor-pointer"
-                onClick={addHeart}
-                style={{ display: "none" }}
-              >
-                💖 x {heartInfo[heartUser.peerHeart5]}
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center items-center ">
-            <div className="flex w-fit text-white">
-              {/* 뮤트 */}
-              <button
-                className="border-2 px-3"
-                onClick={handleMuteClick}
-                ref={muteBtn}
-              >
-                🔊
-              </button>
-              {/* 카메라 */}
-              <button
-                className="border-2 px-3"
-                onClick={handleCameraClick}
-                ref={cameraBtn}
-              >
-                Camera Off
-              </button>
-              {/* 카메라 옵션 */}
-              <select
-                className="text-black"
-                onInput={handleCameraChange}
-                ref={cameraSelect}
-              >
-                {optionList}
-              </select>
-            </div>
-          </div>
+            </>
+          )}
         </>
       )}
     </>

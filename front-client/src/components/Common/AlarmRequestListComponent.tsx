@@ -79,7 +79,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                     const themeId = e.themeId.slice(0,2) 
                     const age = e.age
                     const region = e.region
-                    const isPrivate = e.isPrivate
+                    // const isPrivate = e.isPrivate
                     const limitUser = e.limitUser
                     const totalCount = e.totalCount
 
@@ -90,7 +90,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                         // 소통&게임방
                         // 나이,지역,잠금,총인원수 체크
                         if ((age===0 || age===myAge) && (region === '전국' || region === myRegion) 
-                          && (isPrivate === false) && (limitUser > totalCount)) {
+                          && (limitUser > totalCount)) {
                             axios({
                               method: 'post',
                               url: 'https://i8e201.p.ssafy.io/api/pocha/enter',

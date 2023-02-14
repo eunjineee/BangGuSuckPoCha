@@ -20,6 +20,11 @@ function Login(): React.ReactElement {
   const wordFifth = useRef<HTMLDivElement>(null);
   const elements = [wordFourth, wordFifth];
 
+  // 위에서 클릭시
+  const onClickFirstScroll = () => {
+    secondDiv.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
   // 마우스 윌 이벤트 발생시
   const onWheelScroll = (event: any) => {
     // event.preventDefault();
@@ -80,6 +85,7 @@ function Login(): React.ReactElement {
     <div
       ref={scrollDivRef}
       onWheel={onWheelScroll}
+      onClick={onClickFirstScroll}
       className={`${styles.bgImg} ${styles.fontHanSans} w-screen h-screen bg-scroll overflow-y-hidden`}
     >
       <div className="bg-black bg-opacity-50 w-full">

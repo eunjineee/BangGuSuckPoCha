@@ -236,16 +236,17 @@ function Tag(): JSX.Element {
         </div>
       </div>
       <div className="grid w-full min-w-[75rem] h-[40%] pb-5" style={{gridTemplateColumns:'7fr 5fr', backgroundColor: "rgb(25, 25, 25)"}}>
-        <div className="grid items-end w-full h-full text-white" style={{gridTemplateColumns:'2.5rem 0.6fr 1fr 1fr 1fr 1fr 1fr'}}>
+        <div className="grid items-end w-full h-full text-white" style={{gridTemplateColumns:'2.5rem 0.7fr 1fr 1fr 1fr 1fr 1fr'}}>
           <div className="flex justify-center items-center font-normal ml-2 "> &nbsp;&nbsp;&nbsp;&nbsp;</div>
           {/* All */}
           <div className={`flex justify-center items-center font-normal rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn}`}>
-            <select className={`flex justify-center items-center font-bold text-lg border-0 rounded-full ml-auto h-[2rem] w-full cursor-pointer  ${styles.tagSelect}`} onClick={()=> {
+            <select className={`flex text-center justify-center items-center font-bold text-lg border-0 rounded-full ml-auto h-[2rem] w-full cursor-pointer  ${styles.tagSelect}`} onClick={()=> {
                 setFilter((preState:any)=> {
                   return {...preState, isAll:true, age:'연령',region:'지역',theme:'테마',sul:'술',hobby:'태그', speedEnter: false}
                 })
               }}>
-                <option className='text-center' value="전체" selected disabled>전체</option>
+                <option className='text-center' value="전체" selected disabled hidden> 전체 </option>
+                
             </select>
           </div>
           {/* 연령 */}
@@ -320,7 +321,7 @@ function Tag(): JSX.Element {
             </select>
           </div>
         </div>
-        <div className={`fixed flex flex-col justify-end items-end rounded-[1.25rem] bg-[#FFCC66] w-[12rem] h-[7.3rem] bottom-12 right-12 text-xl font-black text-[#5E2F00] ${styles.tagBtn}`}>
+        <div className={`fixed flex flex-col justify-end items-end rounded-[1.25rem] bg-[#FFEE58] w-[12rem] h-[7.3rem] bottom-12 right-12 text-xl font-black text-[#5E2F00] ${styles.tagBtn}`}>
           <div className={`flex justify-center items-center w-[60%] mx-auto h-full `} style={{borderBottom: 'solid 2px white'}} onClick={()=> {
             setFilter((preState:any)=> {
               return {...preState, speedEnter: true}
@@ -337,7 +338,7 @@ function Tag(): JSX.Element {
             }}
             className={`flex justify-center items-center w-[60%] mx-auto h-full cursor-pointer`}
           >
-            <span className={`cursor-pointer ${styles.tagFixed}`}>포차</span>
+            <span className={`cursor-pointer ${styles.tagFixed}`}>포차 생성</span>
           </div>
 
         </div>
