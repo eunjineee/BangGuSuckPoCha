@@ -9,7 +9,7 @@ const SecessionModal = ({ userData }: { userData: any }) => {
   const navigate = useNavigate();
   let dispatch = useAppDispatch();
   console.log(userData);
-
+  const accessToken = localStorage.getItem("accessToken");
   const { nickname, username } = userData;
   // 탈퇴하는 함수
   const SecessionUser = async () => {
@@ -17,6 +17,9 @@ const SecessionModal = ({ userData }: { userData: any }) => {
       const ssecession = await axios({
         method: "DELETE",
         url: `https://i8e201.p.ssafy.io/api/user/${username}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       toast.success(`${nickname}님은 회원탈퇴하였습니다`);
       // console.log("Secession", ssecession);
