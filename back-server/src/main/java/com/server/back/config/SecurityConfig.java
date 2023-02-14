@@ -61,9 +61,9 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                     .antMatchers("**").permitAll()
-//                    .antMatchers("/v3/api-docs","/swagger**/**").permitAll()
-//                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
-//                    .antMatchers("/api/user/oauth2/**").permitAll()
+                    .antMatchers("/v3/api-docs","/swagger**/**").permitAll()
+                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
+                    .antMatchers("/api/user/oauth2/**").permitAll()
 //                    .antMatchers("/api/v1/manager/**").hasAuthority("MANAGER")
 //                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
