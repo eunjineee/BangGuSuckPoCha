@@ -6,12 +6,12 @@ function CallInput({
   socket,
   pochaId,
   pochaUsers,
-  nowtitle,
+  nowtitles,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
-  nowtitle: any;
+  nowtitles: any;
 }): React.ReactElement {
   const roomName = pochaId;
   
@@ -53,7 +53,9 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    if (answer === nowtitle[mynum]){
+    console.log("----------------제출시작------");
+    if (answer === nowtitles[mynum]?.word){
+      console.log("----------------------");
       socket.emit("game_call_pass", roomName, mynum);
     }
   }
@@ -69,6 +71,7 @@ function CallInput({
         if (index === myNum) {
           return score - 1;
         }
+
         return score;
       });
       console.log("새로운배열?", newArray);
@@ -95,6 +98,7 @@ function CallInput({
         result.push(peopleName[index])
       }
     });
+    console.log("여기오냐 결과가기전? 이건 result", result);
     if (result.length === 1) {
       console.log("여기오냐 결과가기전?", peopleScore);
       const signalData = "RESULT";
@@ -113,33 +117,28 @@ function CallInput({
       <div className={`${styles.buttons}`} id="bigbox">
         <div className={`${styles.layout4}`} id = "title0">
           <div className={`${styles.text1}`} id = "people0">{peopleName[0]}</div>
-          <div className={`${styles.text2}`} id = "ptitle0">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass0"></div>
+          <div className={`${styles.text2}`} id = "ptitle0">{nowtitles[0]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass0">{peopleScore[0]? null : "통과"}</div>
         </div>
         <div className={`${styles.layout4}`} id = "title1">
           <div className={`${styles.text1}`} id = "people1">{peopleName[1]}</div>
-          <div className={`${styles.text2}`} id = "ptitle1">Titles[i]</div>
+          <div className={`${styles.text2}`} id = "ptitle1">{nowtitles[1]?.word}</div>
           <div className={`${styles.text3}`} id = "pass1"></div>
         </div>
         <div className={`${styles.layout4}`} id = "title2">
           <div className={`${styles.text1}`} id = "people2">{peopleName[2]}</div>
-          <div className={`${styles.text2}`} id = "ptitle2">Titles[i]</div>
+          <div className={`${styles.text2}`} id = "ptitle2">{nowtitles[2]?.word}</div>
           <div className={`${styles.text3}`} id = "pass2"></div>
         </div>
         <div className={`${styles.layout4}`} id = "title3">
           <div className={`${styles.text1}`} id = "people3">{peopleName[3]}</div>
-          <div className={`${styles.text2}`} id = "ptitle3">Titles[i]</div>
+          <div className={`${styles.text2}`} id = "ptitle3">{nowtitles[3]?.word}</div>
           <div className={`${styles.text3}`} id = "pass3"></div>
         </div>
         <div className={`${styles.layout4}`} id = "title4">
           <div className={`${styles.text1}`} id = "people4">{peopleName[4]}</div>
-          <div className={`${styles.text2}`} id = "ptitle4">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass4"></div>
-        </div>
-        <div className={`${styles.layout4}`} id = "title5">
-          <div className={`${styles.text1}`} id = "people5">{peopleName[5]}</div>
-          <div className={`${styles.text2}`} id = "ptitle5">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass5"></div>
+          <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[4]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass4">{peopleScore[4]? null : "통과"}</div>
         </div>
       </div>
       <div className={`${styles.layout6}`}>
@@ -149,8 +148,13 @@ function CallInput({
           type="text" 
           onChange={(e) => {setAnswer(e.target.value)}}
         />
-          <div className="flex justify-center mr-1 ">
-            <div className={`${styles.button}`} onClick={inputAnswer}>START</div>
+        <div className={`${styles.layout6}`}>
+          <input 
+            type="button" 
+            onClick={inputAnswer} 
+            className={`${styles.retry}`} 
+            value="제출" 
+          />
         </div>
       </div>
     </div>
