@@ -30,7 +30,7 @@ public class SwaggerConfig {
     @Bean
     public Docket pochaApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-//                .host("i8e201.p.ssafy.io")
+                .host("i8e201.p.ssafy.io")
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(apiInfo())
