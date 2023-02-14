@@ -30,6 +30,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const accessToken=localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // 나의 비디오 ref
   const myFace = useRef<HTMLVideoElement>(null);
@@ -98,6 +99,9 @@ const WebRTC = ({
         data: { data },
       } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       const lastIndex = data.length - 1;
       console.log("참여 유저들 데이터?", data);
@@ -618,6 +622,9 @@ const WebRTC = ({
       // console.log("모달용 데이터 닉?", username);
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       console.log("모달용 데이터?", data);
       dispatch(changeNavAlarmReviewEmojiUserData(data));

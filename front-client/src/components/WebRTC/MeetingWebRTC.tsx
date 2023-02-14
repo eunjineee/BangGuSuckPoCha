@@ -29,6 +29,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // webRTC관련
   // const socket = io("https://pocha.online");
@@ -140,6 +141,9 @@ const WebRTC = ({
         data: { data },
       } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       console.log("참여 유저들 데이터?", data);
       // 방장 여부 체크
@@ -679,6 +683,9 @@ const WebRTC = ({
     console.log("모달용 데이터 닉?", username);
     const { data } = await axios({
       url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     });
     console.log("모달용 데이터?", data);
     dispatch(changeNavAlarmReviewEmojiUserData(data));
