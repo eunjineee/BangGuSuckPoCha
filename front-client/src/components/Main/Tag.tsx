@@ -44,6 +44,18 @@ function Tag(): JSX.Element {
     })
     .then((r:any)=> {
       console.log(r.data)
+      if (r.data.status === '401') {
+        axios({
+          method: 'get',
+          url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+          headers: {
+            refreshToken: `${refreshToken}`,
+          }
+        }).then((e)=> {
+          console.log('55번줄 e: ', e.data);
+          
+        })
+      }
       
       const now = new Date()
       const nowYear = now.getFullYear()
@@ -122,7 +134,6 @@ function Tag(): JSX.Element {
               }
             }).catch((e)=> {
               console.log(e);
-              
           })
         } else {
           // const currenDataFirst = r.data.data.reverse()
@@ -130,11 +141,6 @@ function Tag(): JSX.Element {
           console.log(r.data)
           dispatch(changeMainCreateRoomList(currenDataFirst));
         }
-      }).catch((e)=> {
-        console.log('134번줄 :', e);
-        console.log('134번줄 스테이터스 :', e.status);
-        console.log('134번줄 메세지 :', e.message);
-        
       }) 
     } else {
       console.log('현재 클릭한 태그정보: ',filter)
