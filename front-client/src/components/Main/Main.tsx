@@ -22,6 +22,7 @@ import MainCreateRoomCarousel from "./MainCreateRoomCarousel";
 import Tag from "./Tag";
 
 function Main(): JSX.Element {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const [myState, setMyState] = useState<any>({
     age: 0,
@@ -32,11 +33,11 @@ function Main(): JSX.Element {
     return state.mainCreateRoomList;
   });
 
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 메인 페이지 들어올 시 현재 Username에 대한 유저정보 저장
+  const userName = localStorage.getItem("Username");
   useEffect(() => {
-    const userName = localStorage.getItem("Username");
     
     axios({
       method:'get',
@@ -44,8 +45,88 @@ function Main(): JSX.Element {
       headers: {
         accessToken: `${accessToken}`,
       },
-      })
+    })
       .then((r) => {
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${userName}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            console.log('Tag의 57번줄: ', r.data.status);
+            
+              // 돌려보내기
+            if (r.data.status === '403') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method:'get',
+                url:`https://i8e201.p.ssafy.io/api/user/myinfo/${userName}`,
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                localStorage.setItem("userId", r.data.data.userId);
+                console.log("나의 데이터", r.data.data);
+                const now: any = new Date();
+                const myData: any = r.data.data;
+                const birth: string[] = myData.birth.split(".");
+                let age: number;
+                if (Number(birth[1]) > now.getMonth()) {
+                  age =
+                    Math.floor((now.getFullYear() - Number(birth[0]) - 1) / 10) * 10;
+                } else {
+                  age = Math.floor((now.getFullYear() - Number(birth[0])) / 10) * 10;
+                }
+                // console.log('내 나이는?',age)
+                localStorage.setItem("age", `${age}`);
+                localStorage.setItem("region", `${myData.region}`);
+                localStorage.setItem("gender", `${myData.gender}`);
+                setMyState((preState: any) => {
+                  return {
+                    ...preState,
+                    age: age,
+                    region: myData.region,
+                    gender: myData.gender,
+                  };
+                });
+              })
+            }
+          })
+        } else {
+          localStorage.setItem("userId", r.data.data.userId);
+          console.log("나의 데이터", r.data.data);
+          const now: any = new Date();
+          const myData: any = r.data.data;
+          const birth: string[] = myData.birth.split(".");
+          let age: number;
+          if (Number(birth[1]) > now.getMonth()) {
+            age =
+              Math.floor((now.getFullYear() - Number(birth[0]) - 1) / 10) * 10;
+          } else {
+            age = Math.floor((now.getFullYear() - Number(birth[0])) / 10) * 10;
+          }
+          // console.log('내 나이는?',age)
+          localStorage.setItem("age", `${age}`);
+          localStorage.setItem("region", `${myData.region}`);
+          localStorage.setItem("gender", `${myData.gender}`);
+          setMyState((preState: any) => {
+            return {
+              ...preState,
+              age: age,
+              region: myData.region,
+              gender: myData.gender,
+            };
+          });
+        }
+
         localStorage.setItem("userId", r.data.data.userId);
         console.log("나의 데이터", r.data.data);
         const now: any = new Date();
@@ -253,6 +334,8 @@ export default Main;
 function Room({ mainCreateRoomList, myState }: any): JSX.Element {
   console.log("생성된 방 리스트: ", mainCreateRoomList);
   const navigate = useNavigate();
+  let accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 내 아이디
   const username = localStorage.getItem("Username");
   // ssulTitle가 null일 경우 랜덤하게 넣어줄 문구
@@ -297,6 +380,7 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
     if (themeId === "T2") {
       console.log(themeId);
       // 나이,지역,잠금,총인원수,성비 체크
+      // 미팅방 입장 유저가 남자일 경우
       if (
         myState.gender === "M" &&
         (age === 0 || age === myState.age) &&
@@ -313,9 +397,50 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
             pochaId: pochaId,
             username: username,
           },
-        }).then(() => {
-          navigate(`/meetingroom/${pochaId}`);
-        });
+          headers: {
+            accessToken: `${accessToken}`,
+          }
+        }).then((r) => {
+          // 실패시
+          if (r.data.status === '401') {
+            axios({
+              method: 'get',
+              url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+              headers: {
+                refreshToken: `${refreshToken}`,
+              }
+            }).then((r)=> {
+                // 돌려보내기
+                if (r.data.status === '403') {
+                  localStorage.clear();
+                  toast.error('인증되지 않은 유저입니다')
+                  navigate('/')
+                } else {
+                  // 엑세스 토큰 추가
+                  localStorage.setItem("accessToken", r.data.accessToken);
+                  // 재요청
+                  axios({
+                    method: "post",
+                    url: "https://i8e201.p.ssafy.io/api/pocha/enter",
+                    data: {
+                      isHost: false,
+                      pochaId: pochaId,
+                      username: username,
+                    },
+                    headers: {
+                      accessToken: `${r.data.accessToken}`,
+                    }
+                  }).then(()=> {
+                    navigate(`/meetingroom/${pochaId}`);
+                  })
+                }
+            })
+          } else {
+            // 토큰이 있다면
+            navigate(`/meetingroom/${pochaId}`);
+          }
+        })
+        // 미팅 포차 클릭한 사람이 여자일 경우
       } else if (
         myState.gender === "F" &&
         (age === 0 || age === myState.age) &&
@@ -332,10 +457,54 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
             pochaId: pochaId,
             username: username,
           },
-        }).then(() => {
-          navigate(`/meetingroom/${pochaId}`);
-        });
+          headers: {
+            accessToken: `${accessToken}`,
+          }
+        }).then((r) => {
+            console.log(r.data)
+            // 실패시
+            if (r.data.status === '401') {
+              axios({
+                method: 'get',
+                url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                headers: {
+                  refreshToken: `${refreshToken}`,
+                }
+              }).then((r)=> {
+                console.log('Tag의 57번줄: ', r.data.status);
+                
+                  // 돌려보내기
+                if (r.data.status === '403') {
+                  localStorage.clear();
+                  toast.error('인증되지 않은 유저입니다')
+                  navigate('/')
+                } else {
+                  // 엑세스 토큰 추가
+                  localStorage.setItem("accessToken", r.data.accessToken);
+                  // 재요청
+                  axios({
+                    method: "post",
+                    url: "https://i8e201.p.ssafy.io/api/pocha/enter",
+                    data: {
+                      isHost: false,
+                      pochaId: pochaId,
+                      username: username,
+                    },
+                    headers: {
+                      accessToken: `${r.data.accessToken}`,
+                    }
+                  }).then(()=> {
+                    navigate(`/meetingroom/${pochaId}`);
+                  })
+                }
+              })
+            } else {
+              // 토큰이 있다면
+              navigate(`/meetingroom/${pochaId}`);
+            }
+          })
       } else {
+        // 그 외의 방
         toast.error("입장할 수 없는 방입니다");
       }
     } else {
@@ -355,11 +524,55 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
             pochaId: pochaId,
             username: username,
           },
-        }).then(() => {
-          if (themeId === "T0") {
-            navigate(`/storyroom/${pochaId}`);
-          } else if (themeId === "T1") {
-            navigate(`/gameroom/${pochaId}`);
+          headers: {
+            accessToken: `${accessToken}`,
+          }
+        }).then((r) => {
+          if (r.data.status === '401') {
+            axios({
+              method: 'get',
+              url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+              headers: {
+                refreshToken: `${refreshToken}`,
+              }
+            }).then((r)=> {
+              console.log('Tag의 57번줄: ', r.data.status);
+              
+                // 돌려보내기
+              if (r.data.status === '403') {
+                localStorage.clear();
+                toast.error('인증되지 않은 유저입니다')
+                navigate('/')
+              } else {
+                // 엑세스 토큰 추가
+                localStorage.setItem("accessToken", r.data.accessToken);
+                // 재요청
+                axios({
+                  method: "post",
+                  url: "https://i8e201.p.ssafy.io/api/pocha/enter",
+                  data: {
+                    isHost: false,
+                    pochaId: pochaId,
+                    username: username,
+                  },
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  }
+                }).then(()=> {
+                  if (themeId === "T0") {
+                    navigate(`/storyroom/${pochaId}`);
+                  } else if (themeId === "T1") {
+                    navigate(`/gameroom/${pochaId}`);
+                  }
+                })
+              }
+            })
+          } else {
+            if (themeId === "T0") {
+              navigate(`/storyroom/${pochaId}`);
+            } else if (themeId === "T1") {
+              navigate(`/gameroom/${pochaId}`);
+            }
           }
         });
       } else {
