@@ -59,9 +59,11 @@ function CallInput({
       socket.emit("game_call_pass", roomName, mynum);
     }
   }
-
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
+  },[])
+
+  useEffect(()=> {
     setMyInfo();
     // 접을때 주고 받는 함수
     socket.on("game_call_pass", (myNum: number) => {
