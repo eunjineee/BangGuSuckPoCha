@@ -131,6 +131,7 @@ function Login(): React.ReactElement {
           >
             방구석포차
           </div>
+          {/* <img src={require("src/assets/logo/5.png")} alt="logo" /> */}
           <div
             className="w-2/12 mt-10 cursor-pointer"
             // 밑 주석 지우지 말 것
