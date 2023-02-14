@@ -23,6 +23,7 @@ function CallInput({
   // 사람들 네임
   const [peopleName, setPeopleName] = useState<string[]>([]);
 
+  const [answer, setAnswer] = useState<any>(null);
 
   const onClickClose = () => {
     const signalData = "RESULT";
@@ -74,6 +75,16 @@ function CallInput({
     });
   };
 
+  // 정답 제출
+  function inputAnswer(){
+    if (answer === titles[mynum]){
+      // 통과()
+    }
+  }
+
+  // function 통과(){
+  //   소켓에 신호주기 (소켓에서 신호 5개 받으면끝)
+  // }
 
   useEffect(()=> {
     getLiarSubject(); //라이어 주제 받아오기
@@ -123,11 +134,14 @@ function CallInput({
       </div>
       <div className={`${styles.layout6}`}>
         <input 
-          type="button" 
-          onClick={onClickClose} 
-          className={`${styles.retry}`} 
-          value="NEXT" 
+          id="answer" 
+          className={`${styles.answerInput}`} 
+          type="text" 
+          onChange={(e) => {setAnswer(e.target.value)}}
         />
+          <div className="flex justify-center mr-1 ">
+            <div className={`${styles.button}`} onClick={inputAnswer}>START</div>
+        </div>
       </div>
     </div>
   </div>

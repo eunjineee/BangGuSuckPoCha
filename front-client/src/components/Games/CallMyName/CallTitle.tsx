@@ -1,24 +1,58 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styles from "./CallTitle.module.css";
 
 function CallTitle({
   socket,
   pochaId,
   pochaUsers,
+  pochaInfo,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
+  pochaInfo: any;
 }): React.ReactElement {
   const roomName = pochaId;
 
+  const [titles, setTitles] = useState<any>(null)
+
+  const [nowtitle, setNowtitle] = useState<any>(null);
+
+  // 양세찬 게임 주제 받아오기
+  const getCallSubject = async() => {
+    try {
+      const {
+        data: { data },
+      } = await axios({
+        url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+      });
+      setTitles(data);
+      console.log("------------titles----------", data);
+    } catch (error) {
+      console.log("라이어 게임 주제 axios error", error);
+    }
+  }
+
+  useEffect(()=>{
+    getCallSubject();
+  },[])
+  
+  useEffect(()=>{
+    titlechoice();
+  },[titles])
+  
+  const titlechoice = () => {
+    for (var i = 0; i <= pochaInfo.totalCount ; i++) {
+      var newnum = Math.floor(Math.random()* titles.length)
+      setNowtitle(titles[newnum]);
+      console.log("----------newtitle--------",titles[newnum]);
+    }
+  }
+
+
   const onClickClose = () => {
     const signalData = "INPUT";
-    // 선택창으로 돌아가기
-    socket.emit("game_call_signal", roomName, signalData);
-  };
-  
-  const onClickRetry = () => {
-    const signalData = "INTRO";
     // 선택창으로 돌아가기
     socket.emit("game_call_signal", roomName, signalData);
   };
