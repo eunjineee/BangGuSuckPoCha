@@ -35,7 +35,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
                 .antMatchers("/join","/", "/home","/refresh/**","/admin/join")
-                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver","/api/pocha/exit")
+                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver","/api/user/auth/refresh/**","/api/pocha/exit")
                 .antMatchers("/v2/api-docs","/swagger**/**","/api/v2/**",
                             "/swagger-resources/**",
                             "/configuration/ui",
