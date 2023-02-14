@@ -6,17 +6,15 @@ function CallInput({
   socket,
   pochaId,
   pochaUsers,
+  nowtitle,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
+  nowtitle: any;
 }): React.ReactElement {
   const roomName = pochaId;
   
-  const [titles, setTitles] = useState<any>(null)
-  
-  const [nowtitle, setNowtitle] = useState<any>(null)
- 
   const [mynum, setMyNum] = useState<any>(null) // 내번호
 
   const myName = localStorage.getItem("Username");    // 내 이름
@@ -35,36 +33,12 @@ function CallInput({
   const setPeopleInfo = () => {
     console.log(pochaUsers, "유저들 리스트");
     pochaUsers.forEach((user: any, index: number) => {
-      // setPeopleScore();
-      // setTxtSpanList((prev) => prev = [txtSpan0, txtSpan1, txtSpan2, txtSpan3, txtSpan4, txtSpan5]);
       setPeopleName((prev) => [...prev, user.nickname]);
       if (user.username === myName) {
         setMyNum(index);
       }
     });
   };
-
-  // 양세찬 게임 주제 받아오기
-  const getLiarSubject = async() => {
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-      });
-      setTitles(data);
-    } catch (error) {
-      console.log("양세찬 게임 주제 axios error", error);
-    }
-  }
-  
-  // 이번 턴 주제
-  const maintitle = () => {
-    if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length-1));
-      setNowtitle(titles[titleone]);
-    }
-  }
 
   // 내가 몇번째인지
   const setMyInfo = () => {
