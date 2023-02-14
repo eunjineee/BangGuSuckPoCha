@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
@@ -135,10 +135,27 @@ export default ReviewPage
 function ReviewComponent({reviewAfter,setReviewAfter,reviewBefore,setReviewBefore }:any):JSX.Element {
   let showBefore:any
   let showAfter:any
+  const before = useRef<any>()
+  const after = useRef<any>()
   const [clickReviewState,setClickReviewState] = useState(false)
   // console.log('리뷰 안한거: ',reviewBefore)
   // console.log('리뷰 한거: ',reviewAfter)
   // 리뷰안한게 있다면
+
+  useEffect(()=> {
+    if (clickReviewState) {
+      before.current.classList.add('reviewdefault')
+      before.current.classList.remove('reviewClick')
+      after.current.classList.remove('reviewdefault')
+      after.current.classList.add('reviewClick')
+    } else {
+      before.current.classList.add('reviewClick')
+      before.current.classList.remove('reviewdefault')
+      after.current.classList.remove('reviewClick')
+      after.current.classList.add('reviewdefault')
+    }
+  },[clickReviewState])
+
   if (reviewBefore.length !== 0) {
     showBefore = reviewBefore?.map((e:any)=> {
       return (
@@ -169,9 +186,9 @@ function ReviewComponent({reviewAfter,setReviewAfter,reviewBefore,setReviewBefor
         </div>
         <div className="flex justify-center items-center mt-[10rem]">
           <div className="h-full w-[25rem] text-xl cursor-pointer" id="reviewlist">
-            <span className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem]" style={{borderBottom: 'groove 4px #FFFFFF' }} onClick={()=> {setClickReviewState(false)}}>리뷰 목록</span></div>
+            <span ref={before} className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem] reviewClick "  onClick={()=> {setClickReviewState(false)}}>리뷰 목록</span></div>
           <div className="h-full w-[25rem] text-xl cursor-pointer" id="reviewdone">
-            <span className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem]" style={{borderBottom: 'groove 4px #FFFFFF' }} onClick={()=> {setClickReviewState(true)}}>리뷰 완료</span></div>
+            <span ref={after} className="flex justify-center items-end h-full nickNameNeon pb-[0.5rem] reviewdefault "  onClick={()=> {setClickReviewState(true)}}>리뷰 완료</span></div>
         </div>
         {/* 리뷰 목록 */}
         <div className="flex flex-col w-full max-h-[37.5rem] overflow-scroll hideScroll py-3">

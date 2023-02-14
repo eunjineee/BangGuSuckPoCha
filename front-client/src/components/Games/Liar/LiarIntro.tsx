@@ -69,7 +69,7 @@ function LiarIntro({
   return (
     <>
       {signal === "PLAY" ? (
-        <LiarTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} getLiarInfo={getLiarInfo}/>
+        <LiarTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} getLiarInfo={getLiarInfo} isliar={isliar}/>
       ) : null}
       {signal === "MENUAL" ? (
         <LiarMenual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>

@@ -6,7 +6,10 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  balanceChange,
+  balanceQuestionChange,
   changeNavAlarmReviewEmojiUserData,
+  isRomanNormalChange,
   isRtcLoading,
   selectGame,
   showGameSelectModal,
@@ -458,7 +461,8 @@ const WebRTC = ({
       console.log("포차 설정 변경!----------------------");
       // 방 설정 다시 불러오기!!! 테스트
       getPochaInfo();
-      window.location.reload();
+      toast.success("포차 설정이 변경되었습니다");
+      // window.location.reload();
       // toast.success("포차 정보가 변경되었습니다");
       // await pocha_config_update("3");
     });
@@ -612,12 +616,35 @@ const WebRTC = ({
       }, 1000);
     });
 
+    // 밸런스 게임 시그널받기
+    socket.on("game_balance_Intro", (isBalance) => {
+      console.log("WebRTC에서 roomName에서 받았나?", isBalance);
+      dispatch(balanceChange(isBalance))
+    });
+
+    // 밸런스 게임 시그널받기
+    socket.on("game_balance_typeChange", (choiceType) => {
+      if (choiceType === 'EXIT') {
+        dispatch(isRomanNormalChange(null))
+      } else {
+        dispatch(isRomanNormalChange(choiceType))
+      }
+      console.log("choiceType?", choiceType);
+    });
+
+    // 밸런스 게임 테마별 질문 변경
+    socket.on("game_balance_subjectChange", (themeDataList) => {
+      dispatch(balanceQuestionChange(themeDataList))
+    });
+
     return () => {
       socket.off("game_select");
       socket.off("game_back_select");
       socket.off("game_son_signal");
     };
   }, []);
+
+  
 
   // 게임 선택창 상태
   const isGameSelect = useAppSelector((state) => {
@@ -648,31 +675,31 @@ const WebRTC = ({
               <div className="text-7xl font-bold text-white fixed top-28 z-30">{count}</div>
             </div>
           ) : null}
-          <div className="text-white w-full min-h-[85vh] flex justify-center">
-            <div className="flex flex-col justify-evenly items-center">
+          <div className="text-white w-full min-h-[85vh] flex justify-evenly">
+            <div className="flex flex-col justify-evenly items-center ">
               {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
               {/* 내 비디오 공간 */}
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
-                  className="h-[17rem]"
+                  className="object-fill"
                   ref={myFace}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace2}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace4}
                   playsInline
                   autoPlay
@@ -726,28 +753,28 @@ const WebRTC = ({
 
             {/* 사람 공간 */}
             <div className="flex flex-col justify-evenly items-center">
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace1}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace3}
                   playsInline
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] flex items-center ">
+              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
-                  className=" h-[17rem] cursor-pointer"
+                  className="object-fill cursor-pointer"
                   ref={peerFace5}
                   playsInline
                   autoPlay

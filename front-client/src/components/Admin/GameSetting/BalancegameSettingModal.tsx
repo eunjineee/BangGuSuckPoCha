@@ -98,7 +98,7 @@ const BalancegameSettingModal = () => {
       <div
         ref={bgDiv}
         onMouseDown={CloseBalanceSettingModal}
-        className={`z-10 bg-slate-900 bg-opacity-90 fixed top-0 right-0 bottom-0 left-0 flex flex-col justify-center items-center text-white`}
+        className={`z-10 bg-slate-900 bg-opacity-100 fixed top-0 right-0 bottom-0 left-0 flex flex-col justify-center items-center text-white`}
       >
         <div className="w-[80rem] h-[50rem] border-2 border-white rounded-[6rem] flex flex-col justify-center items-center">
           <div className="h-[11%] w-[78%]">BalanceGame</div>

@@ -8,31 +8,43 @@ function LiarTitle({
   pochaUsers,
   pochaInfo,
   getLiarInfo,
+  isliar,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
   pochaInfo: any;
   getLiarInfo: Function;
+  isliar: any;
 }): React.ReactElement {
   const roomName = pochaId;
   const {totalCount} = pochaInfo;
-  const [liar, setLiar] = useState<any>(null)
   const [titles, setTitles] = useState<any>(null)
   const [nowtitle, setNowtitle] = useState<any>(null)
-  const [isliar, setIsliar] = useState<any>(false)
+  const [liarnum, setLiarnum] = useState<any>(false) // 라이어의 넘버
   
   // 내 이름
   const myName = localStorage.getItem("Username");  
   const [mynum, setMyNum] = useState<any>(null)
+  const [isHost, setIshost] = useState<any>(null)
   
-  
+  useEffect(() => {
+    // 라이어 게임 시그널받기
+    socket.on("game_liar_number", (data: number) => {
+      setLiarnum(data);
+    })
+    return () => {
+      socket.off("game_liar_number");
+    };
+  }, []);
+
+
   const onClickClose = () => {
     const signalData = "VOTE";
     // 다음 페이지로 이동
     socket.emit("game_liar_signal", roomName, signalData);
   };
-
+  // 내가 몇번째인지
   const setPeopleInfo = () => {
     pochaUsers.forEach((user: any, index: number) => {
       if (user.username === myName) {
@@ -41,6 +53,15 @@ function LiarTitle({
     });
   };
 
+  // 방장은 누구?
+  const setHostInfo = () => {
+    pochaUsers.forEach((user: any, index: number) => {
+      if (user.isHost === true) {
+        setIshost(index);
+      }
+    });
+  };
+  // 라이어 게임 주제 받아오기
   const getLiarSubject = async() => {
     try {
       const {
@@ -54,34 +75,41 @@ function LiarTitle({
       console.log("라이어 게임 주제 axios error", error);
     }
   }
+  //라이어 넘버 정해주기
+  const liarnumber = () => {
+    const liarnum = Math.floor(Math.random()*totalCount);
+    setLiarnum(liarnum);
+    socket.emit("game_liar_number", roomName, liarnum);
+  }
 
-  const liarnum = () => {
-    const liar = Math.floor(Math.random()*totalCount);
-    if(liar === mynum){
+  const maintitle = () => {
+    if (titles){
+      const titleone = Math.floor(Math.random()*(titles.length-1));
+      setNowtitle(titles[titleone]);
+    }
+  }
+
+  const imliar = () => {
+    if(liarnum === mynum){
       getLiarInfo(true);
     }else{
       getLiarInfo(false);
     }
   }
 
-  const maintitle = () => {
-    if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length));
-      console.log(titles[titleone], titleone)
-      setNowtitle(titles[titleone]);
-    }
-  }
-
   useEffect(()=> {
-    getLiarSubject();
-    setPeopleInfo();
-    liarnum();
+    getLiarSubject(); //라이어 주제 받아오기
+    setPeopleInfo();  // 방참가인원 정보
+    setHostInfo();    // 방장 누군지 > 라이어 뽑기 해줘야함
+    liarnumber();     // 라이어 뽑기
+    imliar();         // 내가 라이어인지?
   },[])
 
   useEffect(()=> {
     maintitle();
   },[titles])
 
+  console.log(totalCount,"~~~~~~~~~중에 라이어는-------",liarnum, "mynum---", mynum)
   return (
     <div className={`${styles.layout3}`}>
       <div className={`${styles.box} ${styles.layout}`}>
