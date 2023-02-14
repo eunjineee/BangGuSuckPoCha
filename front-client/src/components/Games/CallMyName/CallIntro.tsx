@@ -27,8 +27,6 @@ function CallIntro({
 
   const [isHost, setIshost] = useState<any>(null)
 
-  const [liarnum, setLiarnum] = useState<any>(false) // 라이어의 넘버
-
   const [mynum, setMyNum] = useState<any>(null) // 내번호
 
   // 포차 정보 요청

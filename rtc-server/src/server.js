@@ -316,5 +316,9 @@ wsServer.on("connection", (socket) => {
   socket.on("game_call_signal", (roomName, signalData, data) => {
     wsServer.to(roomName).emit("game_call_signal", signalData, data);
   });
+  //주제들 뿌려줌
+  socket.on("game_call_titles", (roomName, signalData, data) => {
+    wsServer.to(roomName).emit("game_call_titles", signalData, data);
+  });
 });
 
