@@ -166,17 +166,19 @@ const UpdateRoomInfo = ({
   useEffect(() => {
     getPochaInfo();
   }, []);
+ 
 
   // 포차 정보 업데이트 요청
   const updateRoom = async (event: React.MouseEvent<HTMLInputElement>) => {
     const changeThemeId = event.currentTarget.id;
     try {
+      // console.log("pochaInfo.isPrivate!@!@!@!@",pochaInfo.isPrivate)
       const updateInfo = await axios({
         method: "PUT",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
         data: {
           age: createRoomChoiceAge,
-          isPrivate: false,
+          isPrivate: pochaInfo.isPrivate,
           limitUser: createRoomChoicePeople,
           region: createRoomChoiceRegion,
           tagList: choiceTagList,

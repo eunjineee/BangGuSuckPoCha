@@ -46,7 +46,7 @@ function GameSelect({
   // 게임 선택할때
   const selectGame = (event: React.MouseEvent<HTMLImageElement>) => {
     console.log("클릭?");
-    const gameId = event.currentTarget.id;
+    const gameId = "twenty";
     socket.emit("game_select", roomName, gameId);
   };
 
