@@ -35,7 +35,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
                 .antMatchers("/join","/", "/home","/refresh/**","/admin/join")
-                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver")
+                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver","/api/pocha/exit")
                 .antMatchers("/v2/api-docs",
                         "/swagger-resources/**",
                         "/configuration/ui",
@@ -61,9 +61,9 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                     .antMatchers("**").permitAll()
-//                    .antMatchers("/v3/api-docs","/swagger**/**").permitAll()
-//                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
-//                    .antMatchers("/api/user/oauth2/**").permitAll()
+                    .antMatchers("/v3/api-docs","/swagger**/**").permitAll()
+                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
+                    .antMatchers("/api/user/oauth2/**").permitAll()
 //                    .antMatchers("/api/v1/manager/**").hasAuthority("MANAGER")
 //                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
