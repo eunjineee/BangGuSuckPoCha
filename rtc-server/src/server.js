@@ -287,5 +287,10 @@ wsServer.on("connection", (socket) => {
   socket.on("game_liar_number", (roomName, data) => {
     wsServer.to(roomName).emit("game_liar_number", data);
     })
-  })
+  });
+    // 양세찬 게임
+  // 양세찬 게임 여러 시그널
+  socket.on("game_call_signal", (roomName, signalData, data) => {
+    wsServer.to(roomName).emit("game_call_signal", signalData, data);
+  });
 })
