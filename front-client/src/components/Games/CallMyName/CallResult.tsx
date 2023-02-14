@@ -3,11 +3,11 @@ import styles from "./CallResult.module.css";
 function CallResult({
   socket,
   pochaId,
-  // resultData,
+  resultData,
 }: {
   socket: any;
   pochaId: string;
-  // resultData?: any;
+  resultData?: any;
 }): React.ReactElement {
   const roomName = pochaId;
 

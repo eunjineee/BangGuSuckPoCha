@@ -26,6 +26,7 @@ function CallIntro({
   const [pochaInfo, setPochaInfo] = useState<any>(null)
 
   const [isHost, setIshost] = useState<any>(null)
+  const [resultData, setResultData] = useState<any>(null);
 
   const [titles, setTitles] = useState<any>(null)
 
@@ -56,6 +57,12 @@ function CallIntro({
         setSignal(signalData);
       }, 1000);
     });
+    //결과 나오면
+    socket.on("game_call_result", (signalData: string, data: any) => {
+      setTimeout(() => {
+        setResultData(data);
+      }, 1000);
+    });
     // 타이틀 받아오기
     socket.on("game_call_submit", (signalData: string, data: any) => {
       setTimeout(() => {
@@ -71,7 +78,9 @@ function CallIntro({
   useEffect(() => {
     setHostInfo();
     setPeopleInfo();
-    getCallSubject();
+    if (mynum === isHost){
+      getCallSubject();
+    }
   },[]);
 
 
@@ -150,7 +159,7 @@ function CallIntro({
         <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
       ) : null}
       {signal === "RESULT" ? (
-        <CallResult socket={socket} pochaId={pochaId}/>
+        <CallResult socket={socket} pochaId={pochaId} resultData={resultData}/>
       ) : null}
       {signal === "INPUT" ? (
         <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} nowtitle={nowtitle}/>

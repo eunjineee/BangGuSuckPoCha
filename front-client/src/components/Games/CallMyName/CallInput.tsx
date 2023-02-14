@@ -58,10 +58,6 @@ function CallInput({
     }
   }
 
-  // function 통과(){
-  //   소켓에 신호주기 (소켓에서 신호 5개 받으면끝)
-  // }
-
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
     setMyInfo();
@@ -88,19 +84,22 @@ function CallInput({
   //게임 끝인지 확인 
   function finish() {
     const resultList: string[] = [];
+    const result: string[] = [];
     console.log("자 여기 결과가기전", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
       console.log("s여기@@@@@@@@@@@@", score, index);
       if (score === 0) {
         resultList.push(peopleName[index]);
         console.log("여기오냐?", peopleScore);
+      }else{
+        result.push(peopleName[index])
       }
     });
-    if (resultList.length >= pochaUsers.length-1) {
+    if (result.length === 1) {
       console.log("여기오냐 결과가기전?", peopleScore);
       const signalData = "RESULT";
-      const data = resultList;
-      socket.emit("game_call_signal", roomName, signalData, data);
+      const data = result;
+      socket.emit("game_call_result", roomName, signalData, data);
     }
   }
 
