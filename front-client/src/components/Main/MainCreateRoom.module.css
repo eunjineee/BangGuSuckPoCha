@@ -4,7 +4,6 @@
 }
 
 .tagBox {
-  font-family: "maplestory";
   font-size: 1.125rem;
   width: 6.5rem;
   height: 3rem;
@@ -61,7 +60,6 @@
   /* max-width: 100%; */
 
 .createBtn {
-	font-family: "maplestory";
   font-size: 1.2rem;
   position: relative;
   display: inline-block;
@@ -98,7 +96,6 @@
 
 
 .cancelBtn {
-	font-family: "maplestory";
   font-size: 1.2rem;
   position: relative;
   display: inline-block;

@@ -1,4 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Black+Han+Sans:400');
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -24,5 +32,7 @@ html {
 }
 
 .neonTitle {
-  text-shadow: 5px 5px 10px #960f4e;
+  text-shadow: 5px 5px 10px #858585;
+  /* font-family: "Black Han Sans";
+  font-weight: bold; */
 }

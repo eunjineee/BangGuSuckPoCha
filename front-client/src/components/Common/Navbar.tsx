@@ -42,11 +42,13 @@ function Navbar(): JSX.Element {
         <img
           src={require("src/assets/logo/Logo.png")}
           alt="logo"
-          className={`object-contain w-[32%] cursor-pointer`}
+          className={`object-contain w-[24%] cursor-pointer`}
           onClick={() => {
             navigate("/main");
           }}
         />
+        <img className="h-16 my-16" src={require("src/assets/logo/soju.gif")}
+          alt="logo"/>
         <div className="" style={{ width: "16%" }}></div>
         <div className="grid grid-cols-1 " style={{ width: "18%" }}>
           <div></div>

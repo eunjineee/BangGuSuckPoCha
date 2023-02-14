@@ -1,5 +1,13 @@
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 .App {
   text-align: center;
+  /* font-family: 'Binggrae'; */
+  font-family: 'NanumSquareRound';
 }
 
 .App-logo {
@@ -17,6 +25,7 @@ video {
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
 
 .App-header {
   background-color: #282c34;
