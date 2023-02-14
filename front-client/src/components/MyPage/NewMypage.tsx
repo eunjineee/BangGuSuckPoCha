@@ -218,7 +218,7 @@ const NewMyPage = () => {
         }, 1000);
       })
       .catch((e) => {
-        console.log("hello",e);        
+        console.log("hello", e);
         console.log("토큰 실패");
         axios({
           method: "get",
@@ -226,6 +226,9 @@ const NewMyPage = () => {
           data: {
             accessToken: accessToken,
             refreshToken: refreshToken,
+          },
+          headers: {
+            accessToken: accessToken,
           },
         }).then((r) => {
           console.log("나호출??", r.data);
@@ -326,6 +329,9 @@ const NewMyPage = () => {
                                   data: {
                                     changeName: ModifyNickname,
                                     nowName: MyNickname,
+                                  },
+                                  headers: {
+                                    accessToken: accessToken,
                                   },
                                 }).then((r) => {
                                   const isDouble = r.data.data;
@@ -459,6 +465,9 @@ const NewMyPage = () => {
                                   nickname: ModifyNickname,
                                   profile: MyPageProfileImg,
                                   regionCode: Code,
+                                },
+                                headers: {
+                                  accessToken: accessToken,
                                 },
                               }).then((r) => {
                                 toast.success("수정에 성공하셨습니다");
