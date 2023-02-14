@@ -11,9 +11,14 @@ function UserReportWait(): React.ReactElement {
     return state.adminreport;
   });
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/admin/report",
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       dispatch(changeAdminReport(r.data.data));
     });
@@ -65,6 +70,8 @@ function UserReportWait(): React.ReactElement {
                               demeritnum = 2;
                             }
                             // console.log(demeritnum);
+                            const accessToken =
+                              localStorage.getItem("accessToken");
 
                             axios({
                               method: "put",
@@ -73,12 +80,19 @@ function UserReportWait(): React.ReactElement {
                                 demerit: demeritnum,
                                 reportResult: 1,
                               },
+                              headers: {
+                                accessToken: accessToken,
+                              },
                             }).then((r) => {
                               console.log(r.data);
                             });
                             axios({
                               method: "get",
                               url: "https://i8e201.p.ssafy.io/api/admin/report",
+
+                              headers: {
+                                accessToken: accessToken,
+                              },
                             }).then((r) => {
                               dispatch(changeAdminReport(r.data.data));
                             });
@@ -89,6 +103,8 @@ function UserReportWait(): React.ReactElement {
                         <td
                           className="w-[7%] cursor-pointer hover:animate-spin"
                           onClick={() => {
+                            const accessToken =
+                              localStorage.getItem("accessToken");
                             axios({
                               method: "put",
                               url: `https://i8e201.p.ssafy.io/api/admin/report/${it.reportId}`,
@@ -96,12 +112,18 @@ function UserReportWait(): React.ReactElement {
                                 demerit: 0,
                                 reportResult: 1,
                               },
+                              headers: {
+                                accessToken: accessToken,
+                              },
                             }).then((r) => {
                               console.log(r.data);
                             });
                             axios({
                               method: "get",
                               url: "https://i8e201.p.ssafy.io/api/admin/report",
+                              headers: {
+                                accessToken: accessToken,
+                              },
                             }).then((r) => {
                               dispatch(changeAdminReport(r.data.data));
                             });
