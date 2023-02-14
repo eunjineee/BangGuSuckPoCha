@@ -53,10 +53,12 @@ function Tag(): JSX.Element {
             refreshToken: `${refreshToken}`,
           }
         }).then((r)=> {
-          console.log('Tag의 57번줄: ', r.data.status);
+          console.log('Tag의 r.data.status보자: ', r.data.status);
+          console.log('Tag의 r.data보자: ', r.data);
+          console.log('Tag의 r보자: ', r);
           
             // 돌려보내기
-          if (r.data.status === '403') {
+          if (r.data.status === '401') {
             localStorage.clear();
             toast.error('인증되지 않은 유저입니다')
             navigate('/')
