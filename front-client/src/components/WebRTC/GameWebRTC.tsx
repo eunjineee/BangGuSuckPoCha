@@ -136,6 +136,10 @@ const WebRTC = ({
   useEffect(() => {
     propSocket(socket);
     getUsersProfile();
+    // userCount.current = 1
+    return () => {
+      userCount.current = 1
+    }
   }, []);
 
   const getCameras = async () => {

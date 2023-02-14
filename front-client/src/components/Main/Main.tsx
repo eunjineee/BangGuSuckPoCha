@@ -213,7 +213,7 @@ function Main(): JSX.Element {
             </div>
             {/* 방 보이기 */}
             <div
-              className="grid grid-cols-1 w-full min-w-[75rem]"
+              className={`${styles.binggrae} grid grid-cols-1 w-full min-w-[75rem]`}
               style={{ backgroundColor: "rgb(25, 25, 25)" }}
             >
               <Room mainCreateRoomList={mainCreateRoomList} myState={myState} />
