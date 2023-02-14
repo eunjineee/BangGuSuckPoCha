@@ -17,6 +17,8 @@ import FriendSearch from "./FriendSearch";
 
 function FriendList(): JSX.Element {
 
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 친구 검색
   const [searchFriend,setSearchFriend] = useState<any>()
   // 나를 확인할 유저 아이디
@@ -47,6 +49,9 @@ function FriendList(): JSX.Element {
     axios({
       method: 'get',
       url: `https://i8e201.p.ssafy.io/api/user/info/${f_username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     })
     .then((r)=> {
       // console.log('넣어따', r.data)
@@ -81,6 +86,9 @@ function FriendList(): JSX.Element {
       axios({
         method: 'get',
         url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${searchFriend}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       }).then((r)=> {
         // console.log('요청한 친구: ',r.data.data)
         dispatch(changeMenuFriendListApiDataState(r.data.data));
@@ -94,6 +102,9 @@ function FriendList(): JSX.Element {
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/friend/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     }).then((r) => {
       // console.log('친구 리스트 조회: ',r.data.data)
       const friendDataList:any[] = r.data.data
@@ -121,7 +132,10 @@ function FriendList(): JSX.Element {
       // 배프 요청
       axios({
         method: 'put',
-        url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${e.you_id}`
+        url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${e.you_id}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       })
       .then((r)=> {
         // console.log('베프니? ',checkBestFriend)
@@ -160,9 +174,13 @@ function FriendList(): JSX.Element {
             // 채팅내용 가져오기
             const getChatList = async () => {
               try {
-                const getChat = await axios.get(
-                  `https://i8e201.p.ssafy.io/api/user/friend/chat/${chat_id}`
-                );
+                const getChat = await axios({
+                  method:'get',
+                  url:`https://i8e201.p.ssafy.io/api/user/friend/chat/${chat_id}`,
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  },
+                })
                 return getChat.data.data;
               } catch (error) {
                 console.log(error);

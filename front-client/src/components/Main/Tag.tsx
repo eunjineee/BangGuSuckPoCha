@@ -30,12 +30,20 @@ function Tag(): JSX.Element {
   const createThemeRoomCheck: number = useAppSelector((state) => {
     return state.createThemeRoomCheck;
   });
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 유저 정보(연령, 지역)조사
   useEffect(()=> {
-    axios.get(`https://i8e201.p.ssafy.io/api/user/info/${username}`)
+    
+    axios({
+      method: 'get',
+      url:`https://i8e201.p.ssafy.io/api/user/info/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      }
+    })
     .then((r:any)=> {
-      // console.log(r.data.data)
+      console.log(r.data)
       
       const now = new Date()
       const nowYear = now.getFullYear()
@@ -90,7 +98,10 @@ function Tag(): JSX.Element {
               isHost: 'false',
               pochaId: pochaId,
               username: username
-              }
+              },
+            headers: {
+              accessToken: `${accessToken}`,
+            },
             })
             .then(()=> {
               console.log('슬라이싱값: ',themeId.slice(0,2))
@@ -167,7 +178,10 @@ function Tag(): JSX.Element {
         url: 'https://i8e201.p.ssafy.io/api/pocha',
         params: {
           age:age, region:region,themeId:theme,tag:sendTagList
-        }
+        },
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       }).then((r)=> {
         if (filter.speedEnter) {
           // 전체로 선택되어있을 수도 있기에 조회된 방 데이터를 가지고 

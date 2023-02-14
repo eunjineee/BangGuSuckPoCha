@@ -11,6 +11,8 @@ const RoomUserRepotModal = ({ userData }: { userData: any }) => {
   const [reportReason, setReportReason] = useState<string>("");
   const [reportType, setReportType] = useState<number>(0);
   console.log('데이터보자', userData.data)
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   //주석추가
   const onChange = (event: React.ChangeEvent<any>) => {
     const { name, value } = event.target;
@@ -41,6 +43,9 @@ const RoomUserRepotModal = ({ userData }: { userData: any }) => {
           reportReason: reportReason,
           reportType: reportType,
           reporterId: myId,
+        },
+        headers: {
+          accessToken: `${accessToken}`,
         },
       });
       toast.success(`${nickname}을 신고하였습니다`)

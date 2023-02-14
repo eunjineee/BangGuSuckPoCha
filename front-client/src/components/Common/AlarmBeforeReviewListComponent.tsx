@@ -8,11 +8,16 @@ import StarReview from "./StarReview";
 function AlarmBeforeReviewListComponent({to_nickname, reviewId, toUsername, to_profile}:any):JSX.Element {
   // 이모지 클릭 여부
   const dispatch = useAppDispatch()
-  
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   function UserStateSearch() {
+    
     axios({
       method: 'get',
       url: `https://i8e201.p.ssafy.io/api/user/info/${toUsername}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     })
     .then((r)=> {
       console.log('리뷰전 ',r.data)

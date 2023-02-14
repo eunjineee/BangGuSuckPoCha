@@ -15,11 +15,17 @@ import { useEffect, useState } from "react";
 function Navbar(): JSX.Element {
   const navigate = useNavigate();
   const [myData, setMyData] = useState({ profile: null, nickname: null });
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   useEffect(() => {
+    
     const username = localStorage.getItem("Username");
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
     }).then((r) => {
       setMyData({
         profile: r.data.data.profile,
@@ -49,6 +55,8 @@ function Navbar(): JSX.Element {
             myData={myData}
             profile={myData.profile}
             nickname={myData.nickname}
+            accessToken={accessToken}
+            refreshToken={refreshToken}
           />
         </div>
       </div>
@@ -57,7 +65,7 @@ function Navbar(): JSX.Element {
 }
 
 // menu component
-function MenuOption({ profile, nickname, myData }: any): JSX.Element {
+function MenuOption({ profile, nickname, myData, accessToken, refreshToken }: any): JSX.Element {
   const navigate = useNavigate();
   let dispatch = useAppDispatch();
   console.log("마이데이터: ", myData);
@@ -101,6 +109,9 @@ function MenuOption({ profile, nickname, myData }: any): JSX.Element {
               axios({
                 method: "get",
                 url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
               }).then((r) => {
                 const checkFrom_id: number[] = [];
                 const setData: (number | string)[] = [];

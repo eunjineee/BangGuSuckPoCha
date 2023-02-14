@@ -19,6 +19,8 @@ function WaitingRoom({
   waitEnd: Function;
   myInfo: any;
 }): JSX.Element {
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 처음에 받아오는 포차 정보
   const [pochaInfo, setPochaInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -36,6 +38,9 @@ function WaitingRoom({
     try {
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       setPochaInfo(data.data);
 

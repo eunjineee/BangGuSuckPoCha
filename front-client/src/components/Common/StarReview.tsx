@@ -13,6 +13,8 @@ function StarReview({to_nickname, reviewId, toUsername}:any):JSX.Element {
   // username (현재는 내꺼)
   const username = localStorage.getItem('Username')
   const [rating, setRating] = useState(null) as any
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   return (
     
     <div className="flex justify-start items-center">
@@ -30,13 +32,19 @@ function StarReview({to_nickname, reviewId, toUsername}:any):JSX.Element {
                 "reviewId" : reviewId,
                 "reviewScore" : starState,
                 "toUsername" : toUsername
-              }
+              },
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             })
             .then((r)=> {
               toast.success(`${to_nickname}님을 평가 완료하였습니다`);
               axios({
                 method: 'get',
-                url: `https://i8e201.p.ssafy.io/api/user/review/${username}`
+                url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
               })
               .then((r)=>{
                 const datas:any[] = r.data.data
