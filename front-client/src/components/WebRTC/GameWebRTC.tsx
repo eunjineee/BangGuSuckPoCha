@@ -65,6 +65,14 @@ const WebRTC = ({
   const peerFace4 = useRef<any>(null);
   const peerFace5 = useRef<any>(null);
 
+  // useRef 배열
+  const div1 = useRef<HTMLDivElement>(null);
+  const div2 = useRef<HTMLDivElement>(null);
+  const div3 = useRef<HTMLDivElement>(null);
+  const div4 = useRef<HTMLDivElement>(null);
+  const div5 = useRef<HTMLDivElement>(null);
+  const div6 = useRef<HTMLDivElement>(null);
+  
   const myStream = useRef<any>(null);
   // let myStream: any;
   const roomName: any = pochaId;
@@ -537,21 +545,68 @@ const WebRTC = ({
 
     console.log("사람수ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ", indexData);
 
+    // if (userCount.current === 1) {
+    //   peerFace1.current.srcObject = stream;
+    //   peerFace1.current.id = username;
+    // } else if (userCount.current === 2) {
+    //   peerFace2.current.srcObject = stream;
+    //   peerFace2.current.id = username;
+    // } else if (userCount.current === 3) {
+    //   peerFace3.current.srcObject = stream;
+    //   peerFace3.current.id = username;
+    // } else if (userCount.current === 4) {
+    //   peerFace4.current.srcObject = stream;
+    //   peerFace4.current.id = username;
+    // } else if (userCount.current === 5) {
+    //   peerFace5.current.srcObject = stream;
+    //   peerFace5.current.id = username;
+    // }
     if (userCount.current === 1) {
-      peerFace1.current.srcObject = stream;
-      peerFace1.current.id = username;
+      div3.current!.classList.add("hidden");
+      peerFace2.current!.classList.add("hidden");
+      peerFace1.current!.srcObject = stream;
+      peerFace1.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace1.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 2) {
-      peerFace2.current.srcObject = stream;
-      peerFace2.current.id = username;
+      div3.current!.classList.remove("hidden");
+      peerFace2.current!.classList.remove("hidden");
+      div4.current!.classList.add("hidden");
+      peerFace3.current!.classList.add("hidden");
+      peerFace2.current!.srcObject = stream;
+      peerFace2.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace2.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 3) {
-      peerFace3.current.srcObject = stream;
-      peerFace3.current.id = username;
+      div4.current!.classList.remove("hidden");
+      peerFace3.current!.classList.remove("hidden");
+      div5.current!.classList.add("hidden");
+      peerFace4.current!.classList.add("hidden");
+      peerFace3.current!.srcObject = stream;
+      peerFace3.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace3.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 4) {
-      peerFace4.current.srcObject = stream;
-      peerFace4.current.id = username;
+      div5.current!.classList.remove("hidden");
+      peerFace4.current!.classList.remove("hidden");
+      div6.current!.classList.add("hidden");
+      peerFace5.current!.classList.add("hidden");
+      peerFace4.current!.srcObject = stream;
+      peerFace4.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace4.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 5) {
-      peerFace5.current.srcObject = stream;
-      peerFace5.current.id = username;
+      div6.current!.classList.remove("hidden");
+      peerFace5.current!.classList.remove("hidden");
+      peerFace5.current!.srcObject = stream;
+      peerFace5.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace5.current!.classList.add("border-8")
+      // }
     }
 
     userCount.current += 1;
@@ -691,7 +746,7 @@ const WebRTC = ({
             <div className="flex flex-col justify-evenly items-center ">
               {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
               {/* 내 비디오 공간 */}
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div ref={div1} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   className="object-fill"
                   ref={myFace}
@@ -699,7 +754,7 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div ref={div3} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -708,7 +763,7 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div ref={div5} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -782,7 +837,7 @@ const WebRTC = ({
 
             {/* 사람 공간 */}
             <div className="flex flex-col justify-evenly items-center">
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div ref={div2} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -791,7 +846,7 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div ref={div4} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -800,7 +855,7 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div ref={div6} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"

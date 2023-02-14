@@ -77,6 +77,7 @@ function StoryRoom(): JSX.Element {
 
   useEffect(() => {
     getPochaInfo();
+
   }, []);
 
 
