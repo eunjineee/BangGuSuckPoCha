@@ -10,6 +10,7 @@ import styles from "../Common/Common.module.css";
 
 const PointHistory = () => {
   const Username = localStorage.getItem("Username");
+  const refreshToken = localStorage.getItem("refreshToken");
   const [History, setHistory] = useState<any>();
   const [MyInfo, setMyInfo] = useState<any>();
   //  메뉴 -> 친구 클릭 -> 채팅 상태
@@ -27,6 +28,21 @@ const PointHistory = () => {
       },
     })
       .then((r) => {
+        //이상한 token으로 요청하는 중이지?
+        if ("401" === r.data.status) {
+          axios({
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+            headers: {
+              refreshToken: refreshToken,
+            },
+          }).then((r) => {            
+            console.log("해치웠나?", r.data);
+            //token갱신
+            localStorage.setItem("accessToken", r.data.accessToken);
+          });
+        }
+
         console.log(r.data.data);
         setHistory(r.data.data);
       })
