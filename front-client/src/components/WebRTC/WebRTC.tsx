@@ -70,6 +70,9 @@ const WebRTC = ({
 
   // 방장 체크
   const [isHost, setIsHost] = useState<boolean>(false);
+  // useEffect(() => {
+  //   console.log("방ㅈㅈㅈㅈㅈㅈㅈ장 맞습니까?", isHost);
+  // }, [isHost])
 
   // webRTC Loading 상태 가져옴
   const isLoading = useAppSelector((state) => {
@@ -539,44 +542,69 @@ const WebRTC = ({
   }
 
   // addStream 이벤트시 실행 함수
-  function handleAddStream(stream: any, username: string, nickname: string) {
+  async function handleAddStream(stream: any, username: string, nickname: string) {
     console.log("handleAddStream---------------------", username);
-    // const indexData = userCount.current;
-    // const indexData = userCount;
-    // peerFace.current[indexData - 1].classList.toggle("hidden");
-    // peerFace.current[indexData - 1].srcObject = stream;
+
+    // filter로 username의 정보 가져옴
+    // let peerInfo = null;
+    // try {
+    //   const {
+    //     data: { data },
+    //   } = await axios({
+    //     url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+    //   });
+      
+    //   peerInfo = data.filter((user:any) => user.username === username)[0];
+    // } catch (error) {
+    //   console.log("포차 참여유저 데이터 axios error", error);
+    // }
 
     if (userCount.current === 1) {
-      peerFace2.current!.classList.add("hidden");
       div3.current!.classList.add("hidden");
+      peerFace2.current!.classList.add("hidden");
       peerFace1.current!.srcObject = stream;
       peerFace1.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace1.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 2) {
-      peerFace2.current!.classList.remove("hidden");
       div3.current!.classList.remove("hidden");
-      peerFace3.current!.classList.add("hidden");
+      peerFace2.current!.classList.remove("hidden");
       div4.current!.classList.add("hidden");
+      peerFace3.current!.classList.add("hidden");
       peerFace2.current!.srcObject = stream;
       peerFace2.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace2.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 3) {
-      peerFace3.current!.classList.remove("hidden");
       div4.current!.classList.remove("hidden");
-      peerFace4.current!.classList.add("hidden");
+      peerFace3.current!.classList.remove("hidden");
       div5.current!.classList.add("hidden");
+      peerFace4.current!.classList.add("hidden");
       peerFace3.current!.srcObject = stream;
       peerFace3.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace3.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 4) {
-      peerFace4.current!.classList.remove("hidden");
       div5.current!.classList.remove("hidden");
-      peerFace5.current!.classList.add("hidden");
+      peerFace4.current!.classList.remove("hidden");
       div6.current!.classList.add("hidden");
+      peerFace5.current!.classList.add("hidden");
       peerFace4.current!.srcObject = stream;
       peerFace4.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace4.current!.classList.add("border-8")
+      // }
     } else if (userCount.current === 5) {
-      peerFace5.current!.classList.remove("hidden");
       div6.current!.classList.remove("hidden");
+      peerFace5.current!.classList.remove("hidden");
       peerFace5.current!.srcObject = stream;
       peerFace5.current!.id = username;
+      // if(peerInfo.isHost){
+      //   peerFace5.current!.classList.add("border-8")
+      // }
     }
     userCount.current += 1;
   }
@@ -632,7 +660,7 @@ const WebRTC = ({
             )}
             <div className="flex flex-wrap justify-evenly items-center p-24 min-h-[85vh]">
               {/* 내 비디오 공간 */}
-              <div ref={div1} className="rounded-[1rem] overflow-hidden w-[28rem] border-2 my-3">
+              <div ref={div1} className="rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3">
                 <video
                   className="object-fill"
                   ref={myFace}
@@ -641,7 +669,7 @@ const WebRTC = ({
                 ></video>
               </div>
               {/* 다른 사람들 비디오 공간 */}
-              <div ref={div2} className={userCount.current >= 2 ? "rounded-[1rem] overflow-hidden w-[28rem] border-2 my-3" : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"}>
+              <div ref={div2} className={userCount.current >= 2 ? "rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3" : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"}>
                 <video
                   onClick={ShowUserProfile}
                   className="object-fill cursor-pointer"
