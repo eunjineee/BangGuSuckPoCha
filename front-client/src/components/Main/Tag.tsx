@@ -76,7 +76,13 @@ function Tag(): JSX.Element {
       themeRef.current.value = '테마'
       sulRef.current.value = '술'
       hobbyRef.current.value = '태그'
-      axios.get('https://i8e201.p.ssafy.io/api/pocha/all').then((r)=> {
+      axios({
+        method:'get',
+        url: 'https://i8e201.p.ssafy.io/api/pocha/all',
+        headers: {
+          accessToken: `${accessToken}`,
+        },
+      }).then((r)=> {
         if (filter.speedEnter) {
           const roomData:any[] = r.data.data
           const enterPossibleRoomList:any[] = roomData.filter((data:any)=> {
