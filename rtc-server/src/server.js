@@ -267,6 +267,7 @@ wsServer.on("connection", (socket) => {
   // 라이어 게임
   // 라이어게임 여러 시그널
   socket.on("game_liar_signal", (roomName, signalData, data) => {
+    console.log('data는 뭐야??', data);
     wsServer.to(roomName).emit("game_liar_signal", signalData, data);
   });
   //정한 라이어 보내기
