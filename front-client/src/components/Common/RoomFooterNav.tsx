@@ -24,6 +24,8 @@ function RoomFooterNav({
   isHost: boolean;
 }): JSX.Element {
   const dispatch = useAppDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const myName = localStorage.getItem("Username");
   // 룸 이름
@@ -185,6 +187,9 @@ function RoomFooterNav({
         data: {
           ssulTitle: input,
           username: myName,
+        },
+        headers: {
+          accessToken: `${accessToken}`,
         },
       });
       // webRTC 썰 변경.

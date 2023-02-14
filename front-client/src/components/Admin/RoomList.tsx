@@ -166,9 +166,15 @@ function RoomList(): React.ReactElement {
     return state.mainCreateRoomList;
   });
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/admin/pocha",
+
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       // console.log(r.data.data);
       dispatch(changeMainCreateRoomList(r.data.data));

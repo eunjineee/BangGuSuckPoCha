@@ -62,12 +62,17 @@ const LiargameSettingModal = () => {
   };
 
   const Save = () => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "post",
       url: "https://i8e201.p.ssafy.io/api/admin/game/liar",
       data: {
         type: Type,
         word: Word,
+      },
+      headers: {
+        accessToken: accessToken,
       },
     }).then((r) => {
       const result = r.data.message;
@@ -76,6 +81,9 @@ const LiargameSettingModal = () => {
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+          headers: {
+            accessToken: accessToken,
+          },
         }).then((r) => {
           setLiarInfo(r.data.data);
         });
@@ -85,9 +93,15 @@ const LiargameSettingModal = () => {
     });
   };
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/pocha/game/liar",
+
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       console.log(r.data.data);
 
@@ -110,9 +124,15 @@ const LiargameSettingModal = () => {
                 <div
                   className="border-2 h-[100%] w-[100%] rounded-md  cursor-pointer"
                   onClick={() => {
+                    const accessToken = localStorage.getItem("accessToken");
+
                     axios({
                       method: "get",
                       url: "https://i8e201.p.ssafy.io/api/pocha/game/liar",
+
+                      headers: {
+                        accessToken: accessToken,
+                      },
                     }).then((r) => {
                       console.log("라이어 게임 데이터", r.data.data);
                     });
@@ -157,13 +177,24 @@ const LiargameSettingModal = () => {
                               className=" p-2 cursor-pointer hover:scale-125"
                               onClick={() => {
                                 console.log("나 클릭");
+                                const accessToken =
+                                  localStorage.getItem("accessToken");
+
                                 axios({
                                   method: "delete",
                                   url: `https://i8e201.p.ssafy.io/api/admin/game/liar/${it.liarId}`,
+
+                                  headers: {
+                                    accessToken: accessToken,
+                                  },
                                 }).then((r) => {
                                   axios({
                                     method: "get",
                                     url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+
+                                    headers: {
+                                      accessToken: accessToken,
+                                    },
                                   }).then((r) => {
                                     setLiarInfo(r.data.data);
                                   });
@@ -257,6 +288,9 @@ const LiargameSettingModal = () => {
                       <div
                         className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                         onClick={() => {
+                          const accessToken =
+                            localStorage.getItem("accessToken");
+
                           axios({
                             method: "put",
                             url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${ModifyLiarId}`,
@@ -264,11 +298,18 @@ const LiargameSettingModal = () => {
                               type: Type,
                               word: Word,
                             },
+
+                            headers: {
+                              accessToken: accessToken,
+                            },
                           }).then((r) => {
                             toast.success("수정완료");
                             axios({
                               method: "get",
                               url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+                              headers: {
+                                accessToken: accessToken,
+                              },
                             }).then((r) => {
                               setLiarInfo(r.data.data);
                             });

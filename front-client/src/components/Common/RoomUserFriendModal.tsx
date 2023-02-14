@@ -8,7 +8,8 @@ const RoomUserFriendModal = ({ userData }: { userData: any }) => {
   const clickUserId:number = userData.data.userId
   let dispatch = useAppDispatch();
   const { nickname } = userData.data;
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 친구신청 하는 함수
   const addFriend = async () => {
     try {
@@ -18,6 +19,9 @@ const RoomUserFriendModal = ({ userData }: { userData: any }) => {
         data: {
           from_id: localStorage.getItem('userId'),
           to_id: clickUserId,
+        },
+        headers: {
+          accessToken: `${accessToken}`,
         },
       });
       

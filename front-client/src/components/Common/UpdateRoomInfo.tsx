@@ -24,6 +24,8 @@ const UpdateRoomInfo = ({
   socket: any;
 }): React.ReactElement => {
   const dispatch = useAppDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 로딩중
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // 현재 포차 정보
@@ -136,6 +138,9 @@ const UpdateRoomInfo = ({
     try {
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       setPochaInfo(data.data);
       // 그냥 로딩중 보여주기
@@ -183,6 +188,9 @@ const UpdateRoomInfo = ({
           region: createRoomChoiceRegion,
           tagList: choiceTagList,
           themeId: changeThemeId === "game" ? "T1B0" : createRoomThemeCheck,
+        },
+        headers: {
+          accessToken: `${accessToken}`,
         },
       });
       console.log("포차정보수정????", updateInfo);

@@ -25,7 +25,8 @@ const MainCreateRoom = ({
 }): React.ReactElement => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // username (현재는 내꺼)
   const username = localStorage.getItem("Username");
 
@@ -211,6 +212,9 @@ const MainCreateRoom = ({
                         tagList: choiceTagList,
                         themeId: createRoomThemeCheck,
                       },
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
                     }).then((r) => {
                       const PochaId = r.data.data;
                       axios({
@@ -220,6 +224,9 @@ const MainCreateRoom = ({
                           isHost: true,
                           pochaId: PochaId,
                           username: username,
+                        },
+                        headers: {
+                          accessToken: `${accessToken}`,
                         },
                       }).then((r) => {
                         console.log(r.data);
@@ -332,6 +339,9 @@ const MainCreateRoom = ({
                         tagList: choiceTagList,
                         themeId: themeId,
                       },
+                      headers: {
+                        accessToken: `${accessToken}`,
+                      },
                     }).then((r) => {
                       const PochaId = r.data.data;
                       axios({
@@ -341,6 +351,9 @@ const MainCreateRoom = ({
                           isHost: true,
                           pochaId: PochaId,
                           username: username,
+                        },
+                        headers: {
+                          accessToken: `${accessToken}`,
                         },
                       }).then((r) => {
                         if (roomTheme === 2) {

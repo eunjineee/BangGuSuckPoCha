@@ -52,12 +52,17 @@ function AdminLogin(): React.ReactElement {
               onClick={() => {
                 console.log(ID);
                 console.log(PASSWORD);
+                const accessToken = localStorage.getItem("accessToken");
+
                 axios({
                   method: "post",
                   url: `https://i8e201.p.ssafy.io/api/login`,
                   data: {
                     username: ID,
                     password: PASSWORD,
+                  },
+                  headers: {
+                    accessToken: accessToken,
                   },
                 }).then((r) => {
                   console.log("r.data", r.data);

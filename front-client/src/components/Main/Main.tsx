@@ -32,11 +32,19 @@ function Main(): JSX.Element {
     return state.mainCreateRoomList;
   });
 
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // 메인 페이지 들어올 시 현재 Username에 대한 유저정보 저장
   useEffect(() => {
     const userName = localStorage.getItem("Username");
-    axios
-      .get(`https://i8e201.p.ssafy.io/api/user/myinfo/${userName}`)
+    
+    axios({
+      method:'get',
+      url:`https://i8e201.p.ssafy.io/api/user/myinfo/${userName}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+      })
       .then((r) => {
         localStorage.setItem("userId", r.data.data.userId);
         console.log("나의 데이터", r.data.data);

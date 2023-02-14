@@ -8,6 +8,8 @@ function NavbarAlarm(): JSX.Element {
 
   let dispatch = useAppDispatch();
 
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // username (현재는 내꺼)
   const username = localStorage.getItem('Username')
 
@@ -59,7 +61,10 @@ function NavbarAlarm(): JSX.Element {
           <div className="flex justify-center items-center cursor-pointer" onClick={()=> {
             axios({
               method:'get',
-              url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`
+              url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             })
             .then((r)=> {
               // 요청 보낸 유저Id에 따른 중복제거 후 데이터 보내기
@@ -81,7 +86,10 @@ function NavbarAlarm(): JSX.Element {
           <div className="flex justify-center items-center cursor-pointer" onClick={()=> {
             axios({
               method:'get',
-              url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`
+              url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             })
             .then((r)=> {
               // 포차Id에 따른 중복제거 후 데이터 보내기
@@ -102,7 +110,10 @@ function NavbarAlarm(): JSX.Element {
           <div className="flex justify-center items-center cursor-pointer" onClick={()=> {
             axios({
               method: 'get',
-              url: `https://i8e201.p.ssafy.io/api/user/review/${username}`
+              url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
             })
             .then((r)=>{
               const datas:any[] = r.data.data

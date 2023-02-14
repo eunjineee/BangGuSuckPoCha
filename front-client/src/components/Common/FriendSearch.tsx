@@ -9,7 +9,8 @@ function FriendSearch(): JSX.Element {
   const dispatch = useAppDispatch()
   const [chat,setChat] = useState()
   const searchFriend = useRef<any>()
-
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   return (
     <div>
       <div
@@ -44,7 +45,10 @@ function FriendSearch(): JSX.Element {
                         data: {
                           nickname: chat,
                           username: username
-                        }
+                        },
+                        headers: {
+                          accessToken: `${accessToken}`,
+                        },
                       })
                       .then((r)=> {
                         console.log('요청받은 데이터: ',r.data.message)
@@ -74,7 +78,10 @@ function FriendSearch(): JSX.Element {
                         data: {
                           nickname: chat,
                           username: username
-                        }
+                        },
+                        headers: {
+                          accessToken: `${accessToken}`,
+                        },
                       })
                       .then((r)=> {
                         console.log('요청받은 데이터: ',r.data.message)
