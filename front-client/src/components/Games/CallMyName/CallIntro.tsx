@@ -165,7 +165,7 @@ function CallIntro({
         <CallResult socket={socket} pochaId={pochaId} resultData={resultData}/>
       ) : null}
       {signal === "INPUT" ? (
-        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} nowtitles={nowtitles}/>
+        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>
