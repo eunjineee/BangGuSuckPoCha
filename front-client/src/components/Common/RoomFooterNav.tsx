@@ -24,7 +24,7 @@ function RoomFooterNav({
   isHost: boolean;
 }): JSX.Element {
   const dispatch = useAppDispatch();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const myName = localStorage.getItem("Username");
