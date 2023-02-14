@@ -56,6 +56,8 @@ const BalancegameSettingModal = () => {
   };
 
   const Save = () => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "post",
       url: "https://i8e201.p.ssafy.io/api/admin/game/balance",
@@ -64,6 +66,10 @@ const BalancegameSettingModal = () => {
         question2: RightInput,
         type: Select,
       },
+
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       const result = r.data.message;
       if (result === "success") {
@@ -71,6 +77,10 @@ const BalancegameSettingModal = () => {
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/pocha/game/balance/${Select}`,
+
+          headers: {
+            accessToken: accessToken,
+          },
         }).then((r) => {
           // console.log("밸런스 게임 데이터 0", r.data.data);
           setBalance(r.data.data);
@@ -82,9 +92,15 @@ const BalancegameSettingModal = () => {
   };
 
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/pocha/game/balance/0",
+
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       // console.log("밸런스 게임 데이터 0", r.data.data);
       setBalance(r.data.data);
@@ -107,9 +123,15 @@ const BalancegameSettingModal = () => {
               <div
                 className="border-2 h-[100%] w-[100%] rounded-md  cursor-pointer"
                 onClick={() => {
+                  const accessToken = localStorage.getItem("accessToken");
+
                   axios({
                     method: "get",
                     url: "https://i8e201.p.ssafy.io/api/pocha/game/balance/0",
+
+                    headers: {
+                      accessToken: accessToken,
+                    },
                   }).then((r) => {
                     console.log("밸런스 게임 데이터 0", r.data.data);
                     setSelect("0");
@@ -124,9 +146,15 @@ const BalancegameSettingModal = () => {
               <div
                 className="border-2 h-[100%] w-[100%] rounded-md cursor-pointer"
                 onClick={() => {
+                  const accessToken = localStorage.getItem("accessToken");
+
                   axios({
                     method: "get",
                     url: "https://i8e201.p.ssafy.io/api/pocha/game/balance/1",
+
+                    headers: {
+                      accessToken: accessToken,
+                    },
                   }).then((r) => {
                     console.log("밸런스 게임 데이터 1", r.data.data);
                     setSelect("1");
@@ -171,14 +199,25 @@ const BalancegameSettingModal = () => {
                           <td
                             className=" p-2 cursor-pointer hover:scale-125"
                             onClick={() => {
+                              const accessToken =
+                                localStorage.getItem("accessToken");
+
                               console.log("나 클릭");
                               axios({
                                 method: "delete",
                                 url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${it.balanceId}`,
+
+                                headers: {
+                                  accessToken: accessToken,
+                                },
                               }).then((r) => {
                                 axios({
                                   method: "get",
                                   url: `https://i8e201.p.ssafy.io/api/pocha/game/balance/${Select}`,
+
+                                  headers: {
+                                    accessToken: accessToken,
+                                  },
                                 }).then((r) => {
                                   setBalance(r.data.data);
                                 });
@@ -272,6 +311,8 @@ const BalancegameSettingModal = () => {
                     <div
                       className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                       onClick={() => {
+                        const accessToken = localStorage.getItem("accessToken");
+
                         axios({
                           method: "put",
                           url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${ModifybalanceId}`,
@@ -280,11 +321,19 @@ const BalancegameSettingModal = () => {
                             question2: RightInput,
                             type: Select,
                           },
+
+                          headers: {
+                            accessToken: accessToken,
+                          },
                         }).then((r) => {
                           toast.success("수정완료");
                           axios({
                             method: "get",
                             url: `https://i8e201.p.ssafy.io/api/pocha/game/balance/${Select}`,
+
+                            headers: {
+                              accessToken: accessToken,
+                            },
                           }).then((r) => {
                             setBalance(r.data.data);
                           });

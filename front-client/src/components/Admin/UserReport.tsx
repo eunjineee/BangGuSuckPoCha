@@ -11,9 +11,14 @@ function UserReport(): React.ReactElement {
     return state.adminreport;
   });
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/admin/report",
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       dispatch(changeAdminReport(r.data.data));
     });

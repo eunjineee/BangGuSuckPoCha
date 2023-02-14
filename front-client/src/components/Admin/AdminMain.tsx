@@ -24,9 +24,15 @@ function AdminMain(): React.ReactElement {
           <div
             className="cursor-pointer "
             onClick={() => {
+              const accessToken = localStorage.getItem("accessToken");
+
               axios({
                 method: "get",
                 url: `https://i8e201.p.ssafy.io/api/admin/user`,
+
+                headers: {
+                  accessToken: accessToken,
+                },
               }).then((r) => {
                 console.log(r.data.data);
                 dispatch(changeUserList(r.data.data));
@@ -40,9 +46,14 @@ function AdminMain(): React.ReactElement {
           <div
             className="cursor-pointer "
             onClick={() => {
+              const accessToken = localStorage.getItem("accessToken");
               axios({
                 method: "get",
                 url: "https://i8e201.p.ssafy.io/api/admin/pocha",
+
+                headers: {
+                  accessToken: accessToken,
+                },
               }).then((r) => {
                 console.log(r.data.data);
                 dispatch(changeMainCreateRoomList(r.data.data));

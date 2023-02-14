@@ -62,12 +62,18 @@ const YanggameSettingModal = () => {
   };
 
   const Save = () => {
+    const accessToken = localStorage.getItem("accessToken");
+
     axios({
       method: "post",
       url: "https://i8e201.p.ssafy.io/api/admin/game/ysc",
       data: {
         type: Type,
         word: Word,
+      },
+
+      headers: {
+        accessToken: accessToken,
       },
     }).then((r) => {
       const result = r.data.message;
@@ -76,6 +82,10 @@ const YanggameSettingModal = () => {
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+
+          headers: {
+            accessToken: accessToken,
+          },
         }).then((r) => {
           setYscInfo(r.data.data);
         });
@@ -85,9 +95,14 @@ const YanggameSettingModal = () => {
     });
   };
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/pocha/game/ysc",
+
+      headers: {
+        accessToken: accessToken,
+      },
     }).then((r) => {
       console.log(r.data.data);
 
@@ -110,9 +125,15 @@ const YanggameSettingModal = () => {
                 <div
                   className="border-2 h-[100%] w-[100%] rounded-md  cursor-pointer"
                   onClick={() => {
+                    const accessToken = localStorage.getItem("accessToken");
+
                     axios({
                       method: "get",
                       url: "https://i8e201.p.ssafy.io/api/pocha/game/ysc",
+
+                      headers: {
+                        accessToken: accessToken,
+                      },
                     }).then((r) => {
                       console.log("양세찬 게임 데이터", r.data.data);
                     });
@@ -157,13 +178,23 @@ const YanggameSettingModal = () => {
                               className=" p-2 cursor-pointer hover:scale-125"
                               onClick={() => {
                                 console.log("나 클릭");
+                                const accessToken =
+                                  localStorage.getItem("accessToken");
+
                                 axios({
                                   method: "delete",
                                   url: `https://i8e201.p.ssafy.io/api/admin/game/ysc/${it.yscId}`,
+
+                                  headers: {
+                                    accessToken: accessToken,
+                                  },
                                 }).then((r) => {
                                   axios({
                                     method: "get",
                                     url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+                                    headers: {
+                                      accessToken: accessToken,
+                                    },
                                   }).then((r) => {
                                     setYscInfo(r.data.data);
                                   });
@@ -257,6 +288,8 @@ const YanggameSettingModal = () => {
                       <div
                         className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                         onClick={() => {
+                          const accessToken =
+                            localStorage.getItem("accessToken");
                           axios({
                             method: "put",
                             url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${ModifyYscId}`,
@@ -264,11 +297,18 @@ const YanggameSettingModal = () => {
                               type: Type,
                               word: Word,
                             },
+
+                            headers: {
+                              accessToken: accessToken,
+                            },
                           }).then((r) => {
                             toast.success("수정완료");
                             axios({
                               method: "get",
                               url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+                              headers: {
+                                accessToken: accessToken,
+                              },
                             }).then((r) => {
                               setYscInfo(r.data.data);
                             });
