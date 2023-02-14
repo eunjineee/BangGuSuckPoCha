@@ -20,6 +20,7 @@ import {
 import Loading from "../Common/Loading";
 import RoomUserProfile from "../Common/RoomUserProfile";
 import Balance from "../Games/Balance/Balance";
+import CallIntro from "../Games/CallMyName/CallIntro";
 import GameSelect from "../Games/GameSelect/GameSelect";
 import LadderIntro from "../Games/Ladder/LadderIntro";
 import LiarIntro from "../Games/Liar/LiarIntro";
@@ -412,7 +413,7 @@ const WebRTC = ({
     });
 
     socket.on("room_full", () => {
-      toast.info("풀방입니다");
+      toast.info("인원이 가득찬 포차입니다");
       navigate(`/main`);
     });
 
@@ -759,7 +760,16 @@ const WebRTC = ({
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}
+                : null}   
+              {selectedId === "call"
+                ? pochaUsers && (
+                    <CallIntro
+                      socket={socket}
+                      pochaId={pochaId}
+                      pochaUsers={pochaUsers}
+                    />
+                  )
+                : null}   
               {selectedId === "twenty"
                 ? pochaUsers && (
                     <TwentyIntro

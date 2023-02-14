@@ -7,77 +7,86 @@ function LiarVote({
   pochaId,
   pochaUsers,
   pochaInfo,
-  isliar,
+  liarnum,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
   pochaInfo: any;
-  isliar: boolean;
+  liarnum: any;
 }): React.ReactElement {
   const roomName = pochaId;
-
+  const {totalCount} = pochaInfo;
   const [titles, setTitles] = useState<any>(null)
   const [nowtitle, setNowtitle] = useState<any>(null)
+
   const onClickClose = () => {
     const signalData = "INTRO";
     // 다음 페이지로 이동
     socket.emit("game_liar_signal", roomName, signalData);
   };
 
-  const getLiarSubject = async() => {
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
-      });
-      console.log(data);
-      setTitles(data);
-    } catch (error) {
-      console.log("라이어 게임 주제 axios error", error);
-    }
-  }
+  // //토글 보여주기
+  // function onClickdropdown() {
+  //   var v = document.querySelector('.dropdown_content');
+  //   v.classList.toggle('show');
+  // }
 
-  const maintitle = () => {
-    if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length));
-      console.log(titles[titleone], titleone)
-      setNowtitle(titles[titleone]);
-    }
-  }
-  useEffect(()=> {
-    getLiarSubject();
-  },[])
+  // //토글 선택했을 때
+  // function selectP :any = (value:an) => {
+  //   console.log(value);
+  //   var dropbtn_content = document.querySelector('.dropbtn_content');
+  //   var dropbtn_click = document.querySelector('.dropbtn_click');
+  //   var dropbtn = document.querySelector('.dropbtn');
 
-  useEffect(()=> {
-    maintitle();
-  },[titles])
-  
+  //   dropbtn_content.innerText = value;
+  //   dropbtn_content.style.color = '#252525';
+  //   dropbtn.style.borderColor = '#3992a8';
+  // }
+
+  // function onClickVoteLiar = () => {
+  //   const signalData = "vote liar";
+  //   const data = voteliar;
+  //   socket.emit("game_son_signal", roomName, signalData, data);
+  // }
+
   return (
-    <div className={`${styles.layout3}`}>
-      <div className={`${styles.box} ${styles.layout}`}>
-        <div className={`${styles.box2} ${styles.layout2}`}>LIAR GAME</div>
-        <div className={`${styles.layout5}`}>
-          <div className={`${styles.box3}`}>주제 :</div>
-          {nowtitle && <div className={`${styles.box4}`} id="maintitle">{nowtitle.type}</div>}
-        </div>
-        {nowtitle && <div className={`${styles.layout4}`} id="title">{nowtitle.word}</div>}
-        <span className={`${styles.text1}`}>
-          두 턴을 돌고 난 후,
-          <br/>
-          NEXT를 클릭하여 라이어를 투표하십시오.
-        </span>
-        <div className={`${styles.layout6}`}>
-          <input 
-            type="button" 
-            onClick={onClickClose} 
-            className={`${styles.retry}`} 
-            value="지금은 인트로" 
-          />
-        </div>
-      </div>
-    </div>
+    <div></div>
+    // <div className={`${styles.layout3}`}>
+    //   <div className={`${styles.box} ${styles.layout}`}>
+    //     <div className={`${styles.box2} ${styles.layout2}`}>LIAR GAME</div>
+    //     <div className={`${styles.layout5}`}>
+    //       <div className={`${styles.box3}`}>라이어를 투표해주세요.</div>
+    //     </div>
+    //     <div className={`${styles.box4}`}>
+    //       <div className={`${styles.text1} ${styles.showTime}`}></div>
+    //       <div className={`${styles.text1}`} id="title">초</div>
+    //     </div>
+    //     <div className={`${styles.layout6}`}>
+    //       <div className={`${styles.dropdown}`}>
+    //         <button className={`${styles.dropbtn}`}>
+    //           <span className={`${styles.dropbtn_content}`}>라이어는...?</span>
+    //           <span className={`${styles.dropbtn_click} ${styles.dropbtn_click_style}`}
+    //             onClick={onClickdropdown}>arrow_drop_down</span>
+    //         </button>
+    //         <div className={`${styles.dropdown_content}`}>
+    //           <div onClick={selectP(this.innerText)}>{pochaUsers[0]}</div>
+    //           <div onClick={selectP(this.innerText)}>{pochaUsers[1]}</div>
+    //           <div onClick={selectP(this.innerText)}>{pochaUsers[2]}</div>
+    //           <div onClick={selectP(this.innerText)}>{pochaUsers[3]}</div>
+    //           <div onClick={selectP(this.innerText)}>{pochaUsers[4]}</div>
+    //           <div onClick={selectP(this.innerText)}>{pochaUsers[5]}</div>
+    //         </div>
+    //       </div>
+    //       <input
+    //         onClick={onClickVoteLiar}
+    //         type="button"
+    //         className={`${styles.retry}`}
+    //         value="투표하기"
+    //       />
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 
