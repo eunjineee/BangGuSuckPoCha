@@ -132,90 +132,10 @@ const NewMyPage = () => {
       headers: {
         accessToken: `${accessToken}`,
       },
-    })
-      .then((r) => {
-        dispatch(changeMyInfo(r.data.data));
-        setMyInfo(r.data.data);
+    }).then((r) => {
+      console.log("나 토큰있나???111", r.data);
 
-        //data내용
-        const a = r.data.data;
-        //변경될 닉네임
-        setModifyNickname(a.nickname);
-        // //고정될 닉네임
-        setMyNickname(a.nickname);
-        //코멘트 저장
-        setComment(a.comment);
-
-        const birth = a.birth;
-        const today = new Date();
-        const birthDate = new Date(
-          birth.split(".")[0],
-          birth.split(".")[1],
-          birth.split(".")[2]
-        );
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        setAge(age);
-        // setRegion(a.region);
-        setMyRegionCode(a.regioncode);
-        //첫번째 박스의 코드로 확인
-        setSelectedFirst(a.regioncode);
-
-        dispatch(changeMyPageProfile(a.profile));
-        setSelectSecond(a.regioncode);
-
-        //광역시 랑 (도/시) 구분
-        axios({
-          method: "get",
-          url: "https://i8e201.p.ssafy.io/api/admin/region",
-          headers: {
-            accessToken: accessToken,
-          },
-        }).then((r) => {
-          console.log("2번째 axios 시작");
-          const result = r.data.data;
-          let rlist1 = new Array();
-          let rlist2 = new Array();
-          for (var i = 0; i < result.length; i++) {
-            if (i === 0) {
-              rlist1.push(result[i]);
-            } else {
-              if (
-                result[i - 1].regionCode.substr(0, 2) ===
-                result[i].regionCode.substr(0, 2)
-              ) {
-                rlist2.push(result[i]);
-              } else {
-                rlist1.push(result[i]);
-              }
-            }
-          }
-          setCity(rlist1.slice(0, 7));
-
-          setRegionlistFirst(rlist1);
-
-          setRegionlistSecond(rlist2);
-
-          const templist = rlist1.slice(0, 7);
-
-          let temp = false;
-
-          templist.map((it) => {
-            if (it.regionCode.substr(0, 2) === a.regioncode.substr(0, 2)) {
-              temp = true;
-            }
-          });
-          setIsSelected(temp);
-        });
-
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-      })
-      .catch((e) => {
+      if ("401" === r.data.status) {
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
@@ -229,7 +149,89 @@ const NewMyPage = () => {
         }).then((r) => {
           console.log(r.data.data);
         });
+      }
+
+      dispatch(changeMyInfo(r.data.data));
+      setMyInfo(r.data.data);
+
+      //data내용
+      const a = r.data.data;
+      //변경될 닉네임
+      setModifyNickname(a.nickname);
+      // //고정될 닉네임
+      setMyNickname(a.nickname);
+      //코멘트 저장
+      setComment(a.comment);
+
+      const birth = a.birth;
+      const today = new Date();
+      const birthDate = new Date(
+        birth.split(".")[0],
+        birth.split(".")[1],
+        birth.split(".")[2]
+      );
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      setAge(age);
+      // setRegion(a.region);
+      setMyRegionCode(a.regioncode);
+      //첫번째 박스의 코드로 확인
+      setSelectedFirst(a.regioncode);
+
+      dispatch(changeMyPageProfile(a.profile));
+      setSelectSecond(a.regioncode);
+
+      //광역시 랑 (도/시) 구분
+      axios({
+        method: "get",
+        url: "https://i8e201.p.ssafy.io/api/admin/region",
+        headers: {
+          accessToken: accessToken,
+        },
+      }).then((r) => {
+        console.log("2번째 axios 시작");
+        const result = r.data.data;
+        let rlist1 = new Array();
+        let rlist2 = new Array();
+        for (var i = 0; i < result.length; i++) {
+          if (i === 0) {
+            rlist1.push(result[i]);
+          } else {
+            if (
+              result[i - 1].regionCode.substr(0, 2) ===
+              result[i].regionCode.substr(0, 2)
+            ) {
+              rlist2.push(result[i]);
+            } else {
+              rlist1.push(result[i]);
+            }
+          }
+        }
+        setCity(rlist1.slice(0, 7));
+
+        setRegionlistFirst(rlist1);
+
+        setRegionlistSecond(rlist2);
+
+        const templist = rlist1.slice(0, 7);
+
+        let temp = false;
+
+        templist.map((it) => {
+          if (it.regionCode.substr(0, 2) === a.regioncode.substr(0, 2)) {
+            temp = true;
+          }
+        });
+        setIsSelected(temp);
       });
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    });
   }, []);
 
   return (
