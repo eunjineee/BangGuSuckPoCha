@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
@@ -22,6 +23,7 @@ import "./ReviewPage.css";
 
 function ReviewPage(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const username = localStorage.getItem("Username");
   const [reviewAfter, setReviewAfter] = useState([]);
   const [reviewBefore, setReviewBefore] = useState([]);
@@ -71,40 +73,118 @@ function ReviewPage(): JSX.Element {
         accessToken: `${accessToken}`,
       },
     }).then((r) => {
-      const datas: any[] = r.data.data;
-      // 현재 날짜 지정
-      const now = new Date();
-      // 현재 연도
-      let now_year = now.getFullYear();
-      // 현재 월
-      let now_month = ("0" + (now.getMonth() + 1)).slice(-2);
-      // 현재 일
-      let now_day = ("0" + now.getDate()).slice(-2);
-      let two_day_ago = ("0" + (now.getDate() - 2)).slice(-2);
-      // 현재 연도-월-일
-      const nowYMD: any = new Date(now_year + "-" + now_month + "-" + now_day);
-      const threeBeforeYMD: any = new Date(
-        now_year + "-" + now_month + "-" + two_day_ago
-      );
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "get",
+              url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              const datas: any[] = r.data.data;
+              // 현재 날짜 지정
+              const now = new Date();
+              // 현재 연도
+              let now_year = now.getFullYear();
+              // 현재 월
+              let now_month = ("0" + (now.getMonth() + 1)).slice(-2);
+              // 현재 일
+              let now_day = ("0" + now.getDate()).slice(-2);
+              let two_day_ago = ("0" + (now.getDate() - 2)).slice(-2);
+              // 현재 연도-월-일
+              const nowYMD: any = new Date(
+                now_year + "-" + now_month + "-" + now_day
+              );
+              const threeBeforeYMD: any = new Date(
+                now_year + "-" + now_month + "-" + two_day_ago
+              );
 
-      // 3일
-      // 리뷰 이전
-      const Beforedata: any = datas.filter((data) => {
-        const review_create_at = new Date(data.create_at.split("T")[0]);
-        return (
-          data.review_at === null &&
-          review_create_at <= nowYMD &&
-          threeBeforeYMD <= review_create_at
+              // 3일
+              // 리뷰 이전
+              const Beforedata: any = datas.filter((data) => {
+                const review_create_at = new Date(data.create_at.split("T")[0]);
+                return (
+                  data.review_at === null &&
+                  review_create_at <= nowYMD &&
+                  threeBeforeYMD <= review_create_at
+                );
+              });
+              const currentBeforedata = Beforedata.reverse();
+              setReviewBefore(currentBeforedata);
+              // 리뷰 이후
+              const Afterdata: any = datas.filter((data) => {
+                return data.review_at !== null;
+              });
+              const currentAfterReview = Afterdata.reverse();
+              setReviewAfter(currentAfterReview);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        const datas: any[] = r.data.data;
+        // 현재 날짜 지정
+        const now = new Date();
+        // 현재 연도
+        let now_year = now.getFullYear();
+        // 현재 월
+        let now_month = ("0" + (now.getMonth() + 1)).slice(-2);
+        // 현재 일
+        let now_day = ("0" + now.getDate()).slice(-2);
+        let two_day_ago = ("0" + (now.getDate() - 2)).slice(-2);
+        // 현재 연도-월-일
+        const nowYMD: any = new Date(
+          now_year + "-" + now_month + "-" + now_day
         );
-      });
-      const currentBeforedata = Beforedata.reverse();
-      setReviewBefore(currentBeforedata);
-      // 리뷰 이후
-      const Afterdata: any = datas.filter((data) => {
-        return data.review_at !== null;
-      });
-      const currentAfterReview = Afterdata.reverse();
-      setReviewAfter(currentAfterReview);
+        const threeBeforeYMD: any = new Date(
+          now_year + "-" + now_month + "-" + two_day_ago
+        );
+
+        // 3일
+        // 리뷰 이전
+        const Beforedata: any = datas.filter((data) => {
+          const review_create_at = new Date(data.create_at.split("T")[0]);
+          return (
+            data.review_at === null &&
+            review_create_at <= nowYMD &&
+            threeBeforeYMD <= review_create_at
+          );
+        });
+        const currentBeforedata = Beforedata.reverse();
+        setReviewBefore(currentBeforedata);
+        // 리뷰 이후
+        const Afterdata: any = datas.filter((data) => {
+          return data.review_at !== null;
+        });
+        const currentAfterReview = Afterdata.reverse();
+        setReviewAfter(currentAfterReview);
+      }
     });
   }, []);
 
@@ -149,6 +229,7 @@ function ReviewComponent({
   reviewBefore,
   setReviewBefore,
 }: any): JSX.Element {
+  const navigate = useNavigate();
   let showBefore: any;
   let showAfter: any;
   const before = useRef<any>();
@@ -297,7 +378,7 @@ function StartReviewComponent({
     to_username,
   } = userData;
   // console.log('127번임', userData)
-
+  const navigate = useNavigate();
   let createReviewat = "0000-00-00";
   let finishReviewat = "0000-00-00";
   if (clickReviewState) {
@@ -336,14 +417,62 @@ function StartReviewComponent({
                 className="flex justify-center items-center mr-0"
                 onClick={() => {
                   // 클릭한 유저 정보 가져와서 담아주기
-                  axios
-                    .get(
-                      `https://i8e201.p.ssafy.io/api/user/info/${to_username}`
-                    )
-                    .then((r) => {
+                  let accessToken = localStorage.getItem("accessToken");
+                  axios({
+                    method: "get",
+                    url: `https://i8e201.p.ssafy.io/api/user/info/${to_username}`,
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
+                  }).then((r) => {
+                    //토큰이상해
+                    if ("401" === r.data.status) {
+                      //토큰 재요청
+                      console.log("토큰 이상함");
+                      const refreshToken = localStorage.getItem("refreshToken");
+                      const Username = localStorage.getItem("Username");
+                      axios({
+                        method: "get",
+                        url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                        headers: {
+                          refreshToken: refreshToken,
+                        },
+                      }).then((r) => {
+                        //재발급 실패
+                        if ("401" === r.data.status) {
+                          localStorage.clear();
+                          toast.error("인증되지 않은 유저입니다");
+                          navigate("/");
+                        }
+                        //재발급 성공
+                        else {
+                          console.log("재발급 성공", r.data.accessToken);
+                          localStorage.setItem(
+                            "accessToken",
+                            r.data.accessToken
+                          );
+                          accessToken = r.data.accessToken;
+                          //원래 axios 실행
+                          axios({
+                            method: "get",
+                            url: `https://i8e201.p.ssafy.io/api/user/info/${to_username}`,
+                            headers: {
+                              accessToken: `${accessToken}`,
+                            },
+                          }).then((r) => {
+                            dispatch(changeNavAlarmReviewEmojiUserData(r.data));
+                            dispatch(showRoomUserProfile());
+                          });
+                        }
+                      });
+                    }
+                    //토큰 정상이야
+                    else {
+                      //실행 결과값 그대로 실행
                       dispatch(changeNavAlarmReviewEmojiUserData(r.data));
                       dispatch(showRoomUserProfile());
-                    });
+                    }
+                  });
                 }}
               >
                 <img
@@ -384,6 +513,7 @@ function StartReviewComponent({
                   onClick={(e) => {
                     setRating(null);
                     let accessToken = localStorage.getItem("accessToken");
+                    //리뷰 여기부터 해야함
                     axios({
                       method: "put",
                       url: "https://i8e201.p.ssafy.io/api/user/review",
