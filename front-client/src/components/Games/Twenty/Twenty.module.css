@@ -1,0 +1,267 @@
+@font-face {
+    font-family: 'LeferiPoint-BlackA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-BlackA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+/* Yes or No 타이틀 */
+.setSize {
+    border: solid 2px;
+    width: 54rem;
+    margin: 0 auto;
+    height: 48.9rem;
+    background-color: #000000;
+    border-radius: 1rem;
+}
+
+.intro {
+    background-image: url( "./TwentyImg/TwentyIntro.png" );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.introButtons {
+    height: 30%;
+    
+}
+
+.introButton {
+    width : 12rem;
+    height : 3.5rem;
+    line-height: 3.5rem;
+    box-shadow: 0px 0px 30px rgba(222, 236, 221, 0.5);
+    font-family: 'Pretendard-Regular';
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    border: 3px solid transparent;
+    border-image: linear-gradient(178.55deg, #CBBACC -0.42%, #C1DFC4 -0.41%, #DEECDD 97.7%);
+    border-image-slice: 1;
+    text-shadow: 0px 0px 10px #008F5F;
+    margin: 2rem 0;
+}
+
+.introButton:hover {
+    color : #50C785;
+    cursor: pointer;
+}
+
+.manual {
+    background-image: url( "./TwentyImg/TwentyManual.png" ); 
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+
+.manualButton {
+    width : 12rem;
+    height : 3.5rem;
+    line-height: 3.5rem;
+    box-shadow: 0px 0px 30px rgba(222, 236, 221, 0.5);
+    font-family: 'Pretendard-Regular';
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    border: 3px solid transparent;
+    border-image: linear-gradient(178.55deg, #CBBACC -0.42%, #C1DFC4 -0.41%, #DEECDD 97.7%);
+    border-image-slice: 1;
+    text-shadow: 0px 0px 10px #008F5F;
+    margin: 5rem 0;
+}
+
+.manualButton:hover {
+    color : #50C785;
+    cursor: pointer;
+}
+
+.title {
+    text-align: center;
+    font-size: 3.5rem;
+    font-family: 'LeferiPoint-BlackA';
+    background: linear-gradient(180deg, #FDDB92 50%, #D1FDFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0px 0px 60px rgba(0, 182, 62, 0.6);
+    padding: 4rem 0rem 1rem 0rem;
+}
+
+.title > .image {
+    display: inline;
+    width: 2.7rem;
+    margin : 0 0.5rem;
+}
+
+/* 주제 목록 */
+.select {
+    text-align: center;
+    padding: 2rem;
+    color : #ffffff;
+    margin: 1rem auto;
+    height: 31rem;
+    width : 46rem;
+    font-family: 'Pretendard-Regular';
+    border: 3px solid transparent;
+    border-image: linear-gradient(178.55deg, #96FBC4 -0.42%, #F9F586 97.7%);
+    border-image-slice: 1;
+    color: #FFFFFF;
+    background: #131313;
+    box-shadow: 0px 0px 30px #008F5F;
+}
+
+.detail {
+    color: #FFFFFF;
+    font-size: 2rem;
+    padding-bottom : 1rem;
+    font-weight: bold;
+    text-shadow: 0px 0px 30px #00B63E;
+}
+
+.hiddenBox {
+    width: 2rem;
+}
+
+.subjectsArrow {
+    display: inline-block;
+    width: 1rem;
+    margin: 0 0.5rem;
+    display: none;
+    transform: rotate(270deg);
+}
+.subjects {
+    display: flex;
+    font-size: 1.2rem;
+    text-align: start;
+    width: 50%;
+    margin: 1.2rem auto;
+    cursor: pointer;
+}
+
+.subjects:hover {
+    color : #9EFF00;
+    text-shadow: 0px 0px 10px #04C100;
+}
+
+.subjects:hover .subjectsArrow {
+    display: inline-block;
+}
+
+/* 정답 입력 페이지 */
+.subject {
+     background: linear-gradient(180deg, #FDDB92 50%, #D1FDFF 100%);
+    -webkit-background-clip: text;
+    color: #FDDB92;
+    background-clip: text;
+    font-size: 1.8rem;
+    text-shadow: 0px 0px 60px rgba(0, 182, 62, 0.6);
+}
+
+/* 게임 시작 */
+/* 선택된 주제 */
+.selectSubject {
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1.8rem;
+    font-family: 'LeferiPoint-BlackA';
+}
+
+
+.text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9rem;
+    font-weight: bold;
+    color: red;
+    height: 11rem;
+    text-shadow: 0px 0px 20px #FF0000;
+}
+.answerSuccess {
+    font-size: 2rem;
+    padding: 2rem;
+    color: #A7FFEA;
+
+}
+
+.answerInput {
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin: 1rem auto;
+    width: 80%;
+    border-radius: 2rem;
+    color: #131313;
+}
+.answer {
+    font-size: 4rem;
+    padding: 1.5rem 0;
+    margin: 1rem auto;
+    color: #fff;
+    text-shadow: 0px 0px 30px #008F5F;
+}
+.display {
+    text-align: center;
+    font-weight: bold;
+    font-size : 5rem;
+    padding : 0.5rem;
+    color: #A7FFEA;
+    text-shadow: 0px 0px 20px #0085FF;
+}
+
+
+.countDetail {
+    font-size: 1.5rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button {
+    margin : 5px;
+    padding : 5px 10px;
+    width : 12rem;
+    height : 4rem;
+    line-height: 3rem;
+    box-shadow: 0px 0px 30px rgba(222, 236, 221, 0.5);
+    text-shadow: 0px 0px 10px #008F5F;
+    font-family: 'Pretendard-Regular';
+    color: #FFFFFF;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid transparent;
+    border-image: linear-gradient(178.55deg, #CBBACC -0.42%, #C1DFC4 -0.41%, #DEECDD 97.7%);
+    border-image-slice: 1;
+    cursor: pointer;
+}
+
+.button:hover {
+    color: #50C785;
+}
+
+.reset {
+    display: flex;
+    justify-content: center;
+}
