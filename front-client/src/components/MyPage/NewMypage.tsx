@@ -22,7 +22,6 @@ import NavbarAlarm from "../Common/NavbarAlarm";
 const NewMyPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const Username: any = localStorage.getItem("Username");
@@ -160,7 +159,6 @@ const NewMyPage = () => {
           age--;
         }
         setAge(age);
-
         // setRegion(a.region);
         setMyRegionCode(a.regioncode);
         //첫번째 박스의 코드로 확인
@@ -177,7 +175,7 @@ const NewMyPage = () => {
             accessToken: accessToken,
           },
         }).then((r) => {
-          // console.log("2번째 axios 시작");
+          console.log("2번째 axios 시작");
           const result = r.data.data;
           let rlist1 = new Array();
           let rlist2 = new Array();
@@ -218,8 +216,6 @@ const NewMyPage = () => {
         }, 1000);
       })
       .catch((e) => {
-        console.log("hello", e);
-        console.log("토큰 실패");
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
@@ -231,7 +227,7 @@ const NewMyPage = () => {
             accessToken: accessToken,
           },
         }).then((r) => {
-          console.log("나호출??", r.data);
+          console.log(r.data.data);
         });
       });
   }, []);
