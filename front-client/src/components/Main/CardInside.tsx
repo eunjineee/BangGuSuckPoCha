@@ -60,7 +60,7 @@ function CardInside({
 
   return (
     <div
-      className="h-full min-h-[100%] w-full min-w-[100%]"
+      className={`h-full min-h-[100%] w-full min-w-[100%]`}
       onMouseEnter={() => {
         setIsOver(true);
       }}

@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'Binggrae';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Binggrae.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+.binggrae {
+  font-family: 'Binggrae';
+}
+
 /* Talk */
 .talk:hover {
   box-shadow: 0px 0px 3px #fff201, 1px 1px 20px #E47200, -1px -1px 20px #E47200, 1px -1px 60px #FF321A;
