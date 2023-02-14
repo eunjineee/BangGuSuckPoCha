@@ -13,7 +13,7 @@ function FriendChat():JSX.Element {
     return state.menuFriendChatClickCheck
   })
 
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 채팅구역
   const chatArea = useRef<any>(null) 

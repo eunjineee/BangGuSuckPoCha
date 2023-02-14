@@ -13,7 +13,7 @@ import RoomUserFriendModal from "./RoomUserFriendModal";
 const NavUserEmojiClickModal = ({ userData }: { userData: any }) => {
   // console.log('클릭한 유저데이터 닉네임: ',userData.data.profile)
   let dispatch = useAppDispatch();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const username = localStorage.getItem('Username')
   let { manner, gender, birth, region, comment } = userData.data;

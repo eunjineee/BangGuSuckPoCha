@@ -43,6 +43,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const accessToken= localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // 나의 비디오 ref
   const myFace = useRef<HTMLVideoElement>(null);
@@ -72,7 +73,7 @@ const WebRTC = ({
   const div4 = useRef<HTMLDivElement>(null);
   const div5 = useRef<HTMLDivElement>(null);
   const div6 = useRef<HTMLDivElement>(null);
-  
+
   const myStream = useRef<any>(null);
   // let myStream: any;
   const roomName: any = pochaId;
@@ -103,11 +104,17 @@ const WebRTC = ({
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfile() {
     console.log(pochaId);
+    
+    
+    
     try {
       const {
         data: { data },
       } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       const lastIndex = data.length - 1;
       console.log("참여 유저들 데이터?", data);
@@ -441,7 +448,9 @@ const WebRTC = ({
   }, []);
 
   // ------------ 포차 기능 code --------------
-  const [jjanImg, setJjanImg] = useState<any>(require("src/assets/theme/jjan1.png"));
+  const [jjanImg, setJjanImg] = useState<any>(
+    require("src/assets/theme/jjan1.png")
+  );
   //  axios
   // const api = axios.create({
   //   baseURL: "https://i8e201.p.ssafy.io/api",
@@ -623,9 +632,12 @@ const WebRTC = ({
       // console.log("모달용 데이터 닉?", username);
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       console.log("모달용 데이터?", data);
-      dispatch(changeNavAlarmReviewEmojiUserData(data))
+      dispatch(changeNavAlarmReviewEmojiUserData(data));
       dispatch(showRoomUserProfile());
       // setUserProfileData(data);
       // dispatch(isRtcLoading(false));
@@ -689,22 +701,22 @@ const WebRTC = ({
     // 밸런스 게임 시그널받기
     socket.on("game_balance_Intro", (isBalance) => {
       console.log("WebRTC에서 roomName에서 받았나?", isBalance);
-      dispatch(balanceChange(isBalance))
+      dispatch(balanceChange(isBalance));
     });
 
     // 밸런스 게임 시그널받기
     socket.on("game_balance_typeChange", (choiceType) => {
-      if (choiceType === 'EXIT') {
-        dispatch(isRomanNormalChange(null))
+      if (choiceType === "EXIT") {
+        dispatch(isRomanNormalChange(null));
       } else {
-        dispatch(isRomanNormalChange(choiceType))
+        dispatch(isRomanNormalChange(choiceType));
       }
       console.log("choiceType?", choiceType);
     });
 
     // 밸런스 게임 테마별 질문 변경
     socket.on("game_balance_subjectChange", (themeDataList) => {
-      dispatch(balanceQuestionChange(themeDataList))
+      dispatch(balanceQuestionChange(themeDataList));
     });
 
     return () => {
@@ -714,8 +726,6 @@ const WebRTC = ({
       socket.off("game_twenty_signal");
     };
   }, []);
-
-  
 
   // 게임 선택창 상태
   const isGameSelect = useAppSelector((state) => {
@@ -743,14 +753,19 @@ const WebRTC = ({
           {count ? (
             <div className=" bg-black bg-opacity-70 flex flex-col justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
               <img src={jjanImg} alt="jjan" />
-              <div className="text-7xl font-bold text-white fixed top-28 z-30">{count}</div>
+              <div className="text-7xl font-bold text-white fixed top-28 z-30">
+                {count}
+              </div>
             </div>
           ) : null}
           <div className="text-white w-full min-h-[85vh] flex justify-evenly">
             <div className="flex flex-col justify-evenly items-center ">
               {/* <div className="flex flex-wrap justify-evenly items-center p-24"> */}
               {/* 내 비디오 공간 */}
-              <div ref={div1} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div
+                ref={div1}
+                className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center "
+              >
                 <video
                   className="object-fill"
                   ref={myFace}
@@ -758,7 +773,10 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div ref={div3} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
+              <div
+                ref={div3}
+                className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+              >
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -767,7 +785,10 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div ref={div5} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
+              <div
+                ref={div5}
+                className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+              >
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -795,12 +816,7 @@ const WebRTC = ({
                   )
                 : null}
               {selectedId === "son"
-                ? pochaUsers && (
-                    <SonIntro
-                      socket={socket}
-                      pochaId={pochaId}
-                    />
-                  )
+                ? pochaUsers && <SonIntro socket={socket} pochaId={pochaId} />
                 : null}
               {selectedId === "bal"
                 ? pochaUsers && (
@@ -810,7 +826,7 @@ const WebRTC = ({
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}   
+                : null}
               {selectedId === "liar"
                 ? pochaUsers && (
                     <LiarIntro
@@ -819,7 +835,7 @@ const WebRTC = ({
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}   
+                : null}
               {selectedId === "call"
                 ? pochaUsers && (
                     <CallIntro
@@ -828,20 +844,20 @@ const WebRTC = ({
                       pochaUsers={pochaUsers}
                     />
                   )
-                : null}   
+                : null}
               {selectedId === "twenty"
                 ? pochaUsers && (
-                    <TwentyIntro
-                      socket={socket}
-                      pochaId={pochaId}
-                    />
+                    <TwentyIntro socket={socket} pochaId={pochaId} />
                   )
-                : null}  
+                : null}
             </div>
 
             {/* 사람 공간 */}
             <div className="flex flex-col justify-evenly items-center">
-              <div ref={div2} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center ">
+              <div
+                ref={div2}
+                className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center "
+              >
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -850,7 +866,10 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div ref={div4} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
+              <div
+                ref={div4}
+                className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+              >
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"
@@ -859,7 +878,10 @@ const WebRTC = ({
                   autoPlay
                 ></video>
               </div>
-              <div ref={div6} className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden">
+              <div
+                ref={div6}
+                className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+              >
                 <video
                   onClick={showUserProfile}
                   className="object-fill cursor-pointer"

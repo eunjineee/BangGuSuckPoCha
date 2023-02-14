@@ -14,7 +14,7 @@ function RoomMeetingFooterNav({
   const dispatch = useAppDispatch();
   // 룸 이름
   const roomName = pochaId;
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const [modalData, setModalData] = useState<any>(null);
   // 짠 카운트

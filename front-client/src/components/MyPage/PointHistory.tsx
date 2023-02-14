@@ -7,9 +7,13 @@ import Navbar from "../Common/Navbar";
 import NavbarAlarm from "../Common/NavbarAlarm";
 import NavbarMenu from "../Common/NavbarMenu";
 import styles from "../Common/Common.module.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const PointHistory = () => {
+  const navigate = useNavigate();
   const Username = localStorage.getItem("Username");
+  const refreshToken = localStorage.getItem("refreshToken");
   const [History, setHistory] = useState<any>();
   const [MyInfo, setMyInfo] = useState<any>();
   //  메뉴 -> 친구 클릭 -> 채팅 상태
@@ -18,36 +22,74 @@ const PointHistory = () => {
   });
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/point/${Username}`,
       headers: {
         accessToken: accessToken,
       },
-    })
-      .then((r) => {
-        console.log(r.data.data);
+    }).then((r) => {
+      //이상한 token으로 요청하는 중이지?
+      if ("401" === r.data.status) {
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          console.log("해치웠나?", r.data);
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          } else {
+            //재발급이 완만하게 됨
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            axios({
+              method: "get",
+              url: `https://i8e201.p.ssafy.io/api/user/point/${Username}`,
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              console.log(r.data.data);
+              setHistory(r.data.data);
+              axios({
+                method: "get",
+                url: `https://i8e201.p.ssafy.io/api/user/myinfo/${Username}`,
+                headers: {
+                  accessToken: accessToken,
+                },
+              })
+                .then((r) => {
+                  console.log(r.data.data);
+                  setMyInfo(r.data.data);
+                })
+                .catch((e) => {
+                  console.log("두번째", e);
+                });
+            });
+          }
+        });
+      } else {
+        //이상한게 아니군 그냥해
+        console.log("토큰 이상무", r.data.data);
         setHistory(r.data.data);
-      })
-      .catch((e) => {
-        console.log("첫번째", e);
-      });
-
-    axios({
-      method: "get",
-      url: `https://i8e201.p.ssafy.io/api/user/myinfo/${Username}`,
-      headers: {
-        accessToken: accessToken,
-      },
-    })
-      .then((r) => {
-        console.log(r.data.data);
-        setMyInfo(r.data.data);
-      })
-      .catch((e) => {
-        console.log("두번째", e);
-      });
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/myinfo/${Username}`,
+          headers: {
+            accessToken: accessToken,
+          },
+        }).then((r) => {
+          console.log(r.data.data);
+          setMyInfo(r.data.data);
+        });
+      }
+    });
   }, []);
 
   return (

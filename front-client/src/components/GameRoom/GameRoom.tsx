@@ -12,7 +12,7 @@ import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 
 function GameRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const { PochaId } = useParams();
   const [socket, setSocket] = useState<any>(null);
