@@ -1,0 +1,168 @@
+.titlespan{
+  position: absolute;
+  width: 651px;
+  height: 100px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 73px;
+  text-align: center;
+
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img1{
+  z-index: 1;
+  position: absolute;
+  margin-top: 20px;
+}
+
+input.txt {
+  width:80px;
+}
+
+.box {
+  width: 54rem;
+  margin: 0 auto;
+  height: 48.9rem;
+  background-color: #000000;
+  border-radius: 1rem;
+}
+
+.box2 {
+  position: absolute;
+  width: 382px;
+  height: 82px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 55px;
+  line-height: 67px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  -webkit-text-stroke: 1px solid #FFA149;
+  text-shadow: 0px 0px 30px #FF0000;
+}
+
+.box3 {
+  position: absolute;
+width: 624px;
+height: 82px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 800;
+font-size: 40px;
+line-height: 48px;
+text-align: center;
+
+color: #FF0000;
+}
+
+
+.layout {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+} 
+
+.layout2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 555px;
+  z-index: 2;
+} 
+
+.layout3 {
+  display: flex;
+  justify-content: center;
+} 
+
+.layout4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-left: 0px;
+} 
+
+.retry{
+  box-sizing: border-box;
+  border-radius: 0.3rem;
+  margin: 0 20px;
+  margin-top: 10px;
+
+  width: 207px;
+  height: 78px;
+
+  background: #131313;
+  box-shadow: 0px 0px 20px #FFA0A0;
+
+  /* PLAY */
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
+
+  border: 1px solid #FFD098;
+  text-shadow: 0px 0px 15px #FF0000;
+}
+
+.button {
+  border: solid 1px #fff;
+}
+
+.text1{
+  /* width: 51ff2px; */
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 35px;
+
+
+  text-align: center;
+
+  color: #FFFFFF;
+  display : flex;
+
+  justify-content : center;
+
+  margin-top: 0px;
+}
+
+.text2{
+  /* width: 51ff2px; */
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 27px;
+  line-height: 35px;
+
+
+  text-align: center;
+
+  color: #FFFFFF;
+  display : flex;
+
+  justify-content : center;
+
+  margin-top: 0px;
+  text-shadow: 0px 0px 15px #FF0000;
+}

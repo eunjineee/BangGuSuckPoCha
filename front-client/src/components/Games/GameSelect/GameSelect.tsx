@@ -109,8 +109,8 @@ function GameSelect({
             onMouseLeave={goWebRTC}
             className={`transition-all duration-300 rounded-lg cursor-pointer`}
             src={require("src/assets/game_select/yang.png")}
-            alt="yang"
-            id="yang"
+            alt="call"
+            id="call"
             ref={yang}
           />
         </div>
