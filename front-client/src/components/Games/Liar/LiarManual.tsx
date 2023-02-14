@@ -23,8 +23,8 @@ function LiarManual({
       <div className={`${styles.ladderForm} ${styles.layout}`}>
         <div className={`${styles.box} ${styles.layout2}`}>
           <div className={`${styles.smalltitlespan}`}>게임 방법</div>
-          <div>
-            <span className={`${styles.text1}`}>
+          <div className="h-full w-full text-left">
+            <div className={`w-[90%] pt-20 pl-20 ${styles.text1}`}>
               모든 사람이 제시어를 확인한 후,
               <br />
               한 명씩 제시어에 대해 설명합니다
@@ -42,13 +42,17 @@ function LiarManual({
               <br />
               라이어 아닌 사람이 라이어로 뽑히거나,
               <br />
-              라이어가 마지막 찬스에서 제시어를 맞히면 라이어의 승리!
-            </span>
+              라이어가 마지막 찬스에서 제시어를 맞히면 
+              <br />
+              라이어의 승리!
+            </div>
+            <div className={`${styles.layout4}`}>
+              <input type="button" onClick={onClickClose} className={`${styles.retry}`} value="BACK" />
+            </div>
           </div>
+          
         </div>
-        <div className={`${styles.layout4}`}>
-          <input type="button" onClick={onClickClose} className={`${styles.retry}`} value="BACK" />
-        </div>
+        
       </div>
     </div>
   );

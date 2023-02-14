@@ -60,7 +60,7 @@ function LiarIntro({
   // 클릭하면 서버로 시그널 보냄
   const onClickSignal = (event: React.MouseEvent<HTMLInputElement>) => {
     const signalData = event.currentTarget.value;
-    console.log("보내는거냐", signalData);
+    console.log("시그널 데이터: ", signalData);
     socket.emit("game_liar_signal", roomName, signalData);
   };
 
@@ -124,6 +124,7 @@ function LiarIntro({
             <img 
               src={require("src/assets/game_liar/LiarImg.png")}
               className={`${styles.img1}`}
+              alt=""
             />
             <div className={`${styles.box2} ${styles.layout2}`}>
               LIAR GAME 

@@ -91,11 +91,11 @@
     /* box-sizing: border-box; */
     display: block;
     margin: auto;
-    margin-top: -90px;
+    margin-top: 4.5rem;
     margin-left: 30px;
     margin-right: 30px;
-    width: 150px;
-    height: 50px;
+    width: 9.3rem;
+    height: 3.1rem;
   
     background: #131313;
     box-shadow: 0px 0px 20px #FFA0A0; 
@@ -128,9 +128,9 @@
   }
   
   .text1{
-    width: 700px;
-    height: 280px;
-  
+    /* width: 700px;
+    height: 280px; */
+    
     font-family: 'Inter';
     font-style: normal;
     font-weight: 600;
@@ -138,14 +138,16 @@
     line-height: 35px;
   
   
-    text-align: center;
+    /* text-align: start; */
   
     color: #FFFFFF;
-    display : flex;
+    /* display : flex; */
   
-    justify-content : center;
-  
-    margin-top: 110px;
+    /* justify-content : center;
+    height: 100%;
+    width: 100%;
+    border: solid 4px blueviolet; */
+    /* margin-top: 110px; */
   }
   
   .img1{
