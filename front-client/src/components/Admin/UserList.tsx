@@ -138,11 +138,17 @@ function UserList() {
     return state.SelectDetailUser;
   });
   useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/admin/user`,
+      headers: {
+        accessToken: accessToken,
+      },
+      
     }).then((r) => {
-      // console.log(r.data.data);
+      console.log(r.data);
       dispatch(changeUserList(r.data.data));
     });
   }, []);
