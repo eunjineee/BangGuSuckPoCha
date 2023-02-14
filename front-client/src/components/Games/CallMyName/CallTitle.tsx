@@ -28,26 +28,27 @@ function CallTitle({
         url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
       });
       setTitles(data);
+      console.log("------------titles----------", data);
     } catch (error) {
       console.log("라이어 게임 주제 axios error", error);
-    }
-  }
-
-  const titlechoice = () => {
-    for (var i = 0; i < pochaInfo.totalCount ; i++) {
-      var newnum = titles.splice(Math.floor(Math.random() * titles.length),1)[0]
-      setNowtitle(newnum)
-      console.log(nowtitle);
     }
   }
 
   useEffect(()=>{
     getCallSubject();
   },[])
-
+  
   useEffect(()=>{
     titlechoice();
   },[titles])
+  
+  const titlechoice = () => {
+    for (var i = 0; i <= pochaInfo.totalCount ; i++) {
+      var newnum = Math.floor(Math.random()* titles.length)
+      setNowtitle(titles[newnum]);
+      console.log("----------newtitle--------",titles[newnum]);
+    }
+  }
 
 
   const onClickClose = () => {
