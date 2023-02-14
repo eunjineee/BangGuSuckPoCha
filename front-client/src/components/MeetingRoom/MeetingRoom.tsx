@@ -122,6 +122,7 @@ function MeetingRoom(): JSX.Element {
               pochaId={PochaId!}
               socket={socket}
               propIsHost={propIsHost}
+              pochaInfo={pochaInfo}
               getPochaInfo={getPochaInfo}
             />
           </div>
