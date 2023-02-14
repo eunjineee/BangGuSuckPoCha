@@ -49,7 +49,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         System.out.println("----------------------");
 
         String jwtHeader = request.getHeader(JwtProperties.HEADER_STRING);
-        if(jwtHeader ==null) {
+        if(jwtHeader == null) {
             /**
              * JWT 토큰이 없는 사용자 필터링
              */
@@ -87,7 +87,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
          * access 토큰이 정상적이지 않거나 기간만료된 토큰일 경우
          */
         else {
-
             Map<String, String> jwtResponse = jwtService.requiredRefreshTokenResponse();
             response.getWriter().write(objectMapper.writeValueAsString(jwtResponse));
             return;
