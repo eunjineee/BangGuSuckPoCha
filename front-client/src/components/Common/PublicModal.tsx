@@ -38,7 +38,7 @@ const PublicModal = ({
   const api = axios.create({
     baseURL: "https://i8e201.p.ssafy.io/api",
     headers: {
-      "Content-Type": "application/json;charset=utf-8",
+      "Content-Type": "application/json;charset=utf-8",      
     },
   });
 
