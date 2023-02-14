@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CallManual from "./CallManual";
 import CallTitle from "./CallTitle";
 import CallResult from "./CallResult";
-import CallAnswer from "./CallAnswer";
+import CallInput from "./CallInput";
 
 import axios from "axios";
 
@@ -38,11 +38,11 @@ function CallIntro({
         method: "GET",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
       })
-      console.log("포차정보 데이터 잘 오냐!? SON",data);
+      console.log("포차정보 데이터 잘 오냐!? call",data);
       setPochaInfo(data);
 
     } catch(error) {
-      console.log("Son게임에서 포차정보 에러", error);
+      console.log("Call게임에서 포차정보 에러", error);
     }
   }
 
@@ -83,8 +83,8 @@ function CallIntro({
 
   return (
     <>
-      {signal === "TITLE" ? (
-        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} liarnum={liarnum}/>
+      {signal === "PLAY" ? (
+        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
       ) : null}
       {signal === "MANUAL" ? (
         <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
@@ -92,8 +92,8 @@ function CallIntro({
       {signal === "RESULT" ? (
         <CallResult socket={socket} pochaId={pochaId}/>
       ) : null}
-      {signal === "ANSWER" ? (
-        <CallAnswer socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+      {signal === "INPUT" ? (
+        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>

@@ -164,25 +164,6 @@ input.txt {
 }
 
 .retry:hover{
-  box-sizing: border-box;
-  border-radius: 0.3rem;
-  margin: 0 20px;
-  margin-top: -10px;
-
-  width: 207px;
-  height: 78px;
-
-  background: #131313;
-  box-shadow: 0px 0px 20px #FFA0A0;
-
-  /* PLAY */
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 800;
-  font-size: 40px;
-  line-height: 48px;
-  text-align: center;
-
   color: #FFA149;
 
   border: 1px solid #FFD098;
@@ -190,8 +171,9 @@ input.txt {
   cursor: pointer;
 }
 
-.button {
+.buttons {
   border: solid 1px #fff;
+  margin-top: 150px;
 }
 
 .text1{
@@ -234,8 +216,4 @@ input.txt {
 
   -webkit-text-stroke: 1px solid rgba(0, 124, 42, 0.92);
   text-shadow: 0px 0px 30px #70FF00;
-}
-
-.bigbox{
-  margin-top: 150px;
 }
