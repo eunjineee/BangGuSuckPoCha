@@ -84,7 +84,7 @@ function CallIntro({
   return (
     <>
       {signal === "PLAY" ? (
-        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo}/>
       ) : null}
       {signal === "MANUAL" ? (
         <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
