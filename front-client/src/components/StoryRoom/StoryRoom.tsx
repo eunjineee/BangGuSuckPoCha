@@ -80,8 +80,8 @@ function StoryRoom(): JSX.Element {
   }, []);
 
 
-  console.log('네브 알람 리뷰 이모지 정보: ',navAlarmReviewEmojiUserData);
-  console.log('방 유저 프로필 클릭 체크: ',RoomUserProfileClickCheck);
+  // console.log('네브 알람 리뷰 이모지 정보: ',navAlarmReviewEmojiUserData);
+  // console.log('방 유저 프로필 클릭 체크: ',RoomUserProfileClickCheck);
   
   return (
     <>

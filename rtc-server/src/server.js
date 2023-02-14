@@ -142,7 +142,11 @@ wsServer.on("connection", (socket) => {
   });
 
   // 포차 설정 변경
-  socket.on("pocha_change", (roomName) => {
+  socket.on("pocha_change", (roomName, flag) => {
+    // 설정만 변경하는 건지, 포차를 변경하는 건지
+    if(flag){
+      delete users[roomName];
+    }
     wsServer.to(roomName).emit("pocha_change");
   });
 
