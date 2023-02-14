@@ -136,7 +136,7 @@ function Tag(): JSX.Element {
             }
           }).then((r)=> {
             // 돌려보내기
-            if (r.data.status === '403') {
+            if (r.data.status === '401') {
               localStorage.clear();
               toast.error('인증되지 않은 유저입니다')
               navigate('/')
@@ -326,7 +326,7 @@ function Tag(): JSX.Element {
           }).then((r)=> {
             console.log('Tag의 326번줄: ', r.data.status);
               // 돌려보내기
-            if (r.data.status === '403') {
+            if (r.data.status === '401') {
               localStorage.clear();
               toast.error('인증되지 않은 유저입니다')
               navigate('/')
