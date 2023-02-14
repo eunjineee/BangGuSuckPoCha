@@ -23,8 +23,8 @@ import { log } from "console";
 const NewMyPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const accessToken = localStorage.getItem("accessToken");
-  const refreshToken = localStorage.getItem("refreshToken");
+  let accessToken = localStorage.getItem("accessToken");
+  let refreshToken = localStorage.getItem("refreshToken");
   const Username: any = localStorage.getItem("Username");
 
   //--------------useState-------------------
@@ -123,6 +123,73 @@ const NewMyPage = () => {
     setSelectSecond(event.target.value);
   };
 
+  const duffle = () => {
+    axios({
+      method: "post",
+      url: `https://i8e201.p.ssafy.io/api/user/auth/check/nickname`,
+      data: {
+        changeName: ModifyNickname,
+        nowName: MyNickname,
+      },
+      headers: {
+        accessToken: accessToken,
+      },
+    }).then((r) => {
+      console.log("음 토큰이 이상하려나?", r.data);
+      if ("401" === r.data.status) {
+        console.log("토큰 맛탱이 갔네 재발급 ㄱㅈㅇ");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          console.log("해치웠나?", r.data);
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          } else {
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            axios({
+              method: "post",
+              url: `https://i8e201.p.ssafy.io/api/user/auth/check/nickname`,
+              data: {
+                changeName: ModifyNickname,
+                nowName: MyNickname,
+              },
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then(() => {
+              const isDouble = r.data.data;
+              if (isDouble) {
+                toast.success(
+                  `${ModifyNickname}(은)는 수정가능한 닉네임입니다`
+                );
+                setModifydisplay(isDouble);
+              } else {
+                toast.warning(`${ModifyNickname}(은)는 중복된 닉네임입니다`);
+                setModifydisplay(isDouble);
+              }
+            });
+          }
+        });
+      } else if ("401" !== r.data.status) {
+        const isDouble = r.data.data;
+        if (isDouble) {
+          toast.success(`${ModifyNickname}(은)는 수정가능한 닉네임입니다`);
+          setModifydisplay(isDouble);
+        } else {
+          toast.warning(`${ModifyNickname}(은)는 중복된 닉네임입니다`);
+          setModifydisplay(isDouble);
+        }
+      }
+    });
+  };
+
   //------------useEffect------------------
 
   useEffect(() => {
@@ -131,110 +198,123 @@ const NewMyPage = () => {
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/myinfo/${Username}`,
       headers: {
-        accessToken: `${accessToken}`,
+        accessToken: accessToken,
       },
     }).then((r) => {
       console.log("나 토큰있나???111", r.data);
       //401이면 토큰 없는거
       if ("401" === r.data.status) {
         console.log("없는것같아");
-
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
           headers: {
             refreshToken: refreshToken,
           },
-        })
-          .then((r) => {
-            console.log("해치웠나?", r.data);
-            //token갱신
+        }).then((r) => {
+          console.log("해치웠나?", r.data);
+          //token갱신
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않으 유저입니다");
+            navigate("/");
+          } else {
             localStorage.setItem("accessToken", r.data.accessToken);
-          })
-          .then(() => {
-            console.log("갱신 후 axios시작");
-
-            dispatch(changeMyInfo(r.data.data));
-            setMyInfo(r.data.data);
-
-            //data내용
-            const a = r.data.data;
-            //변경될 닉네임
-            setModifyNickname(a.nickname);
-            // //고정될 닉네임
-            setMyNickname(a.nickname);
-            //코멘트 저장
-            setComment(a.comment);
-
-            const birth = a.birth;
-            const today = new Date();
-            const birthDate = new Date(
-              birth.split(".")[0],
-              birth.split(".")[1],
-              birth.split(".")[2]
-            );
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-              age--;
-            }
-            setAge(age);
-            // setRegion(a.region);
-            setMyRegionCode(a.regioncode);
-            //첫번째 박스의 코드로 확인
-            setSelectedFirst(a.regioncode);
-
-            dispatch(changeMyPageProfile(a.profile));
-            setSelectSecond(a.regioncode);
-
-            //광역시 랑 (도/시) 구분
+            accessToken = r.data.accessToken;
             axios({
               method: "get",
-              url: "https://i8e201.p.ssafy.io/api/admin/region",
+              url: `https://i8e201.p.ssafy.io/api/user/myinfo/${Username}`,
               headers: {
                 accessToken: accessToken,
               },
             }).then((r) => {
-              console.log("2번째 axios 시작");
-              const result = r.data.data;
-              let rlist1 = new Array();
-              let rlist2 = new Array();
-              for (var i = 0; i < result.length; i++) {
-                if (i === 0) {
-                  rlist1.push(result[i]);
-                } else {
-                  if (
-                    result[i - 1].regionCode.substr(0, 2) ===
-                    result[i].regionCode.substr(0, 2)
-                  ) {
-                    rlist2.push(result[i]);
-                  } else {
+              console.log("갱신 후 axios시작");
+
+              dispatch(changeMyInfo(r.data.data));
+              setMyInfo(r.data.data);
+
+              //data내용
+              const a = r.data.data;
+              //변경될 닉네임
+              setModifyNickname(a.nickname);
+              // //고정될 닉네임
+              setMyNickname(a.nickname);
+              //코멘트 저장
+              setComment(a.comment);
+
+              const birth = a.birth;
+              const today = new Date();
+              const birthDate = new Date(
+                birth.split(".")[0],
+                birth.split(".")[1],
+                birth.split(".")[2]
+              );
+              let age = today.getFullYear() - birthDate.getFullYear();
+              const m = today.getMonth() - birthDate.getMonth();
+              if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+              }
+              setAge(age);
+              // setRegion(a.region);
+              setMyRegionCode(a.regioncode);
+              //첫번째 박스의 코드로 확인
+              setSelectedFirst(a.regioncode);
+
+              dispatch(changeMyPageProfile(a.profile));
+              setSelectSecond(a.regioncode);
+
+              //광역시 랑 (도/시) 구분
+              axios({
+                method: "get",
+                url: "https://i8e201.p.ssafy.io/api/admin/region",
+                headers: {
+                  accessToken: accessToken,
+                },
+              }).then((r) => {
+                console.log("2번째 axios 시작");
+                const result = r.data.data;
+                let rlist1 = new Array();
+                let rlist2 = new Array();
+                for (var i = 0; i < result.length; i++) {
+                  if (i === 0) {
                     rlist1.push(result[i]);
+                  } else {
+                    if (
+                      result[i - 1].regionCode.substr(0, 2) ===
+                      result[i].regionCode.substr(0, 2)
+                    ) {
+                      rlist2.push(result[i]);
+                    } else {
+                      rlist1.push(result[i]);
+                    }
                   }
                 }
-              }
-              setCity(rlist1.slice(0, 7));
+                setCity(rlist1.slice(0, 7));
 
-              setRegionlistFirst(rlist1);
+                setRegionlistFirst(rlist1);
 
-              setRegionlistSecond(rlist2);
+                setRegionlistSecond(rlist2);
 
-              const templist = rlist1.slice(0, 7);
+                const templist = rlist1.slice(0, 7);
 
-              let temp = false;
+                let temp = false;
 
-              templist.map((it) => {
-                if (it.regionCode.substr(0, 2) === a.regioncode.substr(0, 2)) {
-                  temp = true;
-                }
+                templist.map((it) => {
+                  if (
+                    it.regionCode.substr(0, 2) === a.regioncode.substr(0, 2)
+                  ) {
+                    temp = true;
+                  }
+                });
+                setIsSelected(temp);
               });
-              setIsSelected(temp);
-            });
 
-            setTimeout(() => {
-              setIsLoading(false);
-            }, 1000);
-          });
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 1000);
+            });
+          }
+        });
       }
       //토큰있는것같아
       else if ("401" !== r.data.status) {
@@ -411,63 +491,7 @@ const NewMyPage = () => {
                               if (ModifyNickname.length < 2) {
                                 toast.warning(`2글자 이상 입력바랍니다`);
                               } else {
-                                axios({
-                                  method: "post",
-                                  url: `https://i8e201.p.ssafy.io/api/user/auth/check/nickname`,
-                                  data: {
-                                    changeName: ModifyNickname,
-                                    nowName: MyNickname,
-                                  },
-                                  headers: {
-                                    accessToken: accessToken,
-                                  },
-                                }).then((r) => {
-                                  console.log("음 토큰이 이상하려나?", r.data);
-                                  if ("401" === r.data.status) {
-                                    console.log("토큰 맛탱이 갔네");
-                                    axios({
-                                      method: "get",
-                                      url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
-                                      headers: {
-                                        refreshToken: refreshToken,
-                                      },
-                                    })
-                                      .then((r) => {
-                                        console.log("해치웠나?", r.data);
-                                        localStorage.setItem(
-                                          "accessToken",
-                                          r.data.accessToken
-                                        );
-                                      })
-                                      .then(() => {
-                                        const isDouble = r.data.data;
-                                        if (isDouble) {
-                                          toast.success(
-                                            `${ModifyNickname}(은)는 수정가능한 닉네임입니다`
-                                          );
-                                          setModifydisplay(isDouble);
-                                        } else {
-                                          toast.warning(
-                                            `${ModifyNickname}(은)는 중복된 닉네임입니다`
-                                          );
-                                          setModifydisplay(isDouble);
-                                        }
-                                      });
-                                  } else if ("401" !== r.data.status) {
-                                    const isDouble = r.data.data;
-                                    if (isDouble) {
-                                      toast.success(
-                                        `${ModifyNickname}(은)는 수정가능한 닉네임입니다`
-                                      );
-                                      setModifydisplay(isDouble);
-                                    } else {
-                                      toast.warning(
-                                        `${ModifyNickname}(은)는 중복된 닉네임입니다`
-                                      );
-                                      setModifydisplay(isDouble);
-                                    }
-                                  }
-                                });
+                                duffle();
                               }
                             }}
                           >
@@ -591,36 +615,52 @@ const NewMyPage = () => {
                                   accessToken: accessToken,
                                 },
                               }).then((r) => {
-                                console.log(
-                                  "토큰 가지고 엑시오스 횄냐 짜쉭아",
-                                  r.data.status
-                                );
+                                console.log("토큰 상태?", r.data.status);
                                 //토큰 이상하네?
                                 if ("401" === r.data.status) {
+                                  //토큰 요청
                                   axios({
                                     method: "get",
                                     url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
                                     headers: {
                                       refreshToken: refreshToken,
                                     },
-                                  })
-                                    .then((r) => {
-                                      console.log("해치웠나?", r.data);
-                                      //token갱신
+                                  }).then((r) => {
+                                    console.log("해치웠나?", r.data);
+                                    //token갱신
+                                    if ("401" === r.data.status) {
+                                      localStorage.clear();
+                                      toast.error("인증되지 않은 유저입니다");
+                                      navigate("/");
+                                    } else {
                                       localStorage.setItem(
                                         "accessToken",
                                         r.data.accessToken
                                       );
-                                    })
-                                    .then(() => {
-                                      toast.success("수정에 성공하셨습니다");                                      
-                                      window.location.reload();
-                                    });
+                                      accessToken = r.data.accessToken;
+                                      //새 토큰 받았으니까 axios요청
+                                      axios({
+                                        method: "put",
+                                        url: `https://i8e201.p.ssafy.io/api/user/${Username}`,
+                                        data: {
+                                          comment: comment,
+                                          nickname: ModifyNickname,
+                                          profile: MyPageProfileImg,
+                                          regionCode: Code,
+                                        },
+                                        headers: {
+                                          accessToken: accessToken,
+                                        },
+                                      }).then(() => {
+                                        toast.success("수정에 성공하셨습니다");
+                                        window.location.reload();
+                                      });
+                                    }
+                                  });
                                 }
                                 //음 토큰이 정상적이군
                                 else if ("401" !== r.data.status) {
                                   toast.success("수정에 성공하셨습니다");
-                                  // navigate("/main");
                                   window.location.reload();
                                 }
                               });
