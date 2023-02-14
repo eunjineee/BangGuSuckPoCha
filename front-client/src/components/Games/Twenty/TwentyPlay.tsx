@@ -62,33 +62,40 @@ function TwentyPlay({
     getPochaUsers();
     // 스무고개 게임 시그널받기
     socket.on("game_twenty_submit", (signalData: string, data: any, data2 : any) => {
-      setTimeout(() => {
         console.log("submit" + signalData);
         setSignal(signalData);
         console.log("submit" + data);
         console.log("submit" + data2);
+        if(signalData === "WHO") {
+            setNum(20);
+            setOX(null);
+            setAnswer(null);   
+            setPresenterNickname(null);
+            setPresenter(null);
+        }
+
         if(signalData === "SELECTING") {
             setPresenter(data);
             setPresenterNickname(data2);
         }
+
         if(signalData === "WRITING") {
             setSubject(data);
         }
+
         if(signalData === "START") {
             setAnswer(data);
         }
-      }, 1000);
+
     });
 
     socket.on("game_twenty_play", (signalData : string, data: any, number : any) => {
-        setTimeout(() => {
-            console.log("play" + signalData);
-            setSignal(signalData);
-            setOX(data);
-            setNum(number);
-            console.log(data);
-            console.log(number);
-          }, 1000);
+        console.log("play" + signalData);
+        setSignal(signalData);
+        setOX(data);
+        setNum(number);
+        console.log(data);
+        console.log(number);
     })
 
     return () => {
@@ -154,9 +161,10 @@ function TwentyPlay({
             socket.emit("game_twenty_play", roomName, SignalData);
     }
 
+    // 초기화
     function next() {
         const SignalData = "WHO"
-        socket.emit("game_twenty_play", roomName, SignalData);
+        socket.emit("game_twenty_submit", roomName, SignalData);
         setNum(20);
     }
 

@@ -70,7 +70,6 @@ function TwentyIntro({
   return (
     <>
       {signal === "PLAY" ? (
-        // <TwentyPlay socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} />
         <TwentyPlay socket={socket} pochaId={pochaId} />
       ) : null}
       {signal === "MANUAL" ? (
