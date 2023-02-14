@@ -136,6 +136,8 @@ const NewMyPage = () => {
       console.log("나 토큰있나???111", r.data);
 
       if ("401" === r.data.status) {
+        console.log("없는것같아");
+
         axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
@@ -146,8 +148,8 @@ const NewMyPage = () => {
           headers: {
             accessToken: accessToken,
           },
-        }).then((r) => {
-          console.log(r.data.data);
+        }).then((r) => {          
+          console.log("해치웠나?",r.data);
         });
       }
 
