@@ -22,6 +22,8 @@ function CallInput({
   const [peopleName, setPeopleName] = useState<string[]>([]);
 
   const [answer, setAnswer] = useState<any>(null);
+  // pass
+  const [peopleScore, setPeopleScore] = useState<number[]>([1, 1, 1, 1, 1, 1]);
 
   const onClickClose = () => {
     const signalData = "RESULT";
@@ -51,8 +53,8 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    if (answer === titles[mynum]){
-      // 통과()
+    if (answer === nowtitle[mynum]){
+      socket.emit("game_call_pass", roomName, mynum);
     }
   }
 
@@ -61,14 +63,49 @@ function CallInput({
   // }
 
   useEffect(()=> {
-    getLiarSubject(); //라이어 주제 받아오기
     setPeopleInfo();  // 방참가인원 정보
     setMyInfo();
-  },[])
+    // 접을때 주고 받는 함수
+    socket.on("game_call_pass", (myNum: number) => {
+      finish();
+      console.log("새로운배열 갱신되고있냐?", peopleScore);
+      const newArray = peopleScore.map((score, index) => {
+        if (index === myNum) {
+          return score - 1;
+        }
+        return score;
+      });
+      console.log("새로운배열?", newArray);
+      setPeopleScore((prev) => [...newArray]);
+    });
 
-  useEffect(()=> {
-    maintitle();
-  },[titles])
+    return () => {
+      socket.off("game_call_pass");
+    };
+  }, [peopleScore]);
+
+
+  //게임 끝인지 확인 
+  function finish() {
+    const resultList: string[] = [];
+    console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    peopleScore.forEach((score, index) => {
+      console.log("s여기@@@@@@@@@@@@", score, index);
+      if (score === 0) {
+        resultList.push(peopleName[index]);
+        console.log("여기오냐?", peopleScore);
+      }
+    });
+    if (resultList.length >= pochaUsers.length-1) {
+      console.log("여기오냐 결과가기전?", peopleScore);
+      const signalData = "RESULT";
+      const data = resultList;
+      socket.emit("game_call_signal", roomName, signalData, data);
+    }
+  }
+
+
+
 
   return (
   <div className={`${styles.layout3}`}>

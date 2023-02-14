@@ -29,9 +29,9 @@ function CallResult({
           className={`${styles.img1}`}
         />
         <div className={`${styles.box2}`}>CALL MY NAME</div>
-        {/* <div className={`${styles.box3} text-4xl`}>{resultData.map((data: any) => {
+        <div className={`${styles.box3} text-4xl`}>{resultData.map((data: any) => {
           return <span>{`${data} `}</span>
-        })}</div> */}
+        })}</div>
         <div className={`${styles.box4}`}>마셔라! 마셔라!</div>
 
         <div className={`${styles.layout5}`}>
