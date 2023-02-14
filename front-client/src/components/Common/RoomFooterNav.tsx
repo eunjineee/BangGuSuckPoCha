@@ -147,19 +147,19 @@ function RoomFooterNav({
     dispatch(showUpdateRoom(true));
   };
 
-  const onClickChangePocha = () => {
-    // 방장 체크후 처리
-    if (!isHost) {
-      setModalData({
-        type: "host",
-        nickname: "포차수정은",
-        msg: "방장만 가능합니다",
-      });
-      dispatch(showPublicModal(true));
-      return;
-    }
-    dispatch(showUpdatePocha(true));
-  }
+  // const onClickChangePocha = () => {
+  //   // 방장 체크후 처리
+  //   if (!isHost) {
+  //     setModalData({
+  //       type: "host",
+  //       nickname: "포차수정은",
+  //       msg: "방장만 가능합니다",
+  //     });
+  //     dispatch(showPublicModal(true));
+  //     return;
+  //   }
+  //   dispatch(showUpdatePocha(true));
+  // }
 
   // 친구 초대 창 켜기
   const onClickInviteFriend = () => {
@@ -235,7 +235,7 @@ function RoomFooterNav({
             />
             <span className="text-[0.8rem] mt-1">시간추가</span>
           </div>
-          <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer">
+          {/* <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer">
             <img
               onClick={onClickChangePocha}
               className="h-[2.2rem] py-auto transition-all duration-300 hover:scale-110"
@@ -244,7 +244,7 @@ function RoomFooterNav({
               id="change"
             />
             <span className="text-[0.8rem] mt-1">{roomTheme === 1 ? "게임포차" : "소통포차"}</span>
-          </div>
+          </div> */}
           <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer">
             <img
               onClick={onClickShowModal}
