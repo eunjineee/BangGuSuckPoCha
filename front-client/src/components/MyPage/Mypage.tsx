@@ -183,6 +183,9 @@ function Mypage(): JSX.Element {
       }).then((r) => {
         console.log(r.data);
       });
+    }).catch(e=>{
+      console.log(e.data);
+      
     });
 
     axios({
