@@ -17,6 +17,9 @@ import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 const socket = io("https://pocha.online");
 
 function MeetingRoom(): JSX.Element {
+
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   // const dispatch = useAppDispatch();
   const { PochaId } = useParams();
   // const [socket, setSocket] = useState<any>(null);
@@ -50,6 +53,9 @@ function MeetingRoom(): JSX.Element {
     try {
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(PochaId)}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       setPochaInfo(data.data);
     } catch (error) {
@@ -63,6 +69,9 @@ function MeetingRoom(): JSX.Element {
         url: `https://i8e201.p.ssafy.io/api/user/myinfo/${localStorage.getItem(
           "Username"
         )}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       setMyInfo({ username: data.data.username, nickname: data.data.nickname });
     } catch (error) {

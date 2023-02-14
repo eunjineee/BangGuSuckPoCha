@@ -12,6 +12,8 @@ import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 
 function GameRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   const { PochaId } = useParams();
   const [socket, setSocket] = useState<any>(null);
   const navigate = useNavigate();
@@ -42,6 +44,9 @@ function GameRoom(): JSX.Element {
     try {
       const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(PochaId)}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       setPochaInfo(data.data);
       switch (data.data.themeId) {
