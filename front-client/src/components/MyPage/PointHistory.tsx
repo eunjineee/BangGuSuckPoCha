@@ -25,10 +25,14 @@ const PointHistory = () => {
       headers: {
         accessToken: accessToken,
       },
-    }).then((r) => {
-      console.log(r.data.data);
-      setHistory(r.data.data);
-    });
+    })
+      .then((r) => {
+        console.log(r.data.data);
+        setHistory(r.data.data);
+      })
+      .catch((e) => {
+        console.log("첫번째", e);
+      });
 
     axios({
       method: "get",
@@ -36,10 +40,14 @@ const PointHistory = () => {
       headers: {
         accessToken: accessToken,
       },
-    }).then((r) => {
-      console.log(r.data.data);
-      setMyInfo(r.data.data);
-    });
+    })
+      .then((r) => {
+        console.log(r.data.data);
+        setMyInfo(r.data.data);
+      })
+      .catch((e) => {
+        console.log("두번째", e);
+      });
   }, []);
 
   return (
