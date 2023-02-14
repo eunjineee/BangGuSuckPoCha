@@ -60,12 +60,17 @@ public class SecurityConfig {
                 .and()
 
                 .authorizeRequests()
-                    .antMatchers("**").permitAll()
+//                    .antMatchers("**").permitAll()
                     .antMatchers("/v3/api-docs","/swagger**/**").permitAll()
-                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
-                    .antMatchers("/api/user/oauth2/**").permitAll()
-//                    .antMatchers("/api/v1/manager/**").hasAuthority("MANAGER")
-//                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/v2/api-docs","/swagger**/**","/api/v2/**",
+                            "/swagger-resources/**",
+                            "/configuration/ui",
+                            "/configuration/security",
+                            "/swagger-ui.html",
+                            "/webjars/**").permitAll()
+//                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
+////                    .antMatchers("/api/v1/manager/**").hasAuthority("MANAGER")
+////                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
 
                 .and()
