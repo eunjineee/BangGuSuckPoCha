@@ -56,7 +56,7 @@ const BalancegameSettingModal = () => {
   };
 
   const Save = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
 
     axios({
       method: "post",
@@ -92,7 +92,7 @@ const BalancegameSettingModal = () => {
   };
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
 
     axios({
       method: "get",
@@ -123,7 +123,7 @@ const BalancegameSettingModal = () => {
               <div
                 className="border-2 h-[100%] w-[100%] rounded-md  cursor-pointer"
                 onClick={() => {
-                  const accessToken = localStorage.getItem("accessToken");
+                  let accessToken = localStorage.getItem("accessToken");
 
                   axios({
                     method: "get",
@@ -146,7 +146,7 @@ const BalancegameSettingModal = () => {
               <div
                 className="border-2 h-[100%] w-[100%] rounded-md cursor-pointer"
                 onClick={() => {
-                  const accessToken = localStorage.getItem("accessToken");
+                  let accessToken = localStorage.getItem("accessToken");
 
                   axios({
                     method: "get",
@@ -311,7 +311,7 @@ const BalancegameSettingModal = () => {
                     <div
                       className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                       onClick={() => {
-                        const accessToken = localStorage.getItem("accessToken");
+                        let accessToken = localStorage.getItem("accessToken");
 
                         axios({
                           method: "put",

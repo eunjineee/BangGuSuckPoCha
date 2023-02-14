@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 function Navbar(): JSX.Element {
   const navigate = useNavigate();
   const [myData, setMyData] = useState({ profile: null, nickname: null });
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   useEffect(() => {
     

@@ -29,7 +29,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // webRTC관련
   // const socket = io("https://pocha.online");

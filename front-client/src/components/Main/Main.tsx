@@ -32,7 +32,7 @@ function Main(): JSX.Element {
     return state.mainCreateRoomList;
   });
 
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 메인 페이지 들어올 시 현재 Username에 대한 유저정보 저장
   useEffect(() => {

@@ -62,7 +62,7 @@ const LiargameSettingModal = () => {
   };
 
   const Save = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
 
     axios({
       method: "post",
@@ -93,7 +93,7 @@ const LiargameSettingModal = () => {
     });
   };
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
 
     axios({
       method: "get",
@@ -124,7 +124,7 @@ const LiargameSettingModal = () => {
                 <div
                   className="border-2 h-[100%] w-[100%] rounded-md  cursor-pointer"
                   onClick={() => {
-                    const accessToken = localStorage.getItem("accessToken");
+                    let accessToken = localStorage.getItem("accessToken");
 
                     axios({
                       method: "get",

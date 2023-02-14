@@ -9,7 +9,7 @@ function FriendSearch(): JSX.Element {
   const dispatch = useAppDispatch()
   const [chat,setChat] = useState()
   const searchFriend = useRef<any>()
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   return (
     <div>

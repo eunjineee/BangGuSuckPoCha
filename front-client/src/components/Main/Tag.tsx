@@ -30,7 +30,7 @@ function Tag(): JSX.Element {
   const createThemeRoomCheck: number = useAppSelector((state) => {
     return state.createThemeRoomCheck;
   });
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 유저 정보(연령, 지역)조사
   useEffect(()=> {

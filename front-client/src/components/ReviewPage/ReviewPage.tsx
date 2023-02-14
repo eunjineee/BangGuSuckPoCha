@@ -63,7 +63,7 @@ function ReviewPage(): JSX.Element {
   }
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
     axios({
       method: "get",
       url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
@@ -383,7 +383,7 @@ function StartReviewComponent({
                   value={"평가하기"}
                   onClick={(e) => {
                     setRating(null);
-                    const accessToken = localStorage.getItem("accessToken");
+                    let accessToken = localStorage.getItem("accessToken");
                     axios({
                       method: "put",
                       url: "https://i8e201.p.ssafy.io/api/user/review",
@@ -469,7 +469,7 @@ function StartReviewComponent({
                 className="flex justify-center items-center mr-0"
                 onClick={() => {
                   // 클릭한 유저 정보 가져와서 담아주기
-                  const accessToken = localStorage.getItem("accessToken");
+                  let accessToken = localStorage.getItem("accessToken");
                   axios({
                     method: "get",
                     url: `https://i8e201.p.ssafy.io/api/user/info/${to_username}`,

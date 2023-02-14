@@ -19,7 +19,7 @@ function WaitingRoom({
   waitEnd: Function;
   myInfo: any;
 }): JSX.Element {
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 처음에 받아오는 포차 정보
   const [pochaInfo, setPochaInfo] = useState<any>(null);

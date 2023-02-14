@@ -8,7 +8,7 @@ import StarReview from "./StarReview";
 function AlarmBeforeReviewListComponent({to_nickname, reviewId, toUsername, to_profile}:any):JSX.Element {
   // 이모지 클릭 여부
   const dispatch = useAppDispatch()
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   function UserStateSearch() {
     

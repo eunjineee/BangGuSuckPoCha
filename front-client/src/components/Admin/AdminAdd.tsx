@@ -21,7 +21,7 @@ const AdminAdd = () => {
     console.log(event.target.value);
     setPASSWORD(event.target.value);
   };
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const ChangeUSERNAME = (event: any) => {
     console.log(event.target.value);
     setUSERNAME(event.target.value);

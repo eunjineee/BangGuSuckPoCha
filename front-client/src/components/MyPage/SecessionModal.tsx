@@ -39,10 +39,20 @@ const SecessionModal = ({ userData }: { userData: any }) => {
               navigate("/");
             }
             //재발급 성공
-            else {
-              toast.success(`${nickname}님은 회원탈퇴하였습니다`);
-              window.localStorage.clear();
-              navigate("/");
+            else {            
+              localStorage.setItem("accessToken", r.data.accessToken);              
+              accessToken = r.data.accessToken;
+              axios({
+                method: "DELETE",
+                url: `https://i8e201.p.ssafy.io/api/user/${username}`,
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
+              }).then((r) => {
+                toast.success(`${nickname}님은 회원탈퇴하였습니다`);
+                window.localStorage.clear();
+                navigate("/");
+              });
             }
           });
         }
