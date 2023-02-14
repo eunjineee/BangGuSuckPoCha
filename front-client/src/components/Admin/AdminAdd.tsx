@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AdminAdd = () => {
+  
   const navigate = useNavigate();
   const [USERNAME, setUSERNAME] = useState();
 
@@ -104,6 +105,8 @@ const AdminAdd = () => {
             <div className="col-span-4"></div>
             <div
               onClick={() => {
+                
+
                 console.log("닉네임", NickName);
                 console.log("USERNAME", USERNAME);
                 console.log("PASSWORD", PASSWORD);
@@ -114,6 +117,10 @@ const AdminAdd = () => {
                     nickname: NickName,
                     username: USERNAME,
                     password: PASSWORD,
+                  },
+
+                  headers: {
+                    accessToken: accessToken,
                   },
                 }).then((r) => {
                   console.log(r.data);
