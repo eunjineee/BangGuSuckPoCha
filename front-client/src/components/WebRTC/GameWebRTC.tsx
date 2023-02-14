@@ -20,11 +20,13 @@ import {
 import Loading from "../Common/Loading";
 import RoomUserProfile from "../Common/RoomUserProfile";
 import Balance from "../Games/Balance/Balance";
+import CallIntro from "../Games/CallMyName/CallIntro";
 import GameSelect from "../Games/GameSelect/GameSelect";
 import LadderIntro from "../Games/Ladder/LadderIntro";
 import LiarIntro from "../Games/Liar/LiarIntro";
 import Roulette from "../Games/Roulette/Roulette";
 import SonIntro from "../Games/Son/SonIntro";
+import TwentyIntro from "../Games/Twenty/TwentyIntro";
 // webRTC관련
 const socket = io("https://pocha.online");
 
@@ -411,7 +413,7 @@ const WebRTC = ({
     });
 
     socket.on("room_full", () => {
-      toast.info("풀방입니다");
+      toast.info("인원이 가득찬 포차입니다");
       navigate(`/main`);
     });
 
@@ -616,6 +618,15 @@ const WebRTC = ({
       }, 1000);
     });
 
+    // 스무고개 시그널 받기
+    socket.on("game_twenty_signal", (signalData) => {
+      transitionDiv.current!.classList.add("opacity-0");
+      console.log("twenty : 시그널 gameWebRTC에서 받았냐?", signalData);
+      setTimeout(() => {
+        transitionDiv.current!.classList.remove("opacity-0");
+      }, 1000);
+    });
+
     // 밸런스 게임 시그널받기
     socket.on("game_balance_Intro", (isBalance) => {
       console.log("WebRTC에서 roomName에서 받았나?", isBalance);
@@ -641,6 +652,7 @@ const WebRTC = ({
       socket.off("game_select");
       socket.off("game_back_select");
       socket.off("game_son_signal");
+      socket.off("game_twenty_signal");
     };
   }, []);
 
@@ -749,6 +761,23 @@ const WebRTC = ({
                     />
                   )
                 : null}   
+              {selectedId === "call"
+                ? pochaUsers && (
+                    <CallIntro
+                      socket={socket}
+                      pochaId={pochaId}
+                      pochaUsers={pochaUsers}
+                    />
+                  )
+                : null}   
+              {selectedId === "twenty"
+                ? pochaUsers && (
+                    <TwentyIntro
+                      socket={socket}
+                      pochaId={pochaId}
+                    />
+                  )
+                : null}  
             </div>
 
             {/* 사람 공간 */}

@@ -238,7 +238,7 @@ const WebRTC = ({
     // event : React.FormEvent<HTMLFormElement>
     // event.preventDefault();
     await getMedia();
-    console.log("@@@@@@@@@@@@@@@@", userData);
+    // console.log("@@@@@@@@@@@@@@@@", userData);
     socket.emit("join_room", {
       roomName,
       username: userData.username,
@@ -252,17 +252,17 @@ const WebRTC = ({
   // Socket Code
   useEffect(() => {
     socket.on("users_of_room", async (users) => {
-      console.log("--------------------");
+      // console.log("--------------------");
       await users.forEach((user: any) => {
         console.log(user);
         myPeerConnections.current[user.id] = {
           username: user.username,
           nickname: user.nickname,
         };
-        console.log(
-          "방 입장--------------",
-          myPeerConnections.current[user.id]
-        );
+        // console.log(
+        //   "방 입장--------------",
+        //   myPeerConnections.current[user.id]
+        // );
       });
     });
 
@@ -350,7 +350,9 @@ const WebRTC = ({
       // const lastIndex = userCount.current - 2;
       // const lastIndex = userCount - 2
       // peerFace.current[lastIndex].classList.toggle("hidden");
-
+      
+      // 정보 다시 한번 받아옴
+      getUsersProfile();
       console.log("==============>방 탈출!!!");
       console.log(id);
 
@@ -378,7 +380,6 @@ const WebRTC = ({
         );
       }
 
-      console.log(userCount + "==================");
       let temp = userCount.current;
       // let temp = userCount;
       if (temp < 6) {
@@ -408,7 +409,7 @@ const WebRTC = ({
     });
 
     socket.on("room_full", () => {
-      toast.info("풀방입니다");
+      toast.info("인원이 가득찬 포차입니다");
       navigate(`/main`);
     });
 
@@ -540,11 +541,10 @@ const WebRTC = ({
   // addStream 이벤트시 실행 함수
   function handleAddStream(stream: any, username: string, nickname: string) {
     console.log("handleAddStream---------------------", username);
-    const indexData = userCount.current;
+    // const indexData = userCount.current;
     // const indexData = userCount;
     // peerFace.current[indexData - 1].classList.toggle("hidden");
     // peerFace.current[indexData - 1].srcObject = stream;
-    console.log("사람수ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ", indexData);
 
     if (userCount.current === 1) {
       peerFace2.current!.classList.add("hidden");
