@@ -109,7 +109,9 @@ function Tag(): JSX.Element {
               accessToken: `${accessToken}`,
             },
             })
-            .then(()=> {
+            .then((r)=> {
+              console.log('113번줄 tag 데이터값 : ',r.data);
+              
               console.log('슬라이싱값: ',themeId.slice(0,2))
               if (themeId.slice(0,2) === 'T0') {
                 console.log('소통방입장')
@@ -118,13 +120,21 @@ function Tag(): JSX.Element {
                 console.log('게임방입장')
                 navigate(`/gameroom/${pochaId}`)
               }
-            })
-
+            }).catch((e)=> {
+              console.log(e);
+              
+          })
         } else {
+          // const currenDataFirst = r.data.data.reverse()
           const currenDataFirst = r.data.data
           console.log(r.data)
           dispatch(changeMainCreateRoomList(currenDataFirst));
         }
+      }).catch((e)=> {
+        console.log('134번줄 :', e);
+        console.log('134번줄 스테이터스 :', e.status);
+        console.log('134번줄 메세지 :', e.message);
+        
       }) 
     } else {
       console.log('현재 클릭한 태그정보: ',filter)
