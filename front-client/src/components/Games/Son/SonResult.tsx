@@ -10,7 +10,6 @@ function SonResult({
   resultData?: any;
 }): React.ReactElement {
   const roomName = pochaId;
-  const test = ["핑크빈", "말랑말랑", "남규짱짱맨"]
 
   const onClickIntro = () => {
     const signalData = "INTRO";
@@ -30,7 +29,7 @@ function SonResult({
           className={`${styles.img1}`}
         />
         <div className={`${styles.box2}`}>손병호 게임</div>
-        <div className={`${styles.box3} text-4xl`}>{test.map((data: any) => {
+        <div className={`${styles.box3} text-4xl`}>{resultData.map((data: any) => {
           return <span>{`${data} `}</span>
         })}</div>
         <div className={`${styles.box4}`}>마셔라! 마셔라!</div>

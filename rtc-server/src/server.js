@@ -259,6 +259,10 @@ wsServer.on("connection", (socket) => {
   socket.on("game_son_fold", (roomName, socketId) => {
     wsServer.to(roomName).emit("game_son_fold", socketId);
   });
+  // 다음 턴
+  socket.on("game_son_turn", (roomName, turn) => {
+    wsServer.to(roomName).emit("game_son_turn", turn);
+  });
 
   // 라이어 게임
   // 라이어게임 여러 시그널
@@ -282,4 +286,28 @@ wsServer.on("connection", (socket) => {
   socket.on("game_twenty_play", (roomName, signalData, data, number) => {
     wsServer.to(roomName).emit("game_twenty_play", signalData, data, number);
   });
-});
+
+  // 밸런스 게임 Play
+  socket.on("game_balance_Intro", (roomName, isBalance) => {
+    wsServer.to(roomName).emit("game_balance_Intro", isBalance);
+  });
+  // 밸런스 게임 romantic,normal 클릭
+  socket.on("game_balance_typeChange", (roomName, choiceType) => {
+    console.log("choiceType?", choiceType);
+    wsServer.to(roomName).emit("game_balance_typeChange", choiceType);
+  });
+  // 밸런스 게임 테마에 따른 내용 변경
+  socket.on("game_balance_subjectChange", (roomName, themeDataList) => {
+    console.log("choiceType?", themeDataList);
+    wsServer.to(roomName).emit("game_balance_subjectChange", themeDataList);
+  //정한 라이어 보내기
+  socket.on("game_liar_number", (roomName, data) => {
+    wsServer.to(roomName).emit("game_liar_number", data);
+    })
+  });
+    // 양세찬 게임
+  // 양세찬 게임 여러 시그널
+  socket.on("game_call_signal", (roomName, signalData, data) => {
+    wsServer.to(roomName).emit("game_call_signal", signalData, data);
+  });
+})

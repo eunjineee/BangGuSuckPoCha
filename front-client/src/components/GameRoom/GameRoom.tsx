@@ -47,15 +47,15 @@ function GameRoom(): JSX.Element {
       switch (data.data.themeId) {
         case "T0B0":
           navigate(`/storyroom/${PochaId}`);
-          toast.success("포차 설정이 변경되었습니다");
+          // toast.success("포차 설정이 변경되었습니다");
           break;
         case "T0B1":
           navigate(`/storyroom/${PochaId}`);
-          toast.success("포차 설정이 변경되었습니다");
+          // toast.success("포차 설정이 변경되었습니다");
           break;
         case "T0B2":
           navigate(`/storyroom/${PochaId}`);
-          toast.success("포차 설정이 변경되었습니다");
+          // toast.success("포차 설정이 변경되었습니다");
           break;
         case "T1B0":
           navigate(`/gameroom/${PochaId}`);

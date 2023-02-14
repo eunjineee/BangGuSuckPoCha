@@ -34,6 +34,10 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
   const showModal = useAppSelector((state) => {
     return state.PublicModal;
   });
+  // 포차 테마 확인
+  const enterPochaType = useAppSelector((state) => {
+    return state.enterPochaType;
+  });
 
   console.log("친구리스트데이터", myFriends);
 
@@ -163,7 +167,11 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
         <div
           id={e.you_id}
           data-nickname={e.f_nickname}
-          onClick={onClickShowModal}
+          onClick={(e)=> {
+            if (enterPochaType !== 3) {
+              onClickShowModal(e)
+            }
+          }}
           className={`flex justify-start items-center cursor-pointer pl-3 text-base font-semibold h-full ${styles.menuFriendNeon}`}
         >
           {e.f_nickname}

@@ -13,19 +13,20 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Navbar(): JSX.Element {
-  const navigate = useNavigate()
-  const [myData,setMyData] = useState({profile:null, nickname:null})
-  useEffect(()=> {
-    const username = localStorage.getItem('Username')
+  const navigate = useNavigate();
+  const [myData, setMyData] = useState({ profile: null, nickname: null });
+  useEffect(() => {
+    const username = localStorage.getItem("Username");
     axios({
-      method: 'get',
-      url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`
-    })
-    .then((r)=> {
-      setMyData({profile:r.data.data.profile, nickname:r.data.data.nickname})
-    })
-  },[])
-
+      method: "get",
+      url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`,
+    }).then((r) => {
+      setMyData({
+        profile: r.data.data.profile,
+        nickname: r.data.data.nickname,
+      });
+    });
+  }, []);
 
   return (
     // <div className="h-[11rem] min-w-[75rem] sticky top-0 w-full" >
@@ -36,15 +37,19 @@ function Navbar(): JSX.Element {
           src={require("src/assets/logo/Logo.png")}
           alt="logo"
           className={`object-contain w-[32%] cursor-pointer`}
-          onClick={()=> {
-            navigate('/main')
+          onClick={() => {
+            navigate("/main");
           }}
         />
         <div className="" style={{ width: "16%" }}></div>
         <div className="grid grid-cols-1 " style={{ width: "18%" }}>
           <div></div>
           <div></div>
-          <MenuOption myData={myData} profile={myData.profile} nickname={myData.nickname}/>
+          <MenuOption
+            myData={myData}
+            profile={myData.profile}
+            nickname={myData.nickname}
+          />
         </div>
       </div>
     </div>
@@ -52,9 +57,10 @@ function Navbar(): JSX.Element {
 }
 
 // menu component
-function MenuOption({profile, nickname, myData}:any): JSX.Element {
+function MenuOption({ profile, nickname, myData }: any): JSX.Element {
+  const navigate = useNavigate();
   let dispatch = useAppDispatch();
-  console.log('마이데이터: ',myData)
+  console.log("마이데이터: ", myData);
   const username = localStorage.getItem("Username");
   const menuFriendClickCheck = useAppSelector((state) => {
     return state.menuFriendClickCheck;
@@ -75,6 +81,9 @@ function MenuOption({profile, nickname, myData}:any): JSX.Element {
                 style={{ width: "1.8rem", height: "1.8rem" }}
                 src={profile}
                 alt="my"
+                onClick={() => {
+                  navigate("/newmypage");
+                }}
               />
             </div>
             <p
