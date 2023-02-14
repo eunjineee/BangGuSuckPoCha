@@ -17,7 +17,7 @@ const socket = io("https://pocha.online");
 
 function MeetingRoom(): JSX.Element {
 
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // const dispatch = useAppDispatch();
   const { PochaId } = useParams();

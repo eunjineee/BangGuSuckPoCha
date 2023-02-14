@@ -43,6 +43,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  let accessToken = localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // webRTC관련
   // const socket = io("https://pocha.online");
@@ -164,6 +165,9 @@ const WebRTC = ({
         data: { data },
       } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
       });
       console.log("참여 유저들 데이터?", data);
       // 방장 여부 체크
@@ -745,19 +749,21 @@ const WebRTC = ({
 
   // 유저들 프로파일 모달 띄우기
   const ShowUserProfile = async (event: React.MouseEvent<any>) => {
-    if (userCount.current >= 2) {
-      const username = event.currentTarget.id;
-
-      // console.log("모달용 데이터 닉?", username);
-      const { data } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
-      });
-      console.log("모달용 데이터?", data);
-      dispatch(changeNavAlarmReviewEmojiUserData(data));
-      dispatch(showRoomUserProfile());
-      // setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
-    }
+  if (userCount.current >= 2) {
+    const username = event.currentTarget.id;
+    console.log("모달용 데이터 닉?", username);
+    const { data } = await axios({
+      url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    });
+    console.log("모달용 데이터?", data);
+    dispatch(changeNavAlarmReviewEmojiUserData(data));
+    dispatch(showRoomUserProfile());
+    // setUserProfileData(data);
+    // dispatch(isRtcLoading(false));
+     }
   };
 
   // 하트 시그널 클릭

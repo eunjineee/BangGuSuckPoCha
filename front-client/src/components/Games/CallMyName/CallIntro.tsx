@@ -29,7 +29,7 @@ function CallIntro({
   const [resultData, setResultData] = useState<any>(null);
 
   const [titles, setTitles] = useState<any>(null)
-
+  const [nowtitles, setNowtitles] = useState<any>(null);
   const nowtitle: any[] = [];
 
   const [mynum, setMyNum] = useState<any>(null) // 내번호
@@ -131,29 +131,32 @@ function CallIntro({
   useEffect(()=>{
     titlechoice();
   },[titles])
+
+
+  useEffect(()=>{
+    const SignalData = "TITLE"
+    const data = nowtitles;
+    socket.emit("game_call_submit", roomName, SignalData, data);
+  },[nowtitles])
   
   const titlechoice = () => {
     for (var i = 0; i < 6 ; i++) {
       if (titles){
         var newnum = Math.floor(Math.random()* (titles.length))
         nowtitle.push(titles[newnum]);
-        console.log("----------newtitle--------",titles[newnum]);
       }
     }
-    console.log("----------newtitlesssss--------", nowtitle);
-    const SignalData = "TITLE"
-    const data = nowtitle;
-    socket.emit("game_call_submit", roomName, SignalData, data);
+    setNowtitles(nowtitle);
   }
 
-  // console.log("----------userlist--------",pochaUsers);
-  // console.log("----------mynum--------",mynum);
+  console.log("----------userlist--------",pochaUsers);
+  console.log("----------mynum--------",mynum);
 
 
   return (
     <>
       {signal === "PLAY" ? (
-        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitle={nowtitle}/>
+        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
       ) : null}
       {signal === "MANUAL" ? (
         <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
@@ -162,7 +165,7 @@ function CallIntro({
         <CallResult socket={socket} pochaId={pochaId} resultData={resultData}/>
       ) : null}
       {signal === "INPUT" ? (
-        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} nowtitle={nowtitle}/>
+        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>

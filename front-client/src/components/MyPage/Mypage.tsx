@@ -155,7 +155,7 @@ function Mypage(): JSX.Element {
   useEffect(() => {
     // console.log("useEffect실행");
     //토큰처리
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
     // axios.defaults.headers.common["Authorization"] = `${accessToken}`;
     // axios
@@ -172,7 +172,6 @@ function Mypage(): JSX.Element {
       },
     }).then((r) => {
       console.log("성공인가요?", r.data);
-
       //
       axios({
         method: "post",
