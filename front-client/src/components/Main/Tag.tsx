@@ -50,10 +50,10 @@ function Tag(): JSX.Element {
           url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
           headers: {
             refreshToken: `${refreshToken}`,
+            accessToken: `${accessToken}`
           }
-        }).then((e)=> {
-          console.log('55번줄 e: ', e.data);
-          
+        }).then((r)=> {
+          console.log('55번줄 e: ', r.data);
         })
       }
       
