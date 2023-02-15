@@ -61,14 +61,6 @@ function CallIntro({
 
   useEffect(() => {
     getPochaInfo();
-    socket.on("game_call_signal", (signalData: string, data: any) => {
-      console.log("끝나는 시그널?", signalData);
-      getPochaInfo();
-      setTimeout(() => {
-        setSignal(signalData);
-        setResultData(data);
-      }, 1000);
-    });
     getPochaUsers();
     if (pochaUsers){
       setHostInfo();
@@ -76,19 +68,24 @@ function CallIntro({
   },[]);
 
   useEffect(() => {
-    if (pochaUsers){
+    if(pochaUsers){
       setHostInfo();
       setPeopleInfo();
-      if (mynum === isHost){
-        getCallSubject();
-      }
     }
   },[pochaUsers]);
   
-    
   useEffect(()=>{
-    if ((mynum === isHost)&&!nowtitles){
+    if (mynum === isHost){
+      getCallSubject();
+    }
+  },[isHost])
+
+
+  useEffect(()=>{
+    console.log("77777777777777777777777777nowtitles", nowtitles)
+    if (mynum === isHost){
       titlechoice();
+      console.log("55555555555555555s", nowtitles)
     }
   },[titles])
 
@@ -188,7 +185,9 @@ function CallIntro({
 
   console.log("----------인트로에서 userlist--------",pochaUsers);
   console.log("----------mynum--------",mynum);
-
+  console.log("----------host--------",isHost);
+  
+  console.log("----------개빡쳐--------",nowtitles);
 
   return (
     <>
