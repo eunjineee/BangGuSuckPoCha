@@ -63,49 +63,53 @@ const RoomUserRepotModal = ({ userData }: { userData: any }) => {
 
   return (
     <div
-      className="bg-slate-800 bg-opacity-50 flex justify-center z-20 items-center absolute top-0 right-0 bottom-0 left-0"
+      className="bg-slate-800 bg-opacity-50 flex justify-center items-center z-20 absolute top-0 right-0 bottom-0 left-0"
     >
-      <div className="bg-black w-[22%] px-14 pt-14 pb-7 rounded-md text-center">
+      <div className="bg-black w-[33rem] h-[40.25rem] px-14 pt-14 pb-7 rounded-md text-center">
+        <div className="flex justify-center items-center">
+          <img className="w-8 h-8 object-contain" src={require('../../assets/roomIcon/alert.png')} alt="" />
+        </div>
         <form onSubmit={reportUser}>
-          <div className="text-2xl mb-6 font-bold text-white">
-            <span className="font-bold text-red-500">{`${nickname} `}</span>
+          <div className="text-3xl mb-4 mt-2 font-bold text-white">
+            {/* <span className="font-bold text-red-500">{`${nickname} `}</span> */}
             신고하기
           </div>
-          <div className="flex justify-center">
-            <div className="text-white w-3/4 flex-col">
-              <div className="text-start my-2">
-                <input onChange={onChange} type="radio" name="type" value={0} />
-                <span className="text-lg pl-3">욕설/협박</span>
+          <div className="text-[#FF0000] text-[0.9rem] mb-8"><span className="font-normal">*</span><span className="font-bold">해당 유저와 어떤 일이 있었는지 가능한 한 자세하게 적어주세요.</span></div>
+          <div className="flex justify-center h-full w-full pl-3">
+            <div className="text-white w-full flex-col jus">
+              <div className="text-start mb-4">
+                <input onChange={onChange} type="checkbox" name="type" value={0} />
+                <span className="text-[1.12rem] pl-3">불쾌한 닉네임</span><br />
+                <span className="pl-[1.7rem] text-[0.81rem] text-[#D7D7D7]">불쾌감을 주거나 부적절한 이름 사용</span>
               </div>
-              <div className="text-start my-2">
-                <input onChange={onChange} type="radio" name="type" value={1} />
-                <span className="text-lg pl-3">혐오발언</span>
+              <div className="text-start mb-4">
+                <input onChange={onChange} type="checkbox" name="type" value={0} />
+                <span className="text-[1.12rem] pl-3">욕설</span><br />
+                <span className="pl-[1.7rem] text-[0.81rem] text-[#D7D7D7]">공격적인 언어 사용</span>
               </div>
-              <div className="text-start my-2">
-                <input onChange={onChange} type="radio" name="type" value={2} />
-                <span className="text-lg pl-3">부적절한 닉네임</span>
+              <div className="text-start mb-4">
+                <input onChange={onChange} type="checkbox" name="type" value={0} />
+                <span className="text-[1.12rem] pl-3">음란 행위, 성희롱</span><br />
+                <span className="pl-[1.7rem] text-[0.81rem] text-[#D7D7D7]">불쾌감을 주거나 부적절한 이름 사용</span>
               </div>
-              <div className="text-start my-2">
-                <input onChange={onChange} type="radio" name="type" value={3} />
-                <span className="text-lg pl-3">음란행위/성희롱</span>
-              </div>
-              <div className="text-start my-2">
-                <input onChange={onChange} type="radio" name="type" value={4} />
-                <span className="text-lg pl-3">기타</span>
+              <div className="text-start mb-4">
+                <input onChange={onChange} type="checkbox" name="type" value={0} />
+                <span className="text-[1.12rem] pl-3">기타</span><br />
+                <span className="pl-[1.7rem] text-[0.81rem] text-[#D7D7D7]">이외의 사유</span>
               </div>
               <div className="text-start mt-5">
                 <textarea
-                  className="p-1 w-full text-white border-2 border-white bg-black resize-none"
+                  className="p-1 w-full text-white border-2 border-[#D7D7D7] bg-black resize-none rounded-[4px]"
                   name="사유"
                   value={reportReason}
-                  placeholder="신고사유"
+                  placeholder="사유"
                   onChange={onChange}
                   required
                 ></textarea>
               </div>
             </div>
           </div>
-          <div className="mt-5">
+          <div className="mt-2">
             <input
               className={`${styles.cancelBtn} cursor-pointer`}
               type="submit"
