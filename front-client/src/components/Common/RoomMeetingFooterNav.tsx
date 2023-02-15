@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import { showPublicModal } from "src/store/store";
 import PublicModal from "./PublicModal";
@@ -12,8 +14,10 @@ function RoomMeetingFooterNav({
   socket: any;
 }): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   // 룸 이름
   const roomName = pochaId;
+  const userName = localStorage.getItem("Username");
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const [modalData, setModalData] = useState<any>(null);
@@ -87,13 +91,13 @@ function RoomMeetingFooterNav({
   }, 1000);
 
   //  axios 요청
-  const api = axios.create({
-    baseURL: "https://i8e201.p.ssafy.io/api",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-      accessToken: `${accessToken}`,
-    },
-  });
+  // const api = axios.create({
+  //   baseURL: "https://i8e201.p.ssafy.io/api",
+  //   headers: {
+  //     "Content-Type": "application/json;charset=utf-8",
+  //     accessToken: `${accessToken}`,
+  //   },
+  // });
 
   // 포차 설정 변경 이벤트
   async function handlePochaUpdate() {
@@ -108,8 +112,46 @@ function RoomMeetingFooterNav({
   async function handlePochaExtension() {
     // axios를 통해 포차 시간 연장. (await 사용해야할 듯?)
     try {
-      await api.put("/pocha/extension/3");
-      socket.emit("pocha_extension", roomName);
+      // await api.put("/pocha/extension/3");
+      await axios({
+        method: "PUT",
+        url: `https://i8e201.p.ssafy.io/api/pocha/extension/3`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
+      }).then((r)=> {
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${userName}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+              } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method: "PUT",
+                url: `https://i8e201.p.ssafy.io/api/pocha/extension/3`,
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                socket.emit("pocha_extension", roomName);
+              })
+            }
+          })
+        } else {
+          socket.emit("pocha_extension", roomName);
+        }
+      })
     } catch (error) {
       console.log("시간추가 error", error);
     }

@@ -531,7 +531,7 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
                     username: username,
                   },
                   headers: {
-                    accessToken: `${accessToken}`,
+                    accessToken: `${r.data.accessToken}`,
                   }
                 }).then(()=> {
                   if (themeId === "T0") {

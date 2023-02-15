@@ -13,6 +13,8 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import PublicModal from "./PublicModal";
 import Loading from "./Loading";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UpdateRoomInfo = ({
   roomTheme,
@@ -24,6 +26,8 @@ const UpdateRoomInfo = ({
   socket: any;
 }): React.ReactElement => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
+  const username = localStorage.getItem('Username')
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 로딩중
@@ -136,33 +140,84 @@ const UpdateRoomInfo = ({
   // 현재 포차 정보 요청
   const getPochaInfo = async () => {
     try {
-      const { data } = await axios({
+      await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      setPochaInfo(data.data);
-      // 그냥 로딩중 보여주기
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 500);
-      // console.log("태그", data.data.tagList);
-      const tags = data.data.tagList;
-      // 현재 포차의 선택된 태그들 표시해주기
-      // ref로 잡아온 리스트 for문 돌리고
-      console.log("현재 방 태그들",tags);
-      selectTags.current.forEach((tag) => {
-        // 현재 포차 태그리스트로 2중 for문
-        tags.forEach((tagName: any) => {
-          if (tag.innerText === tagName) {
-            tag.classList.add(`${style.selectBtn}`);
-            // 이렇게 찾아낸건 처음값으로 세팅해준다
-            dispatch(changeCreateRoomChoiceAddTag(tagName));
-            setChoiceTagList((prev) => [...prev, tagName]);
-          }
-        });
-      });
+      }).then((r)=> {
+        // 토큰 갱신 필요
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                setPochaInfo(r.data);
+                // 그냥 로딩중 보여주기
+                setTimeout(() => {
+                  setIsLoading(false);
+                }, 500);
+                // console.log("태그", data.data.tagList);
+                const tags = r.data.tagList;
+                // 현재 포차의 선택된 태그들 표시해주기
+                // ref로 잡아온 리스트 for문 돌리고
+                console.log("현재 방 태그들",tags);
+                selectTags.current.forEach((tag) => {
+                  // 현재 포차 태그리스트로 2중 for문
+                  tags.forEach((tagName: any) => {
+                    if (tag.innerText === tagName) {
+                      tag.classList.add(`${style.selectBtn}`);
+                      // 이렇게 찾아낸건 처음값으로 세팅해준다
+                      dispatch(changeCreateRoomChoiceAddTag(tagName));
+                      setChoiceTagList((prev) => [...prev, tagName]);
+                    }
+                  });
+                });
+              })
+            }
+          })
+        } else {
+          setPochaInfo(r.data);
+          // 그냥 로딩중 보여주기
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
+          // console.log("태그", data.data.tagList);
+          const tags = r.data.tagList;
+          // 현재 포차의 선택된 태그들 표시해주기
+          // ref로 잡아온 리스트 for문 돌리고
+          console.log("현재 방 태그들",tags);
+          selectTags.current.forEach((tag) => {
+            // 현재 포차 태그리스트로 2중 for문
+            tags.forEach((tagName: any) => {
+              if (tag.innerText === tagName) {
+                tag.classList.add(`${style.selectBtn}`);
+                // 이렇게 찾아낸건 처음값으로 세팅해준다
+                dispatch(changeCreateRoomChoiceAddTag(tagName));
+                setChoiceTagList((prev) => [...prev, tagName]);
+              }
+            });
+          });
+        }
+      })
     } catch (error) {
       console.log("포차 정보 받아오기", error);
     }
@@ -171,14 +226,14 @@ const UpdateRoomInfo = ({
   useEffect(() => {
     getPochaInfo();
   }, []);
- 
+
 
   // 포차 정보 업데이트 요청
   const updateRoom = async (event: React.MouseEvent<HTMLInputElement>) => {
     const changeThemeId = event.currentTarget.id;
     try {
       // console.log("pochaInfo.isPrivate!@!@!@!@",pochaInfo.isPrivate)
-      const updateInfo = await axios({
+      await axios({
         method: "PUT",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
         data: {
@@ -192,9 +247,50 @@ const UpdateRoomInfo = ({
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      console.log("포차정보수정????", updateInfo);
-      socket.emit("pocha_change", pochaId);
+      }).then((r)=> {
+        // 토큰 갱신 필요
+      if (r.data.status === '401') {
+        axios({
+          method: 'get',
+          url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+          headers: {
+            refreshToken: `${refreshToken}`,
+          }
+        }).then((r)=> {
+          // 돌려보내기
+          if (r.data.status === '401') {
+            localStorage.clear();
+            toast.error('인증되지 않은 유저입니다')
+            navigate('/')
+          } else {
+            // 엑세스 토큰 추가
+            localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+            axios({
+              method: "PUT",
+              url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
+              data: {
+                age: createRoomChoiceAge,
+                isPrivate: pochaInfo.isPrivate,
+                limitUser: createRoomChoicePeople,
+                region: createRoomChoiceRegion,
+                tagList: choiceTagList,
+                themeId: changeThemeId === "game" ? "T1B0" : createRoomThemeCheck,
+              },
+              headers: {
+                accessToken: `${r.data.accessToken}`,
+              },
+            }).then((r)=> {
+              // console.log("포차정보수정????", r);
+              socket.emit("pocha_change", pochaId);
+            })
+          }
+        })
+        } else {
+          // console.log("포차정보수정????", r);
+          socket.emit("pocha_change", pochaId);
+        }
+      })
     } catch (error) {
       console.log("포차정보수정", error);
     }

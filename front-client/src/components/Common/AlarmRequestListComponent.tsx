@@ -64,7 +64,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                               method:'get',
                               url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
                               headers: {
-                                accessToken: `${r.data.accessToken}`,
+                                accessToken: `${localStorage.getItem("accessToken")}`,
                               },
                             })
                             .then((r)=> {
@@ -134,7 +134,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                               method:'get',
                               url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
                               headers: {
-                                accessToken: `${r.data.accessToken}`,
+                                accessToken: `${localStorage.getItem("accessToken")}`,
                               },
                             })
                             .then((r)=> {
@@ -182,7 +182,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                                         username: username,
                                       },
                                       headers: {
-                                        accessToken: `${accessToken}`,
+                                        accessToken: `${localStorage.getItem("accessToken")}`,
                                       },
                                     }).then(()=> {
                                       if (themeId === 'T0') {
@@ -322,7 +322,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                             method:'get',
                             url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
                             headers: {
-                              accessToken: `${r.data.accessToken}`,
+                              accessToken: `${localStorage.getItem("accessToken")}`,
                             },
                           })
                           .then((r)=> {
@@ -387,7 +387,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                             method:'get',
                             url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
                             headers: {
-                              accessToken: `${r.data.accessToken}`,
+                              accessToken: `${localStorage.getItem("accessToken")}`,
                             },
                           })
                           .then((r)=> {

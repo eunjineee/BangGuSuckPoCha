@@ -3,17 +3,20 @@ import { useAppDispatch } from "../../store/hooks";
 import { roomAddFriendModalState } from "../../store/store";
 import { toast } from "react-toastify";
 import styles from "./RoomUserProfile.module.css";
+import { useNavigate } from "react-router-dom";
 
 const RoomUserFriendModal = ({ userData }: { userData: any }) => {
   const clickUserId:number = userData.data.userId
   let dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const { nickname } = userData.data;
+  const username = localStorage.getItem("Username");
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 친구신청 하는 함수
   const addFriend = async () => {
     try {
-      const ffriend = await axios({
+      await axios({
         method: "POST",
         url: "https://i8e201.p.ssafy.io/api/user/friend/request",
         data: {
@@ -23,14 +26,52 @@ const RoomUserFriendModal = ({ userData }: { userData: any }) => {
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      
-      if (ffriend.data.message === "success") {
-        toast.success(`${nickname}에게 친구신청을 완료하였습니다`);
-      } else {
-        toast.error(`${nickname}에게 친구신청을 이미 보냈습니다`);
-      }
-      
+      }).then((r)=> {
+        // 토큰 갱신 필요
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method: "POST",
+                url: "https://i8e201.p.ssafy.io/api/user/friend/request",
+                data: {
+                  from_id: localStorage.getItem('userId'),
+                  to_id: clickUserId,
+                },
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                if (r.data.message === "success") {
+                  toast.success(`${nickname}에게 친구신청을 완료하였습니다`);
+                } else {
+                  toast.error(`${nickname}에게 친구신청을 이미 보냈습니다`);
+                }
+              })
+            }
+          })
+        } else {
+          if (r.data.message === "success") {
+            toast.success(`${nickname}에게 친구신청을 완료하였습니다`);
+          } else {
+            toast.error(`${nickname}에게 친구신청을 이미 보냈습니다`);
+          }
+        }
+      })
     } catch (error) {
       console.log(error);
     }

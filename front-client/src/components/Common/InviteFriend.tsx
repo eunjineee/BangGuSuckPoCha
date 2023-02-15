@@ -169,7 +169,7 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
               method: 'get',
               url: `https://i8e201.p.ssafy.io/api/user/info/${f_username}`,
               headers: {
-                accessToken: `${accessToken}`,
+                accessToken: `${r.data.accessToken}`,
               },
             }).then((r)=> {
               console.log('넣어따', r.data)

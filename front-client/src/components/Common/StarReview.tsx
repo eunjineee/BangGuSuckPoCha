@@ -5,10 +5,12 @@ import { useState } from "react";
 import { changeAlarmApiDataState } from "../../store/store";
 import { useAppDispatch } from "../../store/hooks";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // 리뷰 평가
 function StarReview({to_nickname, reviewId, toUsername}:any):JSX.Element {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [starState,setStarState] = useState()
   // username (현재는 내꺼)
   const username = localStorage.getItem('Username')
@@ -38,39 +40,104 @@ function StarReview({to_nickname, reviewId, toUsername}:any):JSX.Element {
               },
             })
             .then((r)=> {
-              toast.success(`${to_nickname}님을 평가 완료하였습니다`);
-              axios({
-                method: 'get',
-                url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
-                headers: {
-                  accessToken: `${accessToken}`,
-                },
-              })
-              .then((r)=>{
-                const datas:any[] = r.data.data
-                // 현재 날짜 지정
-                const now = new Date()
-                // 현재 연도
-                let now_year = now.getFullYear()
-                // 현재 월
-                let now_month = ('0' + (now.getMonth() +  1 )).slice(-2);
-                // 현재 일
-                let now_day= ('0'+(now.getDate())).slice(-2)
-                let two_day_ago= ('0'+(now.getDate()-2)).slice(-2)
-                // 현재 연도-월-일
-                const nowYMD:any = new Date(now_year+"-"+now_month+"-"+now_day)
-                const threeBeforeYMD:any = new Date(now_year+"-"+now_month+"-"+two_day_ago)
-                
-                // 3일 
-                // 리뷰 이전
-                const Beforedata:any = datas.filter((data)=> {  
-                  const review_create_at = new Date(((data.create_at).split('T'))[0])
-                  return ((data.review_at === null)&&(review_create_at<=nowYMD)&&(threeBeforeYMD<=review_create_at))
+              // 토큰 갱신 필요
+              if (r.data.status === '401') {
+                axios({
+                  method: 'get',
+                  url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                  headers: {
+                    refreshToken: `${refreshToken}`,
+                  }
+                }).then((r)=> {
+                  // 돌려보내기
+                  if (r.data.status === '401') {
+                    localStorage.clear();
+                    toast.error('인증되지 않은 유저입니다')
+                    navigate('/')
+                  } else {
+                    // 엑세스 토큰 추가
+                    localStorage.setItem("accessToken", r.data.accessToken);
+                    // 재요청
+                    axios({
+                      method: 'put',
+                      url: 'https://i8e201.p.ssafy.io/api/user/review',
+                      data: {
+                        "reviewId" : reviewId,
+                        "reviewScore" : starState,
+                        "toUsername" : toUsername
+                      },
+                      headers: {
+                        accessToken: `${r.data.accessToken}`,
+                      },
+                    }).then((r)=> {
+                      toast.success(`${to_nickname}님을 평가 완료하였습니다`);
+                      axios({
+                        method: 'get',
+                        url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+                        headers: {
+                          accessToken: `${localStorage.getItem("accessToken")}`,
+                        },
+                      })
+                      .then((r)=>{
+                        const datas:any[] = r.data.data
+                        // 현재 날짜 지정
+                        const now = new Date()
+                        // 현재 연도
+                        let now_year = now.getFullYear()
+                        // 현재 월
+                        let now_month = ('0' + (now.getMonth() +  1 )).slice(-2);
+                        // 현재 일
+                        let now_day= ('0'+(now.getDate())).slice(-2)
+                        let two_day_ago= ('0'+(now.getDate()-2)).slice(-2)
+                        // 현재 연도-월-일
+                        const nowYMD:any = new Date(now_year+"-"+now_month+"-"+now_day)
+                        const threeBeforeYMD:any = new Date(now_year+"-"+now_month+"-"+two_day_ago)
+                        
+                        // 3일 
+                        // 리뷰 이전
+                        const Beforedata:any = datas.filter((data)=> {  
+                          const review_create_at = new Date(((data.create_at).split('T'))[0])
+                          return ((data.review_at === null)&&(review_create_at<=nowYMD)&&(threeBeforeYMD<=review_create_at))
+                        })
+                        dispatch(changeAlarmApiDataState(Beforedata))
+                      })
+                    })
+                  }
                 })
-                dispatch(changeAlarmApiDataState(Beforedata))
-              })
+              } else {
+                toast.success(`${to_nickname}님을 평가 완료하였습니다`);
+                axios({
+                  method: 'get',
+                  url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  },
+                })
+                .then((r)=>{
+                  const datas:any[] = r.data.data
+                  // 현재 날짜 지정
+                  const now = new Date()
+                  // 현재 연도
+                  let now_year = now.getFullYear()
+                  // 현재 월
+                  let now_month = ('0' + (now.getMonth() +  1 )).slice(-2);
+                  // 현재 일
+                  let now_day= ('0'+(now.getDate())).slice(-2)
+                  let two_day_ago= ('0'+(now.getDate()-2)).slice(-2)
+                  // 현재 연도-월-일
+                  const nowYMD:any = new Date(now_year+"-"+now_month+"-"+now_day)
+                  const threeBeforeYMD:any = new Date(now_year+"-"+now_month+"-"+two_day_ago)
+                  
+                  // 3일 
+                  // 리뷰 이전
+                  const Beforedata:any = datas.filter((data)=> {  
+                    const review_create_at = new Date(((data.create_at).split('T'))[0])
+                    return ((data.review_at === null)&&(review_create_at<=nowYMD)&&(threeBeforeYMD<=review_create_at))
+                  })
+                  dispatch(changeAlarmApiDataState(Beforedata))
+                })
+              }
             })
-            
           }}/>
         </div>
       </div>

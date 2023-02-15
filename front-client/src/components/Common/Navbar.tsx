@@ -51,7 +51,7 @@ function Navbar(): JSX.Element {
               method: "get",
               url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`,
               headers: {
-                accessToken: `${accessToken}`,
+                accessToken: `${r.data.accessToken}`,
               },
             }).then((r)=> {
               // 새롭게 받은 토큰 저장 후  값 저장
@@ -105,7 +105,8 @@ function Navbar(): JSX.Element {
 }
 
 // menu component
-function MenuOption({ profile, nickname, myData, accessToken, refreshToken }: any): JSX.Element {
+function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Element {
+  const accessToken = localStorage.getItem("accessToken")
   const navigate = useNavigate();
   let dispatch = useAppDispatch();
   console.log("마이데이터: ", myData);
@@ -176,7 +177,7 @@ function MenuOption({ profile, nickname, myData, accessToken, refreshToken }: an
                         method: "get",
                         url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
                         headers: {
-                          accessToken: `${accessToken}`,
+                          accessToken: `${r.data.accessToken}`,
                         },
                       }).then((r)=> {
                         const checkFrom_id: number[] = [];
