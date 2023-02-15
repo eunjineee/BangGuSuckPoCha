@@ -47,6 +47,7 @@ public class SecurityConfig {
 //
 //    }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -76,7 +77,7 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
             http
-                .addFilter(config.corsFilter())
+                    .addFilter(config.corsFilter())
                     .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtService)) //AuthenticationManger가 있어야 된다.(파라미터로)
                     .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtService));
         }
