@@ -216,7 +216,7 @@ const WebRTC = ({
 
   // 카메라 뮤트
   const [muted, setMuted] = useState<boolean>(false);
-    // 카메라 오프
+  // 카메라 오프
   const [cameraOff, setCameraOff] = useState<boolean>(false);
   // let muted = useRef<boolean>(false);
   // let muted = false;
@@ -821,88 +821,89 @@ const WebRTC = ({
 
           <div className="text-white w-full min-h-[85vh]">
             {ssul && (
-              <span
-                className="font-bold text-3xl fixed left-0 right-0 top-10"
-                ref={ssulTitle}
-              >{`💬${ssul}`}</span>
+              <span className="font-bold text-3xl fixed left-10 bottom-10">{`💬${ssul}`}</span>
             )}
-            <div className="flex flex-wrap justify-evenly items-center p-24 min-h-[85vh]">
-              {/* 내 비디오 공간 */}
-              <div
-                ref={div1}
-                className="rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
-              >
-                <video
-                  className="object-fill"
-                  ref={myFace}
-                  playsInline
-                  autoPlay
-                ></video>
+            <div className="flex flex-col justify-evenly items-center min-h-[85vh]">
+              <div className="flex w-full justify-evenly items-center ">
+                {/* 내 비디오 공간 */}
+                <div
+                  ref={div1}
+                  className="rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
+                >
+                  <video
+                    className="object-fill"
+                    ref={myFace}
+                    playsInline
+                    autoPlay
+                  ></video>
+                </div>
+                {/* 다른 사람들 비디오 공간 */}
+                <div
+                  ref={div2}
+                  className={
+                    userCount.current >= 2
+                      ? "rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
+                      : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"
+                  }
+                >
+                  <video
+                    onClick={ShowUserProfile}
+                    className="object-fill cursor-pointer"
+                    ref={peerFace1}
+                    playsInline
+                    autoPlay
+                  ></video>
+                </div>
+                <div
+                  ref={div3}
+                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+                >
+                  <video
+                    onClick={ShowUserProfile}
+                    className="object-fill cursor-pointer hidden"
+                    ref={peerFace2}
+                    playsInline
+                    autoPlay
+                  ></video>
+                </div>
               </div>
-              {/* 다른 사람들 비디오 공간 */}
-              <div
-                ref={div2}
-                className={
-                  userCount.current >= 2
-                    ? "rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
-                    : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"
-                }
-              >
-                <video
-                  onClick={ShowUserProfile}
-                  className="object-fill cursor-pointer"
-                  ref={peerFace1}
-                  playsInline
-                  autoPlay
-                ></video>
-              </div>
-              <div
-                ref={div3}
-                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-              >
-                <video
-                  onClick={ShowUserProfile}
-                  className="object-fill cursor-pointer hidden"
-                  ref={peerFace2}
-                  playsInline
-                  autoPlay
-                ></video>
-              </div>
-              <div
-                ref={div4}
-                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-              >
-                <video
-                  onClick={ShowUserProfile}
-                  className="object-fill cursor-pointer hidden"
-                  ref={peerFace3}
-                  playsInline
-                  autoPlay
-                ></video>
-              </div>
-              <div
-                ref={div5}
-                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-              >
-                <video
-                  onClick={ShowUserProfile}
-                  className="object-fill cursor-pointer hidden"
-                  ref={peerFace4}
-                  playsInline
-                  autoPlay
-                ></video>
-              </div>
-              <div
-                ref={div6}
-                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-              >
-                <video
-                  onClick={ShowUserProfile}
-                  className="object-fill cursor-pointer hidden"
-                  ref={peerFace5}
-                  playsInline
-                  autoPlay
-                ></video>
+              <div className="flex w-full justify-evenly items-center ">
+                <div
+                  ref={div4}
+                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+                >
+                  <video
+                    onClick={ShowUserProfile}
+                    className="object-fill cursor-pointer hidden"
+                    ref={peerFace3}
+                    playsInline
+                    autoPlay
+                  ></video>
+                </div>
+                <div
+                  ref={div5}
+                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+                >
+                  <video
+                    onClick={ShowUserProfile}
+                    className="object-fill cursor-pointer hidden"
+                    ref={peerFace4}
+                    playsInline
+                    autoPlay
+                  ></video>
+                </div>
+                <div
+                  ref={div6}
+                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+                >
+                  <video
+                    onClick={ShowUserProfile}
+                    className="object-fill cursor-pointer hidden"
+                    ref={peerFace5}
+                    playsInline
+                    autoPlay
+                  ></video>
+                </div>
               </div>
             </div>
             <div className="flex justify-center items-center ">
