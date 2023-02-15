@@ -225,18 +225,21 @@ function WaitingRoom({
               ) : (
                 <div className="text-center m-1 text-3xl font-bold">매칭중</div>
               )}
-
-              <div className="text-center m-2 text-3xl text-red-500 font-bold">
-                Tips!
-              </div>
-              <div className="text-center m-2 text-2xl">
-                매칭을 기다리면서 자기 소개 키워드를 작성해보세요!
+              <div className="flex justify-center items-center my-10">
+                <div className="w-[45%]">
+                  <div className="text-start m-2 text-3xl text-red-500 font-bold">
+                    Tips!
+                  </div>
+                  <div className="text-start m-2 text-2xl">
+                    매칭을 기다리면서 자기소개 키워드를 작성해보세요!
+                  </div>
+                </div>
               </div>
 
               <div className="text-center m-2 text-xl">{`ex) 반려동물, MBTI, 관심사, 좋아하는 음식, 영화, 계절`}</div>
               <input
                 type="text"
-                className="w-[50%] rounded-lg p-1 text-center m-2 text-xl text-black border-2 caret-black"
+                className="w-[45%] rounded-lg p-1 text-center m-2 text-xl text-black border-2 caret-black"
                 placeholder="소개할 정보를 입력하세요"
                 value={introduce}
                 onChange={ChangeIntroduce}
@@ -244,7 +247,7 @@ function WaitingRoom({
               />
               <div className="flex m-2">
                 <div className="w-[25%]"></div>
-                <div className="flex-wrap text-left w-[50%]">
+                <div className="flex-wrap text-center w-[80%]">
                   {myIntroduce.map((input, index) => (
                     <div
                       className="inline-block border-2 border-white text-xl p-2 m-2 rounded-xl cursor-pointer"
@@ -253,7 +256,7 @@ function WaitingRoom({
                     >{`#${input}`}</div>
                   ))}
                 </div>
-                <div className="w-[25%]"></div>
+                <div className="w-[25%] my-10"></div>
               </div>
               <input
                 className={`${btnStyles.cancelBtn} cursor-pointer`}
