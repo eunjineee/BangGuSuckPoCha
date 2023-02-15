@@ -19,7 +19,8 @@ function WaitingRoom({
   waitEnd: Function;
   myInfo: any;
 }): JSX.Element {
-  let accessToken = localStorage.getItem("accessToken");
+  const username = localStorage.getItem('Username')
+  const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 처음에 받아오는 포차 정보
   const [pochaInfo, setPochaInfo] = useState<any>(null);
@@ -36,25 +37,65 @@ function WaitingRoom({
 
   const getPochaInfo = async (flag: boolean) => {
     try {
-      const { data } = await axios({
+      await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      setPochaInfo(data.data);
+      }).then((r)=> {
+        // 토큰 갱신 필요
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                setPochaInfo(r.data);
+                if (flag) {
+                  setIsLoading(false);
+                  socket.emit("wait", {
+                    roomName: pochaId,
+                    username: myInfo.username,
+                    nickname: myInfo.nickname,
+                    limit: r.data.limitUser,
+                  });
+                }
+                // console.log(r);
+              })
+            }
+          })
+        } else {
+          setPochaInfo(r.data);
 
-
-      if (flag) {
-        setIsLoading(false);
-        socket.emit("wait", {
-          roomName: pochaId,
-          username: myInfo.username,
-          nickname: myInfo.nickname,
-          limit: data.data.limitUser,
-        });
-      }
-      console.log(data);
+          if (flag) {
+            setIsLoading(false);
+            socket.emit("wait", {
+              roomName: pochaId,
+              username: myInfo.username,
+              nickname: myInfo.nickname,
+              limit: r.data.limitUser,
+            });
+          }
+          // console.log(r);
+        }
+      })
     } catch (error) {
       console.log("포차 정보 받아오기", error);
     }
