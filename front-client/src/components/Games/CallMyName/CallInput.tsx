@@ -33,6 +33,8 @@ function CallInput({
   const title3 = useRef<any>(null);
   const title4 = useRef<any>(null);
   const title5 = useRef<any>(null);
+  const title6 = useRef<any>(null);
+  const title7 = useRef<any>(null);
   const [txtSpanList, setTxtSpanList] = useState<any[]>([
     title0,
     title1,
@@ -40,6 +42,8 @@ function CallInput({
     title3,
     title4,
     title5,
+    title6,
+    title7,
   ]);
   const onClickClose = () => {
     const signalData = "RESULT";
@@ -75,6 +79,9 @@ function CallInput({
     console.log("----------------정답------", nowtitles[mynum]?.word);
     if (answer === nowtitles[mynum]?.word){
       console.log("------------정답이다!!!!!!!!!!!!!!----------");
+      txtSpanList[mynum].current.classList.add("flex");
+      txtSpanList[6].current.classList.add("hidden");
+      txtSpanList[7].current.classList.remove("hidden");
       socket.emit("game_call_pass", roomName, mynum);
     }
     console.log("------------틀렸어----------");
@@ -189,20 +196,25 @@ function CallInput({
           <div className={`${styles.text3}`} id = "pass5">{peopleScore[5]? null : "통과"}</div>
         </div>
       </div>
-      <div className={`${styles.layout6}`}>
-        <input 
-          id="answer" 
-          className={`${styles.answerInput}`} 
-          type="text" 
-          onChange={(e) => {setAnswer(e.target.value)}}
-        />
+      <div className="flex items-center" ref={title6}>
         <div className={`${styles.layout6}`}>
+          <input 
+            id="answer" 
+            className={`${styles.answerInput}`} 
+            type="text" 
+            onChange={(e) => {setAnswer(e.target.value)}}
+          />
           <input 
             type="button" 
             onClick={inputAnswer} 
             className={`${styles.retry}`} 
             value="제출" 
           />
+        </div>
+      </div>
+      <div className="hidden" ref={title7}>
+          <div className={`${styles.layout6} ${styles.box22}`} >
+        정답
         </div>
       </div>
     </div>
