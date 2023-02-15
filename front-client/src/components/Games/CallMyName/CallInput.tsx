@@ -33,6 +33,8 @@ function CallInput({
   const title3 = useRef<any>(null);
   const title4 = useRef<any>(null);
   const title5 = useRef<any>(null);
+  const title6 = useRef<any>(null);
+  const title7 = useRef<any>(null);
   const [txtSpanList, setTxtSpanList] = useState<any[]>([
     title0,
     title1,
@@ -40,6 +42,8 @@ function CallInput({
     title3,
     title4,
     title5,
+    title6,
+    title7,
   ]);
   const onClickClose = () => {
     const signalData = "RESULT";
@@ -69,23 +73,37 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    console.log("----------------제출시작------", answer);
-    console.log("----------------제출시작------", nowtitles[mynum]?.word);
+
+    console.log("----------------정답지------", nowtitles);
+    console.log("----------------제출한 답------", answer);
+    console.log("----------------정답------", nowtitles[mynum]?.word);
     if (answer === nowtitles[mynum]?.word){
-      console.log("----------------------");
+      console.log("------------정답이다!!!!!!!!!!!!!!----------");
+      txtSpanList[mynum].current.classList.add("flex");
+      txtSpanList[6].current.classList.add("hidden");
+      txtSpanList[7].current.classList.remove("hidden");
       socket.emit("game_call_pass", roomName, mynum);
     }
+    console.log("------------틀렸어----------");
   }
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
-    gamestart();
   },[])
+  
+  useEffect(()=> {
+    gamestart();
+  },[mynum])
+
+  useEffect(()=> {
+    finish();
+  },[peopleScore])
 
   useEffect(()=> {
     setMyInfo();
     // 접을때 주고 받는 함수
     socket.on("game_call_pass", (myNum: number) => {
-      console.log("새로운배열 갱신되고있냐?", peopleScore);
+      finish();
+      console.log("새로운배열 갱신되고있냐? 지금배열은", peopleScore);
       const newArray = peopleScore.map((score, index) => {
         if ((index === myNum)&&(score === 1)) {
           return score - 1;
@@ -94,46 +112,48 @@ function CallInput({
       });
       console.log("새로운배열?", newArray);
       setPeopleScore((prev) => [...newArray]);
-      finish();
     });
-
     return () => {
       socket.off("game_call_pass");
     };
   }, [peopleScore]);
 
+  
 
   //게임 끝인지 확인 
   function finish() {
     const resultList: string[] = [];
     const result: string[] = [];
-    // console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    console.log("게임 끝인지 확인중입니다", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
-      // console.log("s여기@@@@@@@@@@@@", score, index);
+      console.log("s여기@@@@@@@@@@@@", score, index);
       if (score === 0) {
         resultList.push(peopleName[index]);
-        console.log("여기오냐?", peopleScore);
-      }else if((score === 1) && (peopleName[index]!== null)){
+        console.log("정답자", resultList);
+      }else{
         result.push(peopleName[index])
       }
     });
-    // console.log("여기오냐 결과가기전? 이건 result", result);
+
     if (resultList.length === totalCount-1) {
-      // console.log("여기오냐 결과가기전?", peopleScore);
+      console.log("여기오냐 결과가기전 꼴찌", result);
+      console.log("여기오냐 결과가기전 정답자들", resultList);
       const signalData = "RESULT";
       const data = result;
-      socket.emit("game_call_signal", roomName, signalData, data);
+      socket.emit("game_call_result", roomName, signalData, data);
     }
   }
 
   //박스만들기(인원수 넘어가는 박스은 가리기)
   function gamestart() {
+    console.log("totalCount----------------",totalCount)
     for (var i = 0; i < 6; i++) {
       if (i >= totalCount) {
-        // console.log(txtSpanList[i].current);
+        console.log("전체 멤버 넘어가면 가려",i, totalCount);
         txtSpanList[i].current.classList.add("hidden");
       }
       if(i === mynum){
+        console.log("이건 나라서 가림",mynum)
         txtSpanList[i].current.classList.add("hidden");
       }
     }
@@ -170,26 +190,31 @@ function CallInput({
           <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[4]?.word}</div>
           <div className={`${styles.text3}`} id = "pass4">{peopleScore[4]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4} flex`} id = "title4" ref={title5}>
-          <div className={`${styles.text1}`} id = "people4">{peopleName[5]}</div>
-          <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[5]?.word}</div>
-          <div className={`${styles.text3}`} id = "pass4">{peopleScore[5]? null : "통과"}</div>
+        <div className={`${styles.layout4} flex`} id = "title5" ref={title5}>
+          <div className={`${styles.text1}`} id = "people5">{peopleName[5]}</div>
+          <div className={`${styles.text2}`} id = "ptitle5">{nowtitles[5]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass5">{peopleScore[5]? null : "통과"}</div>
         </div>
       </div>
-      <div className={`${styles.layout6}`}>
-        <input 
-          id="answer" 
-          className={`${styles.answerInput}`} 
-          type="text" 
-          onChange={(e) => {setAnswer(e.target.value)}}
-        />
+      <div className="flex items-center" ref={title6}>
         <div className={`${styles.layout6}`}>
+          <input 
+            id="answer" 
+            className={`${styles.answerInput}`} 
+            type="text" 
+            onChange={(e) => {setAnswer(e.target.value)}}
+          />
           <input 
             type="button" 
             onClick={inputAnswer} 
             className={`${styles.retry}`} 
             value="제출" 
           />
+        </div>
+      </div>
+      <div className="hidden" ref={title7}>
+          <div className={`${styles.layout6} ${styles.box22}`} >
+        정답
         </div>
       </div>
     </div>

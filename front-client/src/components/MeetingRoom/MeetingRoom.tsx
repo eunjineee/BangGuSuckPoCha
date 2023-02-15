@@ -122,8 +122,9 @@ function MeetingRoom(): JSX.Element {
             friendSearchState? <FriendSearch/>:null
           }
           {RoomUserProfileClickCheck ? (
-            <NavUserEmojiClickModal userData={navAlarmReviewEmojiUserData} />
+            <RoomUserProfile userData={navAlarmReviewEmojiUserData} pochaId={String(PochaId)} isHost={isHost} socket={socket}/>
           ) : null}
+          
           {/* 화면 및 게임 공간 */}
           <div className="h-[90%]">
             <MeetingWebRTC

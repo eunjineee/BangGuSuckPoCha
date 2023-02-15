@@ -3,9 +3,11 @@ import { useAppDispatch } from "../../store/hooks";
 import { showRoomUserBanModal, showRoomUserProfile } from "../../store/store";
 import { toast } from "react-toastify";
 import styles from "./RoomUserProfile.module.css";
+import { useNavigate } from "react-router-dom";
 
 const RoomUserBanModal = ({ userData, pochaId, socket }: { userData: any, pochaId: string, socket: any }) => {
   let dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const { nickname, username } = userData.data;
   const pochaID = Number(pochaId);
   const roomName = pochaId;
@@ -27,9 +29,48 @@ const RoomUserBanModal = ({ userData, pochaId, socket }: { userData: any, pochaI
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      socket.emit("ban", roomName, username);
-      toast.success(`${nickname}을 강퇴하였습니다`);
+      }).then((r)=> {
+        // 토큰 갱신 필요
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청 
+              axios({
+                method: "PUT",
+                url: "https://i8e201.p.ssafy.io/api/pocha/exit",
+                data: {
+                  isHost: true,
+                  pochaId: pochaID,
+                  username: username,
+                  waiting: true,
+                },
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=>{
+                socket.emit("ban", roomName, username);
+                toast.success(`${nickname}을 강퇴하였습니다`);
+              })
+            }
+          })
+        } else {
+          socket.emit("ban", roomName, username);
+          toast.success(`${nickname}을 강퇴하였습니다`);
+        }
+      })
     } catch (error) {
       console.log("강퇴에러", error);
     }
