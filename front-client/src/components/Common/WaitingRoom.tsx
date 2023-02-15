@@ -174,7 +174,7 @@ function WaitingRoom({
       getPochaInfo(false);
       let goal = new Date(time);
 
-      goal.setSeconds(goal.getSeconds() + 5);
+      goal.setSeconds(goal.getSeconds() + 20);
       const waitTime = goal.getTime();
       const startTime = new Date().getTime();
       console.log("시간 비교!!!!!");
