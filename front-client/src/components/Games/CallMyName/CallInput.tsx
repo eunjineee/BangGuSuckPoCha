@@ -135,7 +135,7 @@ function CallInput({
   function gamestart() {
     console.log("totalCount----------------",totalCount)
     for (var i = 0; i < 6; i++) {
-      if (i > totalCount) {
+      if (i > totalCount-1) {
         console.log("전체 멤버 넘어가면 가려",i);
         txtSpanList[i].current.classList.add("hidden");
       }
