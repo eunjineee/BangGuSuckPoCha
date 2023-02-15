@@ -19,35 +19,40 @@ function CallIntro({
   // 방 이름
   const roomName = pochaId;
   // 내 이름
-  const myName = localStorage.getItem("Username");  
+  const myName = localStorage.getItem("Username");
   // 메뉴얼 클릭
   const [signal, setSignal] = useState<string>("INTRO");
-  
-  const [pochaInfo, setPochaInfo] = useState<any>(null)
 
-  const [isHost, setIshost] = useState<any>(null)
+  const [pochaInfo, setPochaInfo] = useState<any>(null);
+
+  const [isHost, setIshost] = useState<any>(null);
   const [resultData, setResultData] = useState<any>(null);
 
-  const [titles, setTitles] = useState<any>(null)
+  const [titles, setTitles] = useState<any>(null);
   const [nowtitles, setNowtitles] = useState<any>(null);
   const nowtitle: any[] = [];
 
-  const [mynum, setMyNum] = useState<any>(null) // 내번호
+  const [mynum, setMyNum] = useState<any>(null); // 내번호
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
+    let accessToken = localStorage.getItem("accessToken");
     try {
-      const {data : {data}} = await axios({
+      const {
+        data: { data },
+      } = await axios({
         method: "GET",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
-      })
-      console.log("포차정보 데이터 잘 오냐!? call",data);
+        headers: {
+          accessToken: accessToken,
+        },
+      });
+      console.log("포차정보 데이터 잘 오냐!? call", data);
       setPochaInfo(data);
-
-    } catch(error) {
+    } catch (error) {
       console.log("Call게임에서 포차정보 에러", error);
     }
-  }
+  };
 
   useEffect(() => {
     // 양세찬 게임 시그널받기
@@ -78,11 +83,10 @@ function CallIntro({
   useEffect(() => {
     setHostInfo();
     setPeopleInfo();
-    if (mynum === isHost){
+    if (mynum === isHost) {
       getCallSubject();
     }
-  },[]);
-
+  }, []);
 
   // 클릭하면 서버로 시그널 보냄
   const onClickSignal = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -114,7 +118,7 @@ function CallIntro({
   };
 
   // 양세찬 게임 주제 받아오기
-  const getCallSubject = async() => {
+  const getCallSubject = async () => {
     try {
       const {
         data: { data },
@@ -126,75 +130,89 @@ function CallIntro({
     } catch (error) {
       console.log("라이어 게임 주제 axios error", error);
     }
-  }
-  
-  useEffect(()=>{
+  };
+
+  useEffect(() => {
     titlechoice();
-  },[titles])
+  }, [titles]);
 
-
-  useEffect(()=>{
-    const SignalData = "TITLE"
+  useEffect(() => {
+    const SignalData = "TITLE";
     const data = nowtitles;
     socket.emit("game_call_submit", roomName, SignalData, data);
-  },[nowtitles])
-  
+  }, [nowtitles]);
+
   const titlechoice = () => {
-    for (var i = 0; i < 6 ; i++) {
-      if (titles){
-        var newnum = Math.floor(Math.random()* (titles.length))
+    for (var i = 0; i < 6; i++) {
+      if (titles) {
+        var newnum = Math.floor(Math.random() * titles.length);
         nowtitle.push(titles[newnum]);
       }
     }
     setNowtitles(nowtitle);
-  }
+  };
 
-  console.log("----------userlist--------",pochaUsers);
-  console.log("----------mynum--------",mynum);
-
+  console.log("----------userlist--------", pochaUsers);
+  console.log("----------mynum--------", mynum);
 
   return (
     <>
       {signal === "PLAY" ? (
-        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
+        <CallTitle
+          socket={socket}
+          pochaId={pochaId}
+          pochaUsers={pochaUsers}
+          pochaInfo={pochaInfo}
+          nowtitles={nowtitles}
+        />
       ) : null}
       {signal === "MANUAL" ? (
-        <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+        <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} />
       ) : null}
       {signal === "RESULT" ? (
-        <CallResult socket={socket} pochaId={pochaId} resultData={resultData}/>
+        <CallResult socket={socket} pochaId={pochaId} resultData={resultData} />
       ) : null}
       {signal === "INPUT" ? (
-        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
+        <CallInput
+          socket={socket}
+          pochaId={pochaId}
+          pochaUsers={pochaUsers}
+          pochaInfo={pochaInfo}
+          nowtitles={nowtitles}
+        />
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>
           <div className={`${styles.box}  ${styles.layout}`}>
-            <img 
-            src={require("src/assets/game_call/탐정.png")}
-            className={`${styles.img1}`}
-          />
-            <div className={`${styles.box2}  ${styles.layout2}`}>CALL MY NAME</div>
-            <div className={`${styles.box3}  ${styles.layout5}`}>양세찬 게임</div>
+            <img
+              src={require("src/assets/game_call/탐정.png")}
+              className={`${styles.img1}`}
+            />
+            <div className={`${styles.box2}  ${styles.layout2}`}>
+              CALL MY NAME
+            </div>
+            <div className={`${styles.box3}  ${styles.layout5}`}>
+              양세찬 게임
+            </div>
             <div className={`${styles.layout4}`}>
-              <input 
-              type="button" 
-              className={`${styles.retry}`} 
-              onClick={onClickClose}
-              value="EXIT"
-            />
-            <input
-              onClick={onClickSignal}
-              type="button"
-              className={`${styles.retry}`}
-              value="MANUAL"
-            />
-            <input
-              onClick={onClickSignal}
-              type="button"
-              className={`${styles.retry}`}
-              value="PLAY"
-            />
+              <input
+                type="button"
+                className={`${styles.retry}`}
+                onClick={onClickClose}
+                value="EXIT"
+              />
+              <input
+                onClick={onClickSignal}
+                type="button"
+                className={`${styles.retry}`}
+                value="MANUAL"
+              />
+              <input
+                onClick={onClickSignal}
+                type="button"
+                className={`${styles.retry}`}
+                value="PLAY"
+              />
             </div>
           </div>
         </div>
