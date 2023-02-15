@@ -226,6 +226,11 @@ wsServer.on("connection", (socket) => {
     wsServer.to(info.roomName).emit("add_heart", info.targetUser);
   });
 
+  // 미팅 포차 알림 제거
+  socket.on("close_notice", (roomName) => {
+    wsServer.to(roomName).emit("close_notice");
+  })
+
   /////////////////////////////////////////////////
 
   // 게임 기능!!

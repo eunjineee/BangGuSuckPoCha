@@ -135,6 +135,9 @@ const WebRTC = ({
   // 요청한 포차참여 유저들 데이터
   const [pochaUsers, setPochaUsers] = useState<any>(null);
 
+  // Meeting 처음 알림 관련
+  const [isNotice, setIsNotice] = useState<boolean>(true);
+
   // 비디오, 자기소개 보여주기
   async function videoOn(videoElement: any, introduceElement: any) {
     let time = new Date(pochaInfo.createAt);
@@ -646,6 +649,16 @@ const WebRTC = ({
       });
     });
 
+    // 미팅 포차 알림 끄기신호 : 알림 끄기
+    socket.on("close_notice", () => {
+      console.log("알림끄기 신호 왔따----------");
+      // 게임 선택창 켜기
+      socket.emit("game_back_select", roomName);
+      setTimeout(() => {
+        setIsNotice(false);
+      }, 1000)
+    })
+
     // 포차 짠! 기능 : 방 설정 다시 불러오기.
     socket.on("pocha_cheers", async () => {
       console.log("포차 짠!!!!!------------ㅇ----------");
@@ -851,6 +864,12 @@ const WebRTC = ({
     const targetUser = event.target.getAttribute("value");
     socket.emit("add_heart", { roomName, targetUser });
   };
+
+  // 미팅포차 입장시 알림화면 제거 신호
+  const closeNotice = () => {
+    socket.emit("close_notice", roomName);
+  }
+
   // ---------------- 게임 관련 --------------------
   const transitionDiv = useRef<HTMLDivElement>(null);
 
@@ -944,6 +963,8 @@ const WebRTC = ({
     return state.selectGameId;
   });
 
+
+
   return (
     <>
       {isLoading ? (
@@ -985,18 +1006,18 @@ const WebRTC = ({
                       ></video>
                       <div
                         ref={myIntroduce}
-                        className="w-full h-full relative flex flex-col justify-center items-center"
+                        className="w-full h-full relative flex flex-col justify-center items-center bg-black bg-opacity-20"
                       >
                         <div
-                          className={`text-xl absolute top-3 ${
+                          className={`text-xl absolute top-3 font-bold ${
                             peerUser.gender === "M"
-                              ? "text-sky-300"
+                              ? "text-sky-400"
                               : " text-pink-400"
                           }`}
                         >
                           {peerUser.nick}
                         </div>
-                        <div className=" flex flex-wrap justify-center">
+                        <div className=" flex flex-wrap justify-center ">
                           {introduceInfo[peerUser.my] &&
                             introduceInfo[peerUser.my].map((tag: any) => {
                               return (
@@ -1030,8 +1051,8 @@ const WebRTC = ({
                         <div
                           className={
                             peerUser.peer2gender === "M"
-                              ? `text-xl absolute top-3 text-sky-300`
-                              : `text-xl absolute top-3 text-pink-400`
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer2nick}
@@ -1076,8 +1097,8 @@ const WebRTC = ({
                         <div
                           className={
                             peerUser.peer4gender === "M"
-                              ? `text-xl absolute top-3 text-sky-300`
-                              : `text-xl absolute top-3 text-pink-400`
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer4nick}
@@ -1107,6 +1128,7 @@ const WebRTC = ({
                   className="flex justify-center items-center min-w-fit w-[47vw] overflow-hidden mt-5 rounded-[20px] transition-all duration-1000 opacity-0"
                 >
                   {/* {pochaUsers && <LadderIntro socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>} */}
+                  {isNotice && <img onClick={closeNotice} className="w-full h-full" src={require("src/assets/meeting_notice/meetingNotice.png")} alt="meetingnotice" />}
                   {isGameSelect && (
                     <GameSelect socket={socket} pochaId={pochaId} />
                   )}
@@ -1176,8 +1198,8 @@ const WebRTC = ({
                         <div
                           className={
                             peerUser.peer1gender === "M"
-                              ? `text-xl absolute top-3 text-sky-300`
-                              : `text-xl absolute top-3 text-pink-400`
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer1nick}
@@ -1222,8 +1244,8 @@ const WebRTC = ({
                         <div
                           className={
                             peerUser.peer3gender === "M"
-                              ? `text-xl absolute top-3 text-sky-300`
-                              : `text-xl absolute top-3 text-pink-400`
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer3nick}
@@ -1268,8 +1290,8 @@ const WebRTC = ({
                         <div
                           className={
                             peerUser.peer5gender === "M"
-                              ? `text-xl absolute top-3 text-sky-300`
-                              : `text-xl absolute top-3 text-pink-400`
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer5nick}
