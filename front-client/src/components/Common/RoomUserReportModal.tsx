@@ -71,10 +71,10 @@ const RoomUserRepotModal = ({ userData }: { userData: any }) => {
         </div>
         <form onSubmit={reportUser}>
           <div className="text-3xl mb-4 mt-2 font-bold text-white">
-            {/* <span className="font-bold text-red-500">{`${nickname} `}</span> */}
             신고하기
           </div>
-          <div className="text-[#FF0000] text-[0.9rem] mb-8"><span className="font-normal">*</span><span className="font-bold">해당 유저와 어떤 일이 있었는지 가능한 한 자세하게 적어주세요.</span></div>
+          {/* <div><span className="font-bold text-red-500">{`${nickname} `}</span></div> */}
+          <div className="text-[#FF0000] text-[0.9rem] mb-8  font-bold pl-2"><span className="text-[1rem] text-orange-400 ">{nickname}</span><br /><span className="">님과 어떤 일이 있었는지 가능한 한 자세하게 적어주세요.</span></div>
           <div className="flex justify-center h-full w-full pl-3">
             <div className="text-white w-full flex-col jus">
               <div className="text-start mb-4">
