@@ -26,7 +26,7 @@ const MainCreateRoom = ({
 }): React.ReactElement => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // username (현재는 내꺼)
   const username = localStorage.getItem("Username");

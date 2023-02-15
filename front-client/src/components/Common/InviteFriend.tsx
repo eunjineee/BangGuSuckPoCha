@@ -20,7 +20,7 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
   const [modalData, setModalData] = useState<any>(null);
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 친구 검색
   const [searchFriend,setSearchFriend] = useState<any>()

@@ -10,11 +10,9 @@ import axios from "axios";
 function CallIntro({
   socket,
   pochaId,
-  pochaUsers,
 }: {
   socket: any;
   pochaId: string;
-  pochaUsers: any;
 }): React.ReactElement {
   // 방 이름
   const roomName = pochaId;
@@ -22,14 +20,91 @@ function CallIntro({
   const myName = localStorage.getItem("Username");  
   // 메뉴얼 클릭
   const [signal, setSignal] = useState<string>("INTRO");
-  
+  // 포차 유저 정보
+  const [pochaUsers, setPochaUsers] = useState<any>(null);
+
   const [pochaInfo, setPochaInfo] = useState<any>(null)
 
   const [isHost, setIshost] = useState<any>(null)
+  const [resultData, setResultData] = useState<any>(null);
 
-  const [liarnum, setLiarnum] = useState<any>(false) // 라이어의 넘버
+  const [titles, setTitles] = useState<any>(null)
+  const [nowtitles, setNowtitles] = useState<any>(null);
 
   const [mynum, setMyNum] = useState<any>(null) // 내번호
+
+  useEffect(() => {
+    // 양세찬 게임 시그널받기
+    socket.on("game_call_signal", (signalData: string) => {
+      getPochaInfo();
+      setTimeout(() => {
+        setSignal(signalData);
+      }, 1000);
+    });
+    //결과 나오면
+    socket.on("game_call_result", (signalData: string, data: any) => {
+      setTimeout(() => {
+        setResultData(data);
+        setSignal(signalData);
+      }, 1000);
+    });
+  }, []);
+
+  useEffect(()=>{
+    // 타이틀 받아오기
+    socket.on("game_call_submit", (data: any) => {
+      setTimeout(() => {
+        console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]");
+        if(!nowtitles){
+          setNowtitles(data);
+        }
+      }, 1000);
+      
+      console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]", nowtitles)
+    });
+    return () => {
+      socket.off("game_call_submit");
+    };
+  })
+  useEffect(() => {
+    getPochaInfo();
+    getPochaUsers();
+  },[]);
+
+  useEffect(() => {
+    if(pochaUsers){
+      setHostInfo();
+      setPeopleInfo();
+    }
+  },[pochaUsers]);
+  
+  useEffect(()=>{
+    if (mynum === isHost){
+      getCallSubject();
+    }
+  },[isHost])
+
+
+  useEffect(()=>{
+    if ((mynum === isHost)&&(!nowtitles)){
+      titlechoice();
+    }
+  },[titles])
+
+
+  // 포차 유저 정보 요청
+  const getPochaUsers = async () => {
+    try {
+      const {data: {data}} = await axios({
+        method: "GET",
+        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`
+      })
+      console.log("포차유저정보왔냐",data)
+      setPochaUsers(data);
+    } catch(error) {
+      console.log("손병호intro", error);
+    }
+  } 
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
@@ -46,19 +121,6 @@ function CallIntro({
     }
   }
 
-  useEffect(() => {
-    // 양세찬 게임 시그널받기
-    socket.on("game_call_signal", (signalData: string) => {
-      getPochaInfo();
-      setTimeout(() => {
-        setSignal(signalData);
-      }, 1000);
-    });
-    return () => {
-      socket.off("game_call_signal");
-    };
-  }, []);
-
   // 클릭하면 서버로 시그널 보냄
   const onClickSignal = (event: React.MouseEvent<HTMLInputElement>) => {
     const signalData = event.currentTarget.value;
@@ -71,7 +133,15 @@ function CallIntro({
     socket.emit("game_back_select", roomName);
   };
 
-  // 내가 몇번째인지
+  // 방장 찾기
+  const setHostInfo = () => {
+    pochaUsers.forEach((user: any, index: number) => {
+      if (user.isHost === true) {
+        setIshost(index);
+      }
+    });
+  };
+  // 내 번호
   const setPeopleInfo = () => {
     pochaUsers.forEach((user: any, index: number) => {
       if (user.username === myName) {
@@ -80,20 +150,54 @@ function CallIntro({
     });
   };
 
+  // 양세찬 게임 주제 받아오기
+  const getCallSubject = async() => {
+    try {
+      const {
+        data: { data },
+      } = await axios({
+        url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+      });
+      setTitles(data);
+      console.log("------------titles----------", data);
+    } catch (error) {
+      console.log("라이어 게임 주제 axios error", error);
+    }
+  }
+
+  const titlechoice = () => {
+    const nowtitle: string[] = [];
+    for (var i = 0; i < 6 ; i++) {
+      if (titles){
+        var newnum = Math.floor(Math.random()* (titles.length))
+        nowtitle.push(titles[newnum]);
+      }
+    }
+    const data = nowtitle;
+    socket.emit("game_call_submit", roomName, data);
+  }
+
+  
+
+  console.log("----------인트로에서 userlist--------",pochaUsers);
+  console.log("----------mynum--------",mynum);
+  console.log("----------host--------",isHost);
+  
+  console.log("----------개빡쳐--------",nowtitles);
 
   return (
     <>
       {signal === "PLAY" ? (
-        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo}/>
+        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
       ) : null}
       {signal === "MANUAL" ? (
         <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
       ) : null}
       {signal === "RESULT" ? (
-        <CallResult socket={socket} pochaId={pochaId}/>
+        <CallResult socket={socket} pochaId={pochaId} resultData={resultData}/>
       ) : null}
       {signal === "INPUT" ? (
-        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>

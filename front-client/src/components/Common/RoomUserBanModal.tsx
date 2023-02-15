@@ -11,7 +11,7 @@ const RoomUserBanModal = ({ userData, pochaId, socket }: { userData: any, pochaI
   const { nickname, username } = userData.data;
   const pochaID = Number(pochaId);
   const roomName = pochaId;
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // console.log(' 유유유저데이터j', userData);
   // 강퇴하는 함수

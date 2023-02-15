@@ -318,5 +318,17 @@ wsServer.on("connection", (socket) => {
   socket.on("game_call_signal", (roomName, signalData, data) => {
     wsServer.to(roomName).emit("game_call_signal", signalData, data);
   });
+  //주제들 뿌려줌
+  socket.on("game_call_submit", (roomName, signalData, data) => {
+    wsServer.to(roomName).emit("game_call_submit", signalData, data);
+  });
+  // 통과
+  socket.on("game_call_pass", (roomName, data) => {
+    wsServer.to(roomName).emit("game_call_pass", data);
+  });
+  // 결과
+  socket.on("game_call_result", (roomName, signalData, data) => {
+    wsServer.to(roomName).emit("game_call_result", signalData, data);
+  });
 });
 

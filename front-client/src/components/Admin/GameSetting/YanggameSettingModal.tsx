@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "src/store/hooks";
 import { showYanggameSettingModal } from "src/store/store";
 import styles from "./BalancegameSettingModal.module.css";
 const YanggameSettingModal = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [Type, setType] = useState<any>();
   const [Word, setWord] = useState<any>();
@@ -62,7 +64,7 @@ const YanggameSettingModal = () => {
   };
 
   const Save = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
 
     axios({
       method: "post",
@@ -71,31 +73,94 @@ const YanggameSettingModal = () => {
         type: Type,
         word: Word,
       },
-
       headers: {
         accessToken: accessToken,
       },
     }).then((r) => {
-      const result = r.data.message;
-      if (result === "success") {
-        toast.success("추가되었습니다!");
+      //토큰이상해
+      if ("401" === r.data.status) {
+        console.log("토큰 이상함");
+
+        //토큰 재요청
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
         axios({
           method: "get",
-          url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
           headers: {
-            accessToken: accessToken,
+            refreshToken: refreshToken,
           },
         }).then((r) => {
-          setYscInfo(r.data.data);
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "post",
+              url: "https://i8e201.p.ssafy.io/api/admin/game/ysc",
+              data: {
+                type: Type,
+                word: Word,
+              },
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              const result = r.data.message;
+              if (result === "success") {
+                toast.success("추가되었습니다!");
+                axios({
+                  method: "get",
+                  url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+
+                  headers: {
+                    accessToken: accessToken,
+                  },
+                }).then((r) => {
+                  setYscInfo(r.data.data);
+                });
+              } else {
+                toast.warning("⛔ 추가 실패 ⛔ ");
+              }
+            });
+          }
         });
-      } else {
-        toast.warning("⛔ 추가 실패 ⛔ ");
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        console.log("토큰정상");
+
+        const result = r.data.message;
+        if (result === "success") {
+          toast.success("추가되었습니다!");
+          axios({
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+
+            headers: {
+              accessToken: accessToken,
+            },
+          }).then((r) => {
+            setYscInfo(r.data.data);
+          });
+        } else {
+          toast.warning("⛔ 추가 실패 ⛔ ");
+        }
       }
     });
   };
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/pocha/game/ysc",
@@ -104,9 +169,51 @@ const YanggameSettingModal = () => {
         accessToken: accessToken,
       },
     }).then((r) => {
-      console.log(r.data.data);
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "get",
+              url: "https://i8e201.p.ssafy.io/api/pocha/game/ysc",
 
-      setYscInfo(r.data.data);
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              console.log(r.data.data);
+
+              setYscInfo(r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        setYscInfo(r.data.data);
+      }
     });
   }, []);
 
@@ -125,7 +232,7 @@ const YanggameSettingModal = () => {
                 <div
                   className="border-2 h-[100%] w-[100%] rounded-md  cursor-pointer"
                   onClick={() => {
-                    const accessToken = localStorage.getItem("accessToken");
+                    let accessToken = localStorage.getItem("accessToken");
 
                     axios({
                       method: "get",
@@ -135,7 +242,54 @@ const YanggameSettingModal = () => {
                         accessToken: accessToken,
                       },
                     }).then((r) => {
-                      console.log("양세찬 게임 데이터", r.data.data);
+                      //토큰이상해
+                      if ("401" === r.data.status) {
+                        //토큰 재요청
+                        console.log("토큰 이상함");
+                        const refreshToken =
+                          localStorage.getItem("refreshToken");
+                        const Username = localStorage.getItem("Username");
+                        axios({
+                          method: "get",
+                          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                          headers: {
+                            refreshToken: refreshToken,
+                          },
+                        }).then((r) => {
+                          //재발급 실패
+                          if ("401" === r.data.status) {
+                            localStorage.clear();
+                            toast.error("인증되지 않은 유저입니다");
+                            navigate("/");
+                          }
+                          //재발급 성공
+                          else {
+                            console.log("재발급 성공", r.data.accessToken);
+                            localStorage.setItem(
+                              "accessToken",
+                              r.data.accessToken
+                            );
+                            accessToken = r.data.accessToken;
+                            //원래 axios 실행
+                            axios({
+                              method: "get",
+                              url: "https://i8e201.p.ssafy.io/api/pocha/game/ysc",
+
+                              headers: {
+                                accessToken: accessToken,
+                              },
+                            }).then((r) => {
+                              console.log("양세찬 게임 데이터", r.data.data);
+                              setYscInfo(r.data.data);
+                            });
+                          }
+                        });
+                      }
+                      //토큰 정상이야
+                      else {
+                        //실행 결과값 그대로 실행
+                        setYscInfo(r.data.data);
+                      }
                     });
                   }}
                 >
@@ -178,7 +332,7 @@ const YanggameSettingModal = () => {
                               className=" p-2 cursor-pointer hover:scale-125"
                               onClick={() => {
                                 console.log("나 클릭");
-                                const accessToken =
+                                let accessToken =
                                   localStorage.getItem("accessToken");
 
                                 axios({
@@ -189,16 +343,75 @@ const YanggameSettingModal = () => {
                                     accessToken: accessToken,
                                   },
                                 }).then((r) => {
-                                  axios({
-                                    method: "get",
-                                    url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-                                    headers: {
-                                      accessToken: accessToken,
-                                    },
-                                  }).then((r) => {
-                                    setYscInfo(r.data.data);
-                                  });
-                                  toast.success("삭제완료");
+                                  //토큰이상해
+                                  if ("401" === r.data.status) {
+                                    //토큰 재요청
+                                    console.log("토큰 이상함");
+                                    const refreshToken =
+                                      localStorage.getItem("refreshToken");
+                                    const Username =
+                                      localStorage.getItem("Username");
+                                    axios({
+                                      method: "get",
+                                      url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                                      headers: {
+                                        refreshToken: refreshToken,
+                                      },
+                                    }).then((r) => {
+                                      //재발급 실패
+                                      if ("401" === r.data.status) {
+                                        localStorage.clear();
+                                        toast.error("인증되지 않은 유저입니다");
+                                        navigate("/");
+                                      }
+                                      //재발급 성공
+                                      else {
+                                        console.log(
+                                          "재발급 성공",
+                                          r.data.accessToken
+                                        );
+                                        localStorage.setItem(
+                                          "accessToken",
+                                          r.data.accessToken
+                                        );
+                                        accessToken = r.data.accessToken;
+                                        //원래 axios 실행
+                                        axios({
+                                          method: "delete",
+                                          url: `https://i8e201.p.ssafy.io/api/admin/game/ysc/${it.yscId}`,
+
+                                          headers: {
+                                            accessToken: accessToken,
+                                          },
+                                        }).then((r) => {
+                                          axios({
+                                            method: "get",
+                                            url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+                                            headers: {
+                                              accessToken: accessToken,
+                                            },
+                                          }).then((r) => {
+                                            setYscInfo(r.data.data);
+                                          });
+                                          toast.success("삭제완료");
+                                        });
+                                      }
+                                    });
+                                  }
+                                  //토큰 정상이야
+                                  else {
+                                    //실행 결과값 그대로 실행
+                                    axios({
+                                      method: "get",
+                                      url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+                                      headers: {
+                                        accessToken: accessToken,
+                                      },
+                                    }).then((r) => {
+                                      setYscInfo(r.data.data);
+                                    });
+                                    toast.success("삭제완료");
+                                  }
                                 });
                               }}
                             >
@@ -288,8 +501,7 @@ const YanggameSettingModal = () => {
                       <div
                         className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                         onClick={() => {
-                          const accessToken =
-                            localStorage.getItem("accessToken");
+                          let accessToken = localStorage.getItem("accessToken");
                           axios({
                             method: "put",
                             url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${ModifyYscId}`,
@@ -302,16 +514,78 @@ const YanggameSettingModal = () => {
                               accessToken: accessToken,
                             },
                           }).then((r) => {
-                            toast.success("수정완료");
-                            axios({
-                              method: "get",
-                              url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-                              headers: {
-                                accessToken: accessToken,
-                              },
-                            }).then((r) => {
-                              setYscInfo(r.data.data);
-                            });
+                            //토큰이상해
+                            if ("401" === r.data.status) {
+                              //토큰 재요청
+                              console.log("토큰 이상함");
+                              const refreshToken =
+                                localStorage.getItem("refreshToken");
+                              const Username = localStorage.getItem("Username");
+                              axios({
+                                method: "get",
+                                url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                                headers: {
+                                  refreshToken: refreshToken,
+                                },
+                              }).then((r) => {
+                                //재발급 실패
+                                if ("401" === r.data.status) {
+                                  localStorage.clear();
+                                  toast.error("인증되지 않은 유저입니다");
+                                  navigate("/");
+                                }
+                                //재발급 성공
+                                else {
+                                  console.log(
+                                    "재발급 성공",
+                                    r.data.accessToken
+                                  );
+                                  localStorage.setItem(
+                                    "accessToken",
+                                    r.data.accessToken
+                                  );
+                                  accessToken = r.data.accessToken;
+                                  //원래 axios 실행
+                                  axios({
+                                    method: "put",
+                                    url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${ModifyYscId}`,
+                                    data: {
+                                      type: Type,
+                                      word: Word,
+                                    },
+
+                                    headers: {
+                                      accessToken: accessToken,
+                                    },
+                                  }).then((r) => {
+                                    toast.success("수정완료");
+                                    axios({
+                                      method: "get",
+                                      url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+                                      headers: {
+                                        accessToken: accessToken,
+                                      },
+                                    }).then((r) => {
+                                      setYscInfo(r.data.data);
+                                    });
+                                  });
+                                }
+                              });
+                            }
+                            //토큰 정상이야
+                            else {
+                              //실행 결과값 그대로 실행
+                              toast.success("수정완료");
+                              axios({
+                                method: "get",
+                                url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+                                headers: {
+                                  accessToken: accessToken,
+                                },
+                              }).then((r) => {
+                                setYscInfo(r.data.data);
+                              });
+                            }
                           });
                         }}
                       >

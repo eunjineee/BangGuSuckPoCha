@@ -182,8 +182,13 @@ function RoomFooterNav({
       dispatch(showPublicModal(true));
       return;
     }
-    let input = prompt("Ssul을 입력하세요!", "새로운 타이틀!");
+    let input = prompt("Ssul을 입력하세요!", "썰을 등록해주세요");
     if (input == null) return;
+    if (input.length > 20) {
+      alert("썰 제한은 20글자 입니다");
+      handleSsulClick();
+      return
+    }
     try {
       await axios({
         method: "PUT",

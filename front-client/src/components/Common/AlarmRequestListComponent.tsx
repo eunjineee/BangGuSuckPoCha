@@ -10,7 +10,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const username = localStorage.getItem('Username')
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const alarmClickState = useAppSelector((state:any)=> {return state.alarmClickState})
   console.log('포차번호',pocha_id, '초대번호',invite_id );

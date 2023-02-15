@@ -15,7 +15,7 @@ function StarReview({to_nickname, reviewId, toUsername}:any):JSX.Element {
   // username (현재는 내꺼)
   const username = localStorage.getItem('Username')
   const [rating, setRating] = useState(null) as any
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   return (
     
