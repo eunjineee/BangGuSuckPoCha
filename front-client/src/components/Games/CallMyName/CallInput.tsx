@@ -117,7 +117,7 @@ function CallInput({
       console.log("s여기@@@@@@@@@@@@", score, index);
       if (score === 0) {
         resultList.push(peopleName[index]);
-        console.log("정답자", peopleScore);
+        console.log("정답자", resultList);
       }else{
         result.push(peopleName[index])
       }
@@ -135,8 +135,8 @@ function CallInput({
   function gamestart() {
     console.log("totalCount----------------",totalCount)
     for (var i = 0; i < 6; i++) {
-      if (i > totalCount-1) {
-        console.log("전체 멤버 넘어가면 가려",i);
+      if (i >= totalCount) {
+        console.log("전체 멤버 넘어가면 가려",i, totalCount);
         txtSpanList[i].current.classList.add("hidden");
       }
       if(i === mynum){
