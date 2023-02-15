@@ -226,6 +226,11 @@ wsServer.on("connection", (socket) => {
     wsServer.to(info.roomName).emit("add_heart", info.targetUser);
   });
 
+  // 미팅 포차 알림 제거
+  socket.on("close_notice", (roomName) => {
+    wsServer.to(roomName).emit("close_notice");
+  })
+
   /////////////////////////////////////////////////
 
   // 게임 기능!!
@@ -277,6 +282,18 @@ wsServer.on("connection", (socket) => {
     wsServer.to(roomName).emit("game_liar_signal", signalData, data);
   });
 
+  // 라이어 넘버 보내주기
+  socket.on("game_liar_number", (roomName, data) => {
+    console.log('라이어 번호 소켓으로 전달', data);
+    wsServer.to(roomName).emit("game_liar_number", data);
+  });
+
+  // 라이어 주제 보내주기
+  socket.on("game_liar_nowtitle", (roomName, data) => {
+    console.log('라이어 주제 소켓으로 전달', data);
+    wsServer.to(roomName).emit("game_liar_nowtitle", data);
+  });
+
 
   // 스무고개 게임
   // 스무고개 intro 시그널
@@ -315,6 +332,13 @@ wsServer.on("connection", (socket) => {
     socket.on("game_liar_number", (roomName, data) => {
     wsServer.to(roomName).emit("game_liar_number", data);
   });
+  //정한 라이어 투표하기
+  socket.on("game_liar_vote", (roomName, myNum, num) => {
+    wsServer.to(roomName).emit("game_liar_vote", myNum, num);
+    })
+  });
+
+  //
 
   // 양세찬 게임
   // 양세찬 게임 여러 시그널

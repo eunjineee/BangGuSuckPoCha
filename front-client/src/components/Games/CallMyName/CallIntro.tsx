@@ -1,12 +1,13 @@
 import styles from "./CallIntro.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CallManual from "./CallManual";
 import CallTitle from "./CallTitle";
 import CallResult from "./CallResult";
 import CallInput from "./CallInput";
 
 import axios from "axios";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function CallIntro({
   socket,
   pochaId,
@@ -17,21 +18,21 @@ function CallIntro({
   // 방 이름
   const roomName = pochaId;
   // 내 이름
-  const myName = localStorage.getItem("Username");  
+  const myName = localStorage.getItem("Username");
   // 메뉴얼 클릭
   const [signal, setSignal] = useState<string>("INTRO");
   // 포차 유저 정보
   const [pochaUsers, setPochaUsers] = useState<any>(null);
 
-  const [pochaInfo, setPochaInfo] = useState<any>(null)
+  const [pochaInfo, setPochaInfo] = useState<any>(null)  
 
-  const [isHost, setIshost] = useState<any>(null)
+  const [isHost, setIshost] = useState<any>(null);
   const [resultData, setResultData] = useState<any>(null);
 
-  const [titles, setTitles] = useState<any>(null)
+  const [titles, setTitles] = useState<any>(null);
   const [nowtitles, setNowtitles] = useState<any>(null);
 
-  const [mynum, setMyNum] = useState<any>(null) // 내번호
+  const [mynum, setMyNum] = useState<any>(null); // 내번호
 
   useEffect(() => {
     // 양세찬 게임 시그널받기
@@ -92,6 +93,21 @@ function CallIntro({
   },[titles])
 
 
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      // preload='auto'
+      // loop
+      src="/balanceGame/BBong.mp3"
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.5}
+      // other props here
+    />
+  );
+
   // 포차 유저 정보 요청
   const getPochaUsers = async () => {
     try {
@@ -108,18 +124,23 @@ function CallIntro({
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
+    let accessToken = localStorage.getItem("accessToken");
     try {
-      const {data : {data}} = await axios({
+      const {
+        data: { data },
+      } = await axios({
         method: "GET",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
-      })
-      console.log("포차정보 데이터 잘 오냐!? call",data);
+        headers: {
+          accessToken: accessToken,
+        },
+      });
+      console.log("포차정보 데이터 잘 오냐!? call", data);
       setPochaInfo(data);
-
-    } catch(error) {
+    } catch (error) {
       console.log("Call게임에서 포차정보 에러", error);
     }
-  }
+  };
 
   // 클릭하면 서버로 시그널 보냄
   const onClickSignal = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -151,7 +172,7 @@ function CallIntro({
   };
 
   // 양세찬 게임 주제 받아오기
-  const getCallSubject = async() => {
+  const getCallSubject = async () => {
     try {
       const {
         data: { data },
@@ -187,46 +208,66 @@ function CallIntro({
 
   return (
     <>
+      {
+        <Player />
+      }
       {signal === "PLAY" ? (
-        <CallTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
+        <CallTitle
+          socket={socket}
+          pochaId={pochaId}
+          pochaUsers={pochaUsers}
+          pochaInfo={pochaInfo}
+          nowtitles={nowtitles}
+        />
       ) : null}
       {signal === "MANUAL" ? (
-        <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+        <CallManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} />
       ) : null}
       {signal === "RESULT" ? (
-        <CallResult socket={socket} pochaId={pochaId} resultData={resultData}/>
+        <CallResult socket={socket} pochaId={pochaId} resultData={resultData} />
       ) : null}
       {signal === "INPUT" ? (
-        <CallInput socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} nowtitles={nowtitles}/>
+        <CallInput
+          socket={socket}
+          pochaId={pochaId}
+          pochaUsers={pochaUsers}
+          pochaInfo={pochaInfo}
+          nowtitles={nowtitles}
+        />
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>
           <div className={`${styles.box}  ${styles.layout}`}>
-            <img 
-            src={require("src/assets/game_call/탐정.png")}
-            className={`${styles.img1}`}
-          />
-            <div className={`${styles.box2}  ${styles.layout2}`}>CALL MY NAME</div>
-            <div className={`${styles.box3}  ${styles.layout5}`}>양세찬 게임</div>
+            <img
+              src={require("src/assets/game_call/탐정.png")}
+              className={`${styles.img1}`}
+              alt=""
+            />
+            <div className={`${styles.box2}  ${styles.layout2}`}>
+              CALL MY NAME
+            </div>
+            <div className={`${styles.box3}  ${styles.layout5}`}>
+              양세찬 게임
+            </div>
             <div className={`${styles.layout4}`}>
-              <input 
-              type="button" 
-              className={`${styles.retry}`} 
-              onClick={onClickClose}
-              value="EXIT"
-            />
-            <input
-              onClick={onClickSignal}
-              type="button"
-              className={`${styles.retry}`}
-              value="MANUAL"
-            />
-            <input
-              onClick={onClickSignal}
-              type="button"
-              className={`${styles.retry}`}
-              value="PLAY"
-            />
+              <input
+                type="button"
+                className={`${styles.retry}`}
+                onClick={onClickClose}
+                value="EXIT"
+              />
+              <input
+                onClick={onClickSignal}
+                type="button"
+                className={`${styles.retry}`}
+                value="MANUAL"
+              />
+              <input
+                onClick={onClickSignal}
+                type="button"
+                className={`${styles.retry}`}
+                value="PLAY"
+              />
             </div>
           </div>
         </div>

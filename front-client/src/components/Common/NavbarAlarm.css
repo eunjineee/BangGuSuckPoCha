@@ -1,0 +1,12 @@
+@keyframes cycle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(365deg);
+  }
+}
+
+.reset_cycle {
+  animation: cycle 0.6s normal ease-in-out;
+}

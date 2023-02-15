@@ -22,8 +22,7 @@ function Balance({
   const navigate = useNavigate();
 
   const imgDiv = useRef<any>();
-  // 플레이어 자동재생 막기
-  const player = useRef<any>();
+  
   const romantic = useRef<any>();
   const normal = useRef<any>();
   const q1 = useRef<any>();
@@ -70,6 +69,7 @@ function Balance({
   // 방 이름
   const roomName = pochaId;
 
+  const player = useRef<any>();
   const Player = () => (
     <AudioPlayer
       ref={player}
@@ -83,10 +83,6 @@ function Balance({
       // other props here
     />
   );
-
-  useEffect(() => {
-    player.current.audio.current.pause();
-  }, []);
 
   useEffect(() => {
     // Normal
@@ -376,7 +372,7 @@ function Balance({
               id="q1"
               onMouseOver={goWebRTC}
               onMouseLeave={goWebRTC}
-              onClick={play}
+              // onClick={play}
             >
               {balanceQuestion.question1}
             </div>
@@ -401,7 +397,7 @@ function Balance({
               id="q2"
               onMouseOver={goWebRTC}
               onMouseLeave={goWebRTC}
-              onClick={play}
+              // onClick={play}
             >
               {balanceQuestion.question2}
             </div>

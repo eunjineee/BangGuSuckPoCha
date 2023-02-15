@@ -1,10 +1,11 @@
 import styles from "./SonIntro.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SonMenual from "./SonMenual";
 import SonPlay from "./SonPlay";
 import axios from "axios";
 import SonResult from "./SonResult";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function SonIntro({
   socket,
   pochaId,
@@ -67,6 +68,22 @@ function SonIntro({
     };
   }, []);
 
+  // 효과음
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      // preload='auto'
+      // loop
+      src="/balanceGame/BBong.mp3"
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.5}
+      // other props here
+    />
+  );
+
   // 클릭하면 서버로 시그널 보냄
   const onClickSignal = (event: React.MouseEvent<HTMLInputElement>) => {
     const signalData = event.currentTarget.value;
@@ -81,6 +98,9 @@ function SonIntro({
 
   return (
     <>
+      {
+        <Player/>
+      }
       {signal === "PLAY" &&  pochaUsers ? (
         <SonPlay socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} />
       ) : null}

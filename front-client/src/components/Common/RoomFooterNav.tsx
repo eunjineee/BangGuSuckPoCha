@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
   changeEnterPochaType,
@@ -24,7 +26,9 @@ function RoomFooterNav({
   isHost: boolean;
 }): JSX.Element {
   const dispatch = useAppDispatch();
-  let accessToken = localStorage.getItem("accessToken");
+  const navigate = useNavigate()
+  const userName = localStorage.getItem("Username");
+  const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const myName = localStorage.getItem("Username");
@@ -196,11 +200,48 @@ function RoomFooterNav({
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      // webRTC 썰 변경.
-      socket.emit("ssul_change", roomName, input);
-    } catch (error) {
-      console.log("썰 변경 요청에러", error);
+      }).then((r)=> {
+        // 토큰 갱신 필요
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${userName}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+              } else {
+                // 엑세스 토큰 추가
+                localStorage.setItem("accessToken", r.data.accessToken);
+                // 재요청  
+                axios({
+                  method: "PUT",
+                  url: `https://i8e201.p.ssafy.io/api/pocha/talk/ssul/${roomName}`,
+                  data: {
+                    ssulTitle: input,
+                    username: myName,
+                  },
+                  headers: {
+                    accessToken: `${r.data.accessToken}`,
+                  },
+                }).then((r)=> {
+                  // webRTC 썰 변경.
+                  socket.emit("ssul_change", roomName, input);
+                })
+              } 
+            })
+          } else {
+          // webRTC 썰 변경.
+          socket.emit("ssul_change", roomName, input);
+          }
+        })      
+      } catch (error) {
+        console.log("썰 변경 요청에러", error);
     }
   }
 

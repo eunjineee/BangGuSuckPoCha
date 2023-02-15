@@ -71,9 +71,11 @@ const WebRTC = ({
   // 짠 카운트
   const [count, setCount] = useState<string>("");
 
+  // 요청한 유저프로필 데이터
+  const [userProfileData, setUserProfileData] = useState<any>(null);
+
   const [peerUser, setPeerUser] = useState<any>({
     my: myUserName,
-    nick: "유저",
   });
   // 자기소개 정보
   const [introduceInfo, setIntroduceInfo] = useState<any>({});
@@ -130,33 +132,65 @@ const WebRTC = ({
     return state.RoomUserProfileClickCheck;
   });
 
-  // 요청한 유저프로필 데이터
-  const [userProfileData, setUserProfileData] = useState(null);
-
   // 요청한 포차참여 유저들 데이터
   const [pochaUsers, setPochaUsers] = useState<any>(null);
+
+  // Meeting 처음 알림 관련
+  const [isNotice, setIsNotice] = useState<boolean>(true);
 
   // 비디오, 자기소개 보여주기
   async function videoOn(videoElement: any, introduceElement: any) {
     let time = new Date(pochaInfo.createAt);
     time.setHours(time.getHours() + 9);
-    time.setSeconds(time.getSeconds() + 660);
+    time.setSeconds(time.getSeconds() + 120);
     const waitEnd = time.getTime();
 
     const now = new Date().getTime();
 
     if (waitEnd <= now) {
       videoElement.current!.classList.remove("hidden");
+      introduceElement.current!.classList.remove("flex");
       introduceElement.current!.classList.add("hidden");
     } else {
       videoElement.current!.classList.add("hidden");
+      introduceElement.current!.classList.add("flex");
       introduceElement.current!.classList.remove("hidden");
       setTimeout(() => {
         videoElement.current!.classList.remove("hidden");
+        introduceElement.current!.classList.remove("flex");
         introduceElement.current!.classList.add("hidden");
       }, waitEnd - now);
     }
   }
+  // 유저들 프로파일 요청하기
+  const getUserProfile = async (username: any) => {
+    try {
+      const {
+        data: { data },
+      } = await axios({
+        url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
+      });
+      // setUserProfileData((prev: any) => data);
+      if (username === myUserName) {
+        console.log(
+          "처음에 여기 들어오나??",
+          "젠더정보@@@@@@@@@@@@",
+          data.nickname,
+          data.gender
+        );
+        setPeerUser((prev: any) => {
+          return { ...prev, nick: data.nickname, gender: data.gender };
+        });
+      }
+      console.log("정보요청 잘왔냐", data);
+      return data;
+    } catch (error) {
+      console.log("유저정보 처음 요청", error);
+    }
+  };
 
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfile() {
@@ -189,14 +223,15 @@ const WebRTC = ({
   }
 
   // 카메라 뮤트
-  let muted = false;
+  const [muted, setMuted] = useState<boolean>(false);
   // 카메라 오프
-  let cameraOff = false;
+  const [cameraOff, setCameraOff] = useState<boolean>(false);
   // let userCount = 1;
 
   // 최초실행
   useEffect(() => {
-    //propSocket(socket);
+    getUserProfile(myUserName);
+    console.log("이게끝나고--------------------");
     setIsLoading(false);
     getUsersProfile();
     setVideoOnTime(() => {
@@ -206,6 +241,7 @@ const WebRTC = ({
 
       return waitEnd.getTime();
     });
+    //propSocket(socket);
   }, []);
 
   const getCameras = async () => {
@@ -283,12 +319,12 @@ const WebRTC = ({
     myStream.current
       .getAudioTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!muted) {
-      muteBtn.current!.innerText = "🔈";
-    } else {
-      muteBtn.current!.innerText = "🔊";
-    }
-    muted = !muted;
+    // if (!muted) {
+    //   muteBtn.current!.innerText = "🔈";
+    // } else {
+    //   muteBtn.current!.innerText = "🔊";
+    // }
+    setMuted((prev) => !prev);
   }
 
   // 카메라 끄는 함수
@@ -297,12 +333,12 @@ const WebRTC = ({
     myStream.current
       .getVideoTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!cameraOff) {
-      cameraBtn.current!.innerText = "Camera On";
-    } else {
-      cameraBtn.current!.innerText = "Camera Off";
-    }
-    cameraOff = !cameraOff;
+    // if (!cameraOff) {
+    //   cameraBtn.current!.innerText = "Camera On";
+    // } else {
+    //   cameraBtn.current!.innerText = "Camera Off";
+    // }
+    setCameraOff((prev) => !prev);
   }
 
   // 카메라 바꿀때 옵션 변경했으니 getMedia 다시실행해준다(이제는 특정카메라id도 담아서 실행)
@@ -323,13 +359,14 @@ const WebRTC = ({
   async function handleWelcomeSubmit(userData: any) {
     // event : React.FormEvent<HTMLFormElement>
     // event.preventDefault();
-    setPeerUser(
-      (prev: any) =>
-        (prev = {
-          my: myUserName,
-          nick: userData.nickname,
-        })
-    );
+    // setPeerUser(
+    //   (prev: any) =>
+    //     (prev = {
+    //       my: myUserName,
+    //       nick: userData.nickname,
+    //       gender: userProfileData?.gender,
+    //     })
+    // );
     await getMedia();
     console.log("@@@@@@@@@@@@@@@@", userData);
     setHeartInfo((hearts: any) => {
@@ -467,7 +504,9 @@ const WebRTC = ({
         delete prev[deleteUsername];
         return { ...prev };
       });
-      setPeerUser({ my: myUserName });
+      setPeerUser({
+        my: myUserName,
+      });
 
       delete myPeerConnections.current[id];
       // 사람수 - 2 해야 마지막인덱스값
@@ -610,6 +649,16 @@ const WebRTC = ({
       });
     });
 
+    // 미팅 포차 알림 끄기신호 : 알림 끄기
+    socket.on("close_notice", () => {
+      console.log("알림끄기 신호 왔따----------");
+      // 게임 선택창 켜기
+      socket.emit("game_back_select", roomName);
+      setTimeout(() => {
+        setIsNotice(false);
+      }, 1000)
+    })
+
     // 포차 짠! 기능 : 방 설정 다시 불러오기.
     socket.on("pocha_cheers", async () => {
       console.log("포차 짠!!!!!------------ㅇ----------");
@@ -664,16 +713,17 @@ const WebRTC = ({
   }
 
   // addStream 이벤트시 실행 함수
-  function handleAddStream(
+  async function handleAddStream(
     stream: any,
     username: string,
     nickname: string,
     introduce: any
   ) {
     console.log("handleAddStream---------------------");
-
+    // 정보 요청해서 젠더 뽑아냄
+    const { gender } = await getUserProfile(username);
     console.log("사람수ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ", userCount.current);
-
+    console.log(peerUser, "젠더정보좀 볼까?");
     setHeartInfo((hearts: any) => {
       hearts[username] = hearts[username] ? hearts[username] : 0;
       return { ...hearts };
@@ -688,8 +738,14 @@ const WebRTC = ({
       // peerFace2.current!.classList.add("hidden");
       peerFace1.current.srcObject = stream;
       peerFace1.current.id = username;
+      peerIntroduce1.current!.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer1: username, peer1nick: nickname };
+        return {
+          ...prev,
+          peer1: username,
+          peer1nick: nickname,
+          peer1gender: gender,
+        };
       });
       peerHeart1.current.setAttribute("value", username);
       peerHeart1.current.classList.remove("hidden");
@@ -702,8 +758,14 @@ const WebRTC = ({
       // peerFace3.current!.classList.add("hidden");
       peerFace2.current.srcObject = stream;
       peerFace2.current.id = username;
+      peerIntroduce2.current!.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer2: username, peer2nick: nickname };
+        return {
+          ...prev,
+          peer2: username,
+          peer2nick: nickname,
+          peer2gender: gender,
+        };
       });
       peerHeart2.current.setAttribute("value", username);
       peerHeart2.current.classList.remove("hidden");
@@ -716,8 +778,14 @@ const WebRTC = ({
       // peerFace4.current!.classList.add("hidden");
       peerFace3.current.srcObject = stream;
       peerFace3.current.id = username;
+      peerIntroduce3.current!.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer3: username, peer3nick: nickname };
+        return {
+          ...prev,
+          peer3: username,
+          peer3nick: nickname,
+          peer3gender: gender,
+        };
       });
       peerHeart3.current.setAttribute("value", username);
       peerHeart3.current.classList.remove("hidden");
@@ -730,8 +798,14 @@ const WebRTC = ({
       // peerFace5.current!.classList.add("hidden");
       peerFace4.current.srcObject = stream;
       peerFace4.current.id = username;
+      peerIntroduce4.current!.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer4: username, peer4nick: nickname };
+        return {
+          ...prev,
+          peer4: username,
+          peer4nick: nickname,
+          peer4gender: gender,
+        };
       });
       peerHeart4.current.setAttribute("value", username);
       peerHeart4.current.classList.remove("hidden");
@@ -742,8 +816,14 @@ const WebRTC = ({
       // peerFace5.current!.classList.remove("hidden");
       peerFace5.current.srcObject = stream;
       peerFace5.current.id = username;
+      peerIntroduce5.current!.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer5: username, peer5nick: nickname };
+        return {
+          ...prev,
+          peer5: username,
+          peer5nick: nickname,
+          peer5gender: gender,
+        };
       });
       peerHeart5.current.setAttribute("value", username);
       peerHeart5.current.classList.remove("hidden");
@@ -784,6 +864,12 @@ const WebRTC = ({
     const targetUser = event.target.getAttribute("value");
     socket.emit("add_heart", { roomName, targetUser });
   };
+
+  // 미팅포차 입장시 알림화면 제거 신호
+  const closeNotice = () => {
+    socket.emit("close_notice", roomName);
+  }
+
   // ---------------- 게임 관련 --------------------
   const transitionDiv = useRef<HTMLDivElement>(null);
 
@@ -877,20 +963,22 @@ const WebRTC = ({
     return state.selectGameId;
   });
 
+
+
   return (
     <>
       {isLoading ? (
         <Loading />
       ) : (
         <>
-          {isRoomUserProfile && userProfileData && (
+          {/* {isRoomUserProfile && userProfileData && (
             <RoomUserProfile
               userData={userProfileData}
               pochaId={pochaId}
               isHost={isHost}
               socket={socket}
             />
-          )}
+          )} */}
           {count ? (
             <div className=" bg-black bg-opacity-70 flex flex-col justify-center z-20 items-center fixed top-0 right-0 bottom-0 left-0">
               <img src={jjanImg} alt="jjan" />
@@ -918,19 +1006,27 @@ const WebRTC = ({
                       ></video>
                       <div
                         ref={myIntroduce}
-                        className="object-fill flex flex-wrap justify-center text-2xl"
+                        className="w-full h-full relative flex flex-col justify-center items-center bg-black bg-opacity-20"
                       >
-                        <div className="text-xl text-sky-300">
+                        <div
+                          className={`text-xl absolute top-3 font-bold ${
+                            peerUser.gender === "M"
+                              ? "text-sky-400"
+                              : " text-pink-400"
+                          }`}
+                        >
                           {peerUser.nick}
                         </div>
-                        {introduceInfo[peerUser.my] &&
-                          introduceInfo[peerUser.my].map((tag: any) => {
-                            return (
-                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
-                                #{tag}
-                              </div>
-                            );
-                          })}
+                        <div className=" flex flex-wrap justify-center ">
+                          {introduceInfo[peerUser.my] &&
+                            introduceInfo[peerUser.my].map((tag: any) => {
+                              return (
+                                <div className="border-2 border-white text-xl p-1 m-1 rounded-xl">
+                                  #{tag}
+                                </div>
+                              );
+                            })}
+                        </div>
                       </div>
                     </div>
                     <div ref={myHeart}>💖 x {heartInfo[peerUser.my]}</div>
@@ -947,18 +1043,30 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={peerIntroduce2} className="object-fill hidden">
-                        <div className="text-xl text-sky-300">
+                      <div
+                        onClick={ShowUserProfile}
+                        ref={peerIntroduce2}
+                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                      >
+                        <div
+                          className={
+                            peerUser.peer2gender === "M"
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
+                          }
+                        >
                           {peerUser.peer2nick}
                         </div>
-                        {introduceInfo[peerUser.peer2] &&
-                          introduceInfo[peerUser.peer2].map((tag: any) => {
-                            return (
-                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
-                                #{tag}
-                              </div>
-                            );
-                          })}
+                        <div className=" flex flex-wrap justify-center">
+                          {introduceInfo[peerUser.peer2] &&
+                            introduceInfo[peerUser.peer2].map((tag: any) => {
+                              return (
+                                <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                  #{tag}
+                                </div>
+                              );
+                            })}
+                        </div>
                       </div>
                     </div>
                     <div
@@ -981,8 +1089,28 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={peerIntroduce4} className="object-fill hidden">
-                        {introduceInfo[peerUser.peer4]}
+                      <div
+                        onClick={ShowUserProfile}
+                        ref={peerIntroduce4}
+                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                      >
+                        <div
+                          className={
+                            peerUser.peer4gender === "M"
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
+                          }
+                        >
+                          {peerUser.peer4nick}
+                        </div>
+                        {introduceInfo[peerUser.peer4] &&
+                          introduceInfo[peerUser.peer4].map((tag: any) => {
+                            return (
+                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                #{tag}
+                              </div>
+                            );
+                          })}
                       </div>
                     </div>
                     <div
@@ -1000,6 +1128,7 @@ const WebRTC = ({
                   className="flex justify-center items-center min-w-fit w-[47vw] overflow-hidden mt-5 rounded-[20px] transition-all duration-1000 opacity-0"
                 >
                   {/* {pochaUsers && <LadderIntro socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>} */}
+                  {isNotice && <img onClick={closeNotice} className="w-full h-full" src={require("src/assets/meeting_notice/meetingNotice.png")} alt="meetingnotice" />}
                   {isGameSelect && (
                     <GameSelect socket={socket} pochaId={pochaId} />
                   )}
@@ -1037,10 +1166,7 @@ const WebRTC = ({
                     : null}
                   {selectedId === "call"
                     ? pochaUsers && (
-                        <CallIntro
-                          socket={socket}
-                          pochaId={pochaId}
-                        />
+                        <CallIntro socket={socket} pochaId={pochaId} />
                       )
                     : null}
                   {selectedId === "twenty"
@@ -1064,18 +1190,30 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={peerIntroduce1} className="object-fill hidden">
-                        <div className="text-xl text-sky-300">
+                      <div
+                        onClick={ShowUserProfile}
+                        ref={peerIntroduce1}
+                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                      >
+                        <div
+                          className={
+                            peerUser.peer1gender === "M"
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
+                          }
+                        >
                           {peerUser.peer1nick}
                         </div>
-                        {introduceInfo[peerUser.peer1] &&
-                          introduceInfo[peerUser.peer1].map((tag: any) => {
-                            return (
-                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
-                                #{tag}
-                              </div>
-                            );
-                          })}
+                        <div className=" flex flex-wrap justify-center">
+                          {introduceInfo[peerUser.peer1] &&
+                            introduceInfo[peerUser.peer1].map((tag: any) => {
+                              return (
+                                <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                  #{tag}
+                                </div>
+                              );
+                            })}
+                        </div>
                       </div>
                     </div>
                     <div
@@ -1098,8 +1236,30 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={peerIntroduce3} className="object-fill hidden">
-                        {introduceInfo[peerUser.peer3]}
+                      <div
+                        onClick={ShowUserProfile}
+                        ref={peerIntroduce3}
+                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                      >
+                        <div
+                          className={
+                            peerUser.peer3gender === "M"
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
+                          }
+                        >
+                          {peerUser.peer3nick}
+                        </div>
+                        <div className=" flex flex-wrap justify-center">
+                          {introduceInfo[peerUser.peer3] &&
+                            introduceInfo[peerUser.peer3].map((tag: any) => {
+                              return (
+                                <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                  #{tag}
+                                </div>
+                              );
+                            })}
+                        </div>
                       </div>
                     </div>
                     <div
@@ -1122,8 +1282,30 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={peerIntroduce5} className="object-fill hidden">
-                        {introduceInfo[peerUser.peer5]}
+                      <div
+                        onClick={ShowUserProfile}
+                        ref={peerIntroduce5}
+                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                      >
+                        <div
+                          className={
+                            peerUser.peer5gender === "M"
+                              ? `text-xl absolute top-3 font-bold text-sky-400`
+                              : `text-xl absolute top-3 font-bold text-pink-400`
+                          }
+                        >
+                          {peerUser.peer5nick}
+                        </div>
+                        <div className=" flex flex-wrap justify-center">
+                          {introduceInfo[peerUser.peer5] &&
+                            introduceInfo[peerUser.peer5].map((tag: any) => {
+                              return (
+                                <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                  #{tag}
+                                </div>
+                              );
+                            })}
+                        </div>
                       </div>
                     </div>
                     <div
@@ -1140,28 +1322,54 @@ const WebRTC = ({
                 <div className="flex w-fit text-white">
                   {/* 뮤트 */}
                   <button
-                    className="border-2 px-3"
+                    className="p-3 w-16"
                     onClick={handleMuteClick}
                     ref={muteBtn}
                   >
-                    🔊
+                    {muted ? (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/offmic.png")}
+                        alt="offmic"
+                      />
+                    ) : (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/onmic.png")}
+                        alt="mic"
+                      />
+                    )}
                   </button>
                   {/* 카메라 */}
                   <button
-                    className="border-2 px-3"
+                    className="p-3 w-16"
                     onClick={handleCameraClick}
                     ref={cameraBtn}
                   >
-                    Camera Off
+                    {cameraOff ? (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/offcamera.png")}
+                        alt="offcamera"
+                      />
+                    ) : (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/oncamera.png")}
+                        alt="onmic"
+                      />
+                    )}
                   </button>
                   {/* 카메라 옵션 */}
-                  <select
-                    className="text-black"
-                    onInput={handleCameraChange}
-                    ref={cameraSelect}
-                  >
-                    {optionList}
-                  </select>
+                  <div className="h-6 pt-6 mx-5">
+                    <select
+                      className="text-black"
+                      onInput={handleCameraChange}
+                      ref={cameraSelect}
+                    >
+                      {optionList}
+                    </select>
+                  </div>
                 </div>
               </div>
             </>

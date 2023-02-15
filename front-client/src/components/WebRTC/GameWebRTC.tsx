@@ -43,7 +43,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken= localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // 나의 비디오 ref
   const myFace = useRef<HTMLVideoElement>(null);
@@ -104,39 +104,109 @@ const WebRTC = ({
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfile() {
     console.log(pochaId);
-    
-    
-    
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
-        headers: {
-          accessToken: `${accessToken}`,
-        },
-      });
-      const lastIndex = data.length - 1;
-      console.log("참여 유저들 데이터?", data);
-      // 방장 여부 체크
-      data.forEach((user: any) => {
-        if (user.username === myUserName) {
-          setIsHost(user.isHost);
-          propIsHost(user.isHost);
-        }
-      });
-      setPochaUsers(data);
-      dispatch(isRtcLoading(false));
-      handleWelcomeSubmit(data[lastIndex]);
-    } catch (error) {
-      console.log("포차 참여유저 데이터 axios error", error);
-    }
+
+    //   try {
+    //     const {
+    //       data: { data },
+    //     } = await axios({
+    //       url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+    //       headers: {
+    //         accessToken: `${accessToken}`,
+    //       },
+    //     });
+    //     const lastIndex = data.length - 1;
+    //     console.log("참여 유저들 데이터?", data);
+    //     // 방장 여부 체크
+    //     data.forEach((user: any) => {
+    //       if (user.username === myUserName) {
+    //         setIsHost(user.isHost);
+    //         propIsHost(user.isHost);
+    //       }
+    //     });
+    //     setPochaUsers(data);
+    //     dispatch(isRtcLoading(false));
+    //     handleWelcomeSubmit(data[lastIndex]);
+    //   } catch (error) {
+    //     console.log("포차 참여유저 데이터 axios error", error);
+    //   }
+    // }
+
+    axios({
+      url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              const lastIndex = r.data.data.length - 1;
+              console.log("참여 유저들 데이터?", r.data.data);
+              // 방장 여부 체크
+              r.data.data.forEach((user: any) => {
+                if (user.username === myUserName) {
+                  setIsHost(user.isHost);
+                  propIsHost(user.isHost);
+                }
+              });
+              setPochaUsers(r.data.data);
+              dispatch(isRtcLoading(false));
+              handleWelcomeSubmit(r.data.data[lastIndex]);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        const lastIndex = r.data.data.length - 1;
+        console.log("참여 유저들 데이터?", r.data.data);
+        // 방장 여부 체크
+        r.data.data.forEach((user: any) => {
+          if (user.username === myUserName) {
+            setIsHost(user.isHost);
+            propIsHost(user.isHost);
+          }
+        });
+        setPochaUsers(r.data.data);
+        dispatch(isRtcLoading(false));
+        handleWelcomeSubmit(r.data.data[lastIndex]);
+      }
+    });
   }
 
   // 카메라 뮤트
-  let muted = false;
+  const [muted, setMuted] = useState<boolean>(false);
   // 카메라 오프
-  let cameraOff = false;
+  const [cameraOff, setCameraOff] = useState<boolean>(false);
   // let userCount = 1;
 
   // 최초실행
@@ -145,8 +215,8 @@ const WebRTC = ({
     getUsersProfile();
     // userCount.current = 1
     return () => {
-      userCount.current = 1
-    }
+      userCount.current = 1;
+    };
   }, []);
 
   const getCameras = async () => {
@@ -219,12 +289,12 @@ const WebRTC = ({
     myStream.current
       .getAudioTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!muted) {
-      muteBtn.current!.innerText = "🔈";
-    } else {
-      muteBtn.current!.innerText = "🔊";
-    }
-    muted = !muted;
+    // if (!muted) {
+    //   muteBtn.current!.innerText = "🔈";
+    // } else {
+    //   muteBtn.current!.innerText = "🔊";
+    // }
+    setMuted((prev) => !prev);
   }
 
   // 카메라 끄는 함수
@@ -233,12 +303,12 @@ const WebRTC = ({
     myStream.current
       .getVideoTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!cameraOff) {
-      cameraBtn.current!.innerText = "Camera On";
-    } else {
-      cameraBtn.current!.innerText = "Camera Off";
-    }
-    cameraOff = !cameraOff;
+    // if (!cameraOff) {
+    //   cameraBtn.current!.innerText = "Camera On";
+    // } else {
+    //   cameraBtn.current!.innerText = "Camera Off";
+    // }
+    setCameraOff((prev) => !prev);
   }
 
   // 카메라 바꿀때 옵션 변경했으니 getMedia 다시실행해준다(이제는 특정카메라id도 담아서 실행)
@@ -629,18 +699,69 @@ const WebRTC = ({
     if (userCount.current >= 2) {
       const username = event.currentTarget.id;
 
-      // console.log("모달용 데이터 닉?", username);
-      const { data } = await axios({
+      // // console.log("모달용 데이터 닉?", username);
+      // const { data } = await axios({
+      //   url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+      //   headers: {
+      //     accessToken: `${accessToken}`,
+      //   },
+      // });
+      // console.log("모달용 데이터?", data);
+      // dispatch(changeNavAlarmReviewEmojiUserData(data));
+      // dispatch(showRoomUserProfile());
+      // // setUserProfileData(data);
+      // // dispatch(isRtcLoading(false));
+
+      axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
         headers: {
           accessToken: `${accessToken}`,
         },
+      }).then((r) => {
+        //토큰이상해
+        if ("401" === r.data.status) {
+          //토큰 재요청
+          console.log("토큰 이상함");
+          const refreshToken = localStorage.getItem("refreshToken");
+          const Username = localStorage.getItem("Username");
+          axios({
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+            headers: {
+              refreshToken: refreshToken,
+            },
+          }).then((r) => {
+            //재발급 실패
+            if ("401" === r.data.status) {
+              localStorage.clear();
+              toast.error("인증되지 않은 유저입니다");
+              navigate("/");
+            }
+            //재발급 성공
+            else {
+              console.log("재발급 성공", r.data.accessToken);
+              localStorage.setItem("accessToken", r.data.accessToken);
+              accessToken = r.data.accessToken;
+              //원래 axios 실행
+              axios({
+                url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
+              }).then((r) => {
+                dispatch(changeNavAlarmReviewEmojiUserData(r.data));
+                dispatch(showRoomUserProfile());
+              });
+            }
+          });
+        }
+        //토큰 정상이야
+        else {
+          //실행 결과값 그대로 실행
+          dispatch(changeNavAlarmReviewEmojiUserData(r.data));
+          dispatch(showRoomUserProfile());
+        }
       });
-      console.log("모달용 데이터?", data);
-      dispatch(changeNavAlarmReviewEmojiUserData(data));
-      dispatch(showRoomUserProfile());
-      // setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
     }
   };
   // ---------------- 게임 관련 --------------------
@@ -837,12 +958,7 @@ const WebRTC = ({
                   )
                 : null}
               {selectedId === "call"
-                ? pochaUsers && (
-                    <CallIntro
-                      socket={socket}
-                      pochaId={pochaId}
-                    />
-                  )
+                ? pochaUsers && <CallIntro socket={socket} pochaId={pochaId} />
                 : null}
               {selectedId === "twenty"
                 ? pochaUsers && (
@@ -895,28 +1011,54 @@ const WebRTC = ({
             <div className="flex w-fit text-white">
               {/* 뮤트 */}
               <button
-                className="border-2 px-3"
+                className="p-3 w-16"
                 onClick={handleMuteClick}
                 ref={muteBtn}
               >
-                🔊
+                {muted ? (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/offmic.png")}
+                    alt="offmic"
+                  />
+                ) : (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/onmic.png")}
+                    alt="mic"
+                  />
+                )}
               </button>
               {/* 카메라 */}
               <button
-                className="border-2 px-3"
+                className="p-3 w-16"
                 onClick={handleCameraClick}
                 ref={cameraBtn}
               >
-                Camera Off
+                {cameraOff ? (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/offcamera.png")}
+                    alt="offcamera"
+                  />
+                ) : (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/oncamera.png")}
+                    alt="onmic"
+                  />
+                )}
               </button>
               {/* 카메라 옵션 */}
-              <select
-                className="text-black"
-                onInput={handleCameraChange}
-                ref={cameraSelect}
-              >
-                {optionList}
-              </select>
+              <div className="h-6 pt-6 mx-5">
+                <select
+                  className="text-black"
+                  onInput={handleCameraChange}
+                  ref={cameraSelect}
+                >
+                  {optionList}
+                </select>
+              </div>
             </div>
           </div>
         </>
