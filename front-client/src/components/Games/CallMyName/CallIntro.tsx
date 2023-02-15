@@ -62,12 +62,17 @@ function CallIntro({
   useEffect(() => {
     getPochaInfo();
     getPochaUsers();
-    setHostInfo();
-    setPeopleInfo();
-    if (mynum === isHost){
-      getCallSubject();
-    }
   },[]);
+
+  useEffect(() => {
+    if (pochaUsers){
+      setHostInfo();
+      setPeopleInfo();
+      if (mynum === isHost){
+        getCallSubject();
+      }
+    }
+  },[pochaUsers]);
   
   // 포차 유저 정보 요청
   const getPochaUsers = async () => {
