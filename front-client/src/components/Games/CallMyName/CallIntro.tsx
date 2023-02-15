@@ -87,7 +87,7 @@ function CallIntro({
   
     
   useEffect(()=>{
-    if ((mynum === isHost)&&(nowtitles.length === 0)){
+    if ((mynum === isHost)&&!nowtitles){
       titlechoice();
     }
   },[titles])
@@ -99,7 +99,7 @@ function CallIntro({
   },[nowtitles])
 
 
-  
+
   // 포차 유저 정보 요청
   const getPochaUsers = async () => {
     try {
