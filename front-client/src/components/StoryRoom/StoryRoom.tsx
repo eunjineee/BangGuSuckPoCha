@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useAppSelector } from "src/store/hooks";
 import FriendSearch from "../Common/FriendSearch";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
+import RoomUserProfile from "../Common/RoomUserProfile";
 
 function StoryRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
@@ -173,6 +174,7 @@ function StoryRoom(): JSX.Element {
     getPochaInfo();
   }, []);
 
+  console.log('PochaId', typeof PochaId, PochaId);
   // console.log('네브 알람 리뷰 이모지 정보: ',navAlarmReviewEmojiUserData);
   // console.log('방 유저 프로필 클릭 체크: ',RoomUserProfileClickCheck);
 
@@ -187,8 +189,10 @@ function StoryRoom(): JSX.Element {
         >
           {friendSearchState ? <FriendSearch /> : null}
           {RoomUserProfileClickCheck ? (
-            <NavUserEmojiClickModal userData={navAlarmReviewEmojiUserData} />
+            <RoomUserProfile userData={navAlarmReviewEmojiUserData} pochaId={String(PochaId)} isHost={isHost} socket={socket}/>
           ) : null}
+          
+          
 
           {/* 화면 및 게임 공간 */}
           <div className="min-h-[90vh]">

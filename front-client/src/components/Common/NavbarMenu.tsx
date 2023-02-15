@@ -80,9 +80,41 @@ function NavbarMenu(): JSX.Element {
                 accessToken: `${accessToken}`,
               },
             }).then((r) => {
-              // console.log("내정보 : ", r.data.data);
-              dispatch(changeMyInfo(r.data.data));
-              navigate("/newmypage");
+              if (r.data.status === '401') {
+                axios({
+                  method: 'get',
+                  url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                  headers: {
+                    refreshToken: `${refreshToken}`,
+                  }
+                }).then((r)=> {
+                  // 돌려보내기
+                  if (r.data.status === '401') {
+                    localStorage.clear();
+                    toast.error('인증되지 않은 유저입니다')
+                    navigate('/')
+                  } else {
+                    // 엑세스 토큰 추가
+                    localStorage.setItem("accessToken", r.data.accessToken);
+                    // 재요청
+                    axios({
+                      method: "get",
+                      url: `https://i8e201.p.ssafy.io/api/user/myinfo/${username}`,
+                      headers: {
+                        accessToken: `${accessToken}`,
+                      },
+                    }).then((r)=> {
+                      // console.log("내정보 : ", r.data.data);
+                      dispatch(changeMyInfo(r.data.data));
+                      navigate("/newmypage");
+                    })
+                  }
+                })
+              } else {
+                // console.log("내정보 : ", r.data.data);
+                dispatch(changeMyInfo(r.data.data));
+                navigate("/newmypage");
+              }
             });
           }}
         >
@@ -106,23 +138,70 @@ function NavbarMenu(): JSX.Element {
                 accessToken: `${accessToken}`,
               },
             }).then((r) => {
-              console.log('친구 리스트 조회: ',r.data.data)
-              const friendDataList:any[] = r.data.data
-              const bestFriend:any = []
-              const normalFriend:any = []
+              // 토큰 갱신 필요
+              if (r.data.status === '401') {
+                axios({
+                  method: 'get',
+                  url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                  headers: {
+                    refreshToken: `${refreshToken}`,
+                  }
+                }).then((r)=> {
+                  // 돌려보내기
+                  if (r.data.status === '401') {
+                    localStorage.clear();
+                    toast.error('인증되지 않은 유저입니다')
+                    navigate('/')
+                  } else {
+                     // 엑세스 토큰 추가
+                    localStorage.setItem("accessToken", r.data.accessToken);
+                    // 재요청  
+                    axios({
+                      method: "get",
+                      url: `https://i8e201.p.ssafy.io/api/user/friend/${username}`,
+                      headers: {
+                        accessToken: `${r.data.accessToken}`,
+                      },
+                    }).then((r)=> {
+                      console.log('친구 리스트 조회: ',r.data.data)
+                      const friendDataList:any[] = r.data.data
+                      const bestFriend:any = []
+                      const normalFriend:any = []
 
-              friendDataList.forEach((data:any)=> {
-                if (data.best_friend) {
-                  bestFriend.push(data)
-                } else {
-                  normalFriend.push(data)
-                }
-              })
-              console.log('베프: ',bestFriend)
-              console.log('친구: ',normalFriend)
-              
-              dispatch(changeMenuFriendState());
-              dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));
+                      friendDataList.forEach((data:any)=> {
+                        if (data.best_friend) {
+                          bestFriend.push(data)
+                        } else {
+                          normalFriend.push(data)
+                        }
+                      })
+                      console.log('베프: ',bestFriend)
+                      console.log('친구: ',normalFriend)
+                      
+                      dispatch(changeMenuFriendState());
+                      dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));
+                    })
+                  }
+                })
+              } else {
+                console.log('친구 리스트 조회: ',r.data.data)
+                const friendDataList:any[] = r.data.data
+                const bestFriend:any = []
+                const normalFriend:any = []
+  
+                friendDataList.forEach((data:any)=> {
+                  if (data.best_friend) {
+                    bestFriend.push(data)
+                  } else {
+                    normalFriend.push(data)
+                  }
+                })
+                console.log('베프: ',bestFriend)
+                console.log('친구: ',normalFriend)
+                
+                dispatch(changeMenuFriendState());
+                dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));
+              }
             });
           }}
         >
@@ -145,11 +224,47 @@ function NavbarMenu(): JSX.Element {
                 accessToken: `${accessToken}`,
               },
             }).then((r) => {
-              const result = r.data.message;
-              if ("success") {
-                toast.success("로그아웃되셨습니다");
-                window.localStorage.clear();
-                navigate("/");
+              // 토큰 갱신 필요
+              if (r.data.status === '401') {
+                axios({
+                  method: 'get',
+                  url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                  headers: {
+                    refreshToken: `${refreshToken}`,
+                  }
+                }).then((r)=> {
+                  // 돌려보내기
+                  if (r.data.status === '401') {
+                    localStorage.clear();
+                    toast.error('인증되지 않은 유저입니다')
+                    navigate('/')
+                  } else {
+                    // 엑세스 토큰 추가
+                    localStorage.setItem("accessToken", r.data.accessToken);
+                    // 재요청 
+                    axios({
+                      method: "put",
+                      url: `https://i8e201.p.ssafy.io/api/user/logout/${username}`,
+                      headers: {
+                        accessToken: `${r.data.accessToken}`,
+                      },
+                    }).then((r)=> {
+                      // const result = r.data.message;
+                      if ("success") {
+                        toast.success("로그아웃되셨습니다");
+                        window.localStorage.clear();
+                        navigate("/");
+                      }
+                    })
+                  }
+                })
+              } else {
+                // const result = r.data.message;
+                if ("success") {
+                  toast.success("로그아웃되셨습니다");
+                  window.localStorage.clear();
+                  navigate("/");
+                }
               }
             });
           }}

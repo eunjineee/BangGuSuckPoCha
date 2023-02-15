@@ -189,6 +189,30 @@ const WebRTC = ({
       }
     });
   }
+  
+  // 포차 참여유저 데이터 axios 요청
+  async function getUsersProfileAgain() {
+    // console.log(pochaId);
+    try {
+      const {
+        data: { data },
+      } = await axios({
+        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+      });
+      console.log("재 요청한 참여 유저들 데이터?", data);
+
+      // 방장 여부 체크
+      data.forEach((user: any) => {
+        if (user.username === myUserName) {
+          setIsHost(user.isHost);
+          propIsHost(user.isHost);
+        }
+      });
+      dispatch(isRtcLoading(false));
+    } catch (error) {
+      console.log("포차 재요청한 참여유저 데이터 axios error", error);
+    }
+  }
 
   // 카메라 뮤트
   let muted = false;
@@ -433,7 +457,7 @@ const WebRTC = ({
       // peerFace.current[lastIndex].classList.toggle("hidden");
 
       // 정보 다시 한번 받아옴
-      // getUsersProfile();
+      getUsersProfileAgain();
       console.log("==============>방 탈출!!!");
       console.log(id);
 
@@ -788,6 +812,7 @@ const WebRTC = ({
               </div>
             </div>
           ) : null}
+ 
           <div className="text-white w-full min-h-[85vh]">
             {ssul && (
               <span

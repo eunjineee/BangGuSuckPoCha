@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
@@ -17,6 +18,7 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
   const username = localStorage.getItem("Username");
   // 메뉴 클릭시
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const [modalData, setModalData] = useState<any>(null);
   let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
@@ -51,23 +53,86 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
         accessToken: `${accessToken}`,
       },
     }).then((r) => {
-      // console.log('친구 리스트 조회: ',r.data.data)
-      const friendDataList:any[] = r.data.data
-      const bestFriend:any = []
-      const normalFriend:any = []
+      // 토큰 갱신 필요
+      if (r.data.status === '401') {
+        axios({
+          method: 'get',
+          url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+          headers: {
+            refreshToken: `${refreshToken}`,
+          }
+        }).then((r)=> {
+          // 돌려보내기
+          if (r.data.status === '401') {
+            localStorage.clear();
+            toast.error('인증되지 않은 유저입니다')
+            navigate('/')
+          } else {
+            // 엑세스 토큰 추가
+            localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+            axios({
+              method: "get",
+              url: `https://i8e201.p.ssafy.io/api/user/friend/${username}`,
+              headers: {
+                accessToken: `${r.data.accessToken}`,
+              },
+            }).then((r)=> {
+               // console.log('친구 리스트 조회: ',r.data.data)
+              const friendDataList:any[] = r.data.data
+              const bestFriend:any = []
+              const normalFriend:any = []
 
-      friendDataList.forEach((data:any)=> {
-        if (data.best_friend) {
-          bestFriend.push(data)
-        } else {
-          normalFriend.push(data)
-        }
-      })
-      // console.log('베프: ',bestFriend)
-      // console.log('친구: ',normalFriend)
-      setMyFriends([...bestFriend,...normalFriend]);
-      // dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));
+              friendDataList.forEach((data:any)=> {
+                if (data.best_friend) {
+                  bestFriend.push(data)
+                } else {
+                  normalFriend.push(data)
+                }
+              })
+              // console.log('베프: ',bestFriend)
+              // console.log('친구: ',normalFriend)
+              setMyFriends([...bestFriend,...normalFriend]);
+              // dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));
+            })
+          }
+        })
+      } else {
+         // console.log('친구 리스트 조회: ',r.data.data)
+        const friendDataList:any[] = r.data.data
+        const bestFriend:any = []
+        const normalFriend:any = []
 
+        friendDataList.forEach((data:any)=> {
+          if (data.best_friend) {
+            bestFriend.push(data)
+          } else {
+            normalFriend.push(data)
+          }
+        })
+        // console.log('베프: ',bestFriend)
+        // console.log('친구: ',normalFriend)
+        setMyFriends([...bestFriend,...normalFriend]);
+        // dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));           
+      }
+
+
+      // // console.log('친구 리스트 조회: ',r.data.data)
+      // const friendDataList:any[] = r.data.data
+      // const bestFriend:any = []
+      // const normalFriend:any = []
+
+      // friendDataList.forEach((data:any)=> {
+      //   if (data.best_friend) {
+      //     bestFriend.push(data)
+      //   } else {
+      //     normalFriend.push(data)
+      //   }
+      // })
+      // // console.log('베프: ',bestFriend)
+      // // console.log('친구: ',normalFriend)
+      // setMyFriends([...bestFriend,...normalFriend]);
+      // // dispatch(changeMenuFriendListApiDataState([...bestFriend,...normalFriend]));
     });
   }
 
@@ -82,9 +147,45 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
       },
     })
     .then((r)=> {
-      console.log('넣어따', r.data)
-      dispatch(changeNavAlarmReviewEmojiUserData(r.data))
-      dispatch(showRoomUserProfile())
+      // 토큰 갱신 필요
+      if (r.data.status === '401') {
+        axios({
+          method: 'get',
+          url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+          headers: {
+            refreshToken: `${refreshToken}`,
+          }
+        }).then((r)=> {
+           // 돌려보내기
+          if (r.data.status === '401') {
+            localStorage.clear();
+            toast.error('인증되지 않은 유저입니다')
+            navigate('/')
+          } else {
+            // 엑세스 토큰 추가
+            localStorage.setItem("accessToken", r.data.accessToken);
+            // 재요청
+            axios({
+              method: 'get',
+              url: `https://i8e201.p.ssafy.io/api/user/info/${f_username}`,
+              headers: {
+                accessToken: `${r.data.accessToken}`,
+              },
+            }).then((r)=> {
+              console.log('넣어따', r.data)
+              dispatch(changeNavAlarmReviewEmojiUserData(r.data))
+              dispatch(showRoomUserProfile())
+            })
+          } 
+        })
+      } else {
+        console.log('넣어따', r.data)
+        dispatch(changeNavAlarmReviewEmojiUserData(r.data))
+        dispatch(showRoomUserProfile())
+      }
+      // console.log('넣어따', r.data)
+      // dispatch(changeNavAlarmReviewEmojiUserData(r.data))
+      // dispatch(showRoomUserProfile())
     })
   }
 
@@ -99,9 +200,44 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
           accessToken: `${accessToken}`,
         },
       }).then((r:any)=> {
-        // console.log('요청한 친구: ',r.data.data)
-        setMyFriends(r.data.data)
-        setSearchFriend("") 
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method: 'get',
+                url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${searchFriend}`,
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                // console.log('요청한 친구: ',r.data.data)
+                setMyFriends(r.data.data)
+                setSearchFriend("") 
+              })
+            }
+          })
+        } else {
+          // console.log('요청한 친구: ',r.data.data)
+          setMyFriends(r.data.data)
+          setSearchFriend("") 
+        }
+        // // console.log('요청한 친구: ',r.data.data)
+        // setMyFriends(r.data.data)
+        // setSearchFriend("") 
       })
     }}
 
@@ -147,6 +283,63 @@ function InviteFriend({ onClickShowInvite, pochaId }: { onClickShowInvite: Funct
         },
       })
       .then((r)=> {
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+              // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method: 'put',
+                url: `https://i8e201.p.ssafy.io/api/user/friend/${username}/${e.you_id}`,
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                // console.log('베프니? ',checkBestFriend)
+                if (checkBestFriend) {
+                  toast.success(`${e.f_nickname} 즐겨찾기에서 제거하였습니다`)
+                } else {
+                  toast.success(`${e.f_nickname} 즐겨찾기에 추가하였습니다`)
+                }
+              })
+              .then(requestFriendList)
+              .catch(()=> {
+                toast.error('다시 요청을 시도해주세요')
+              })
+              .then(requestFriendList)
+              
+            }
+          })
+        } else {
+          // console.log('베프니? ',checkBestFriend)
+          
+          if (checkBestFriend) {
+            toast.success(`${e.f_nickname} 즐겨찾기에서 제거하였습니다`)
+          } else {
+            toast.success(`${e.f_nickname} 즐겨찾기에 추가하였습니다`)
+          }
+          Promise.all([requestFriendList, toast.error('다시 요청을 시도해주세요'), requestFriendList])
+          .then(requestFriendList)
+          .catch(()=> {
+            toast.error('다시 요청을 시도해주세요')
+          })
+          .then(requestFriendList)
+        }
+      
+
+
         // console.log('베프니? ',checkBestFriend)
         if (checkBestFriend) {
           toast.success(`${e.f_nickname} 즐겨찾기에서 제거하였습니다`)

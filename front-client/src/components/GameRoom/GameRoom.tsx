@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import FriendSearch from "../Common/FriendSearch";
 import { useAppSelector } from "src/store/hooks";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
+import RoomUserProfile from "../Common/RoomUserProfile";
 
 function GameRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
@@ -175,8 +176,9 @@ function GameRoom(): JSX.Element {
         >
           {friendSearchState ? <FriendSearch /> : null}
           {RoomUserProfileClickCheck ? (
-            <NavUserEmojiClickModal userData={navAlarmReviewEmojiUserData} />
+            <RoomUserProfile userData={navAlarmReviewEmojiUserData} pochaId={String(PochaId)} isHost={isHost} socket={socket}/>
           ) : null}
+          
           {/* 화면 및 게임 공간 */}
           <div className="min-h-[90vh]">
             <GameWebRTC
