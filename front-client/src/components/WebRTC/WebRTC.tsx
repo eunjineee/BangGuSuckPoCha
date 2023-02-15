@@ -30,7 +30,7 @@ const WebRTC = ({
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken=localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const myUserName = localStorage.getItem("Username");
   // 나의 비디오 ref
   const myFace = useRef<HTMLVideoElement>(null);
@@ -93,32 +93,103 @@ const WebRTC = ({
 
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfile() {
-    // console.log(pochaId);
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
-        headers: {
-          accessToken: `${accessToken}`,
-        },
-      });
-      const lastIndex = data.length - 1;
-      console.log("참여 유저들 데이터?", data);
+    // // console.log(pochaId);
+    // try {
+    //   const {
+    //     data: { data },
+    //   } = await axios({
+    //     url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+    //     headers: {
+    //       accessToken: `${accessToken}`,
+    //     },
+    //   });
+    //   const lastIndex = data.length - 1;
+    //   console.log("참여 유저들 데이터?", data);
 
-      // 방장 여부 체크
-      data.forEach((user: any) => {
-        if (user.username === myUserName) {
-          setIsHost(user.isHost);
-          propIsHost(user.isHost);
-        }
-      });
-      dispatch(isRtcLoading(false));
-      handleWelcomeSubmit(data[lastIndex]);
-    } catch (error) {
-      console.log("포차 참여유저 데이터 axios error", error);
-    }
+    //   // 방장 여부 체크
+    //   data.forEach((user: any) => {
+    //     if (user.username === myUserName) {
+    //       setIsHost(user.isHost);
+    //       propIsHost(user.isHost);
+    //     }
+    //   });
+    //   dispatch(isRtcLoading(false));
+    //   handleWelcomeSubmit(data[lastIndex]);
+    // } catch (error) {
+    //   console.log("포차 참여유저 데이터 axios error", error);
+    // }
+
+    axios({
+      url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              const lastIndex = r.data.length - 1;
+              console.log("참여 유저들 데이터?", r.data);
+
+              // 방장 여부 체크
+              r.data.forEach((user: any) => {
+                if (user.username === myUserName) {
+                  setIsHost(user.isHost);
+                  propIsHost(user.isHost);
+                }
+              });
+              dispatch(isRtcLoading(false));
+              handleWelcomeSubmit(r.data[lastIndex]);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        const lastIndex = r.data.length - 1;
+        console.log("참여 유저들 데이터?", r.data);
+        // 방장 여부 체크
+        r.data.forEach((user: any) => {
+          if (user.username === myUserName) {
+            setIsHost(user.isHost);
+            propIsHost(user.isHost);
+          }
+        });
+        dispatch(isRtcLoading(false));
+        handleWelcomeSubmit(r.data[lastIndex]);
+      }
+    });
   }
+  
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfileAgain() {
     // console.log(pochaId);
@@ -650,18 +721,71 @@ const WebRTC = ({
       const username = event.currentTarget.id;
       console.log("여긴 이벤트: ", event);
 
-      // console.log("모달용 데이터 닉?", username);
-      const { data } = await axios({
+      // // console.log("모달용 데이터 닉?", username);
+      // const { data } = await axios({
+      //   url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+      //   headers: {
+      //     accessToken: `${accessToken}`,
+      //   },
+      // });
+      // console.log("모달용 데이터?", data);
+      // dispatch(changeNavAlarmReviewEmojiUserData(data));
+      // dispatch(showRoomUserProfile());
+      // // setUserProfileData(data);
+      // // dispatch(isRtcLoading(false));
+
+      axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
         headers: {
           accessToken: `${accessToken}`,
         },
+      }).then((r) => {
+        //토큰이상해
+        if ("401" === r.data.status) {
+          //토큰 재요청
+          console.log("토큰 이상함");
+          const refreshToken = localStorage.getItem("refreshToken");
+          const Username = localStorage.getItem("Username");
+          axios({
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+            headers: {
+              refreshToken: refreshToken,
+            },
+          }).then((r) => {
+            //재발급 실패
+            if ("401" === r.data.status) {
+              localStorage.clear();
+              toast.error("인증되지 않은 유저입니다");
+              navigate("/");
+            }
+            //재발급 성공
+            else {
+              console.log("재발급 성공", r.data.accessToken);
+              localStorage.setItem("accessToken", r.data.accessToken);
+              accessToken = r.data.accessToken;
+              //원래 axios 실행
+              axios({
+                url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
+              }).then((r) => {
+                console.log("모달용 데이터?", r.data);
+                dispatch(changeNavAlarmReviewEmojiUserData(r.data));
+                dispatch(showRoomUserProfile());
+              });
+            }
+          });
+        }
+        //토큰 정상이야
+        else {
+          //실행 결과값 그대로 실행
+          console.log("모달용 데이터?", r.data);
+          dispatch(changeNavAlarmReviewEmojiUserData(r.data));
+          dispatch(showRoomUserProfile());
+        }
       });
-      console.log("모달용 데이터?", data);
-      dispatch(changeNavAlarmReviewEmojiUserData(data));
-      dispatch(showRoomUserProfile());
-      // setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
     }
   };
 
@@ -690,92 +814,89 @@ const WebRTC = ({
           ) : null}
  
           <div className="text-white w-full min-h-[85vh]">
-          {ssul && (
-            <span
-              className="font-bold text-3xl fixed left-10 bottom-10"
-            >{`💬${ssul}`}</span>
-          )}
-            <div className="flex flex-col justify-evenly items-center min-h-[85vh]">
-              <div className="flex w-full justify-evenly items-center ">
-                {/* 내 비디오 공간 */}
-                <div
-                  ref={div1}
-                  className="rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
-                >
-                  <video
-                    className="object-fill"
-                    ref={myFace}
-                    playsInline
-                    autoPlay
-                  ></video>
-                </div>
-                {/* 다른 사람들 비디오 공간 */}
-                <div
-                  ref={div2}
-                  className={
-                    userCount.current >= 2
-                      ? "rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
-                      : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"
-                  }
-                >
-                  <video
-                    onClick={ShowUserProfile}
-                    className="object-fill cursor-pointer"
-                    ref={peerFace1}
-                    playsInline
-                    autoPlay
-                  ></video>
-                </div>
-                <div
-                  ref={div3}
-                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-                >
-                  <video
-                    onClick={ShowUserProfile}
-                    className="object-fill cursor-pointer hidden"
-                    ref={peerFace2}
-                    playsInline
-                    autoPlay
-                  ></video>
-                </div>
+            {ssul && (
+              <span
+                className="font-bold text-3xl fixed left-0 right-0 top-10"
+                ref={ssulTitle}
+              >{`💬${ssul}`}</span>
+            )}
+            <div className="flex flex-wrap justify-evenly items-center p-24 min-h-[85vh]">
+              {/* 내 비디오 공간 */}
+              <div
+                ref={div1}
+                className="rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
+              >
+                <video
+                  className="object-fill"
+                  ref={myFace}
+                  playsInline
+                  autoPlay
+                ></video>
               </div>
-              <div className="flex w-full justify-evenly items-center ">
-                <div
-                  ref={div4}
-                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-                >
-                  <video
-                    onClick={ShowUserProfile}
-                    className="object-fill cursor-pointer hidden"
-                    ref={peerFace3}
-                    playsInline
-                    autoPlay
-                  ></video>
-                </div>
-                <div
-                  ref={div5}
-                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-                >
-                  <video
-                    onClick={ShowUserProfile}
-                    className="object-fill cursor-pointer hidden"
-                    ref={peerFace4}
-                    playsInline
-                    autoPlay
-                  ></video>
-                </div>
-                <div
-                  ref={div6}
-                  className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
-                >
-                  <video
-                    onClick={ShowUserProfile}
-                    className="object-fill cursor-pointer hidden"
-                    ref={peerFace5}
-                    playsInline
-                    autoPlay
-                  ></video>
-                </div>
+              {/* 다른 사람들 비디오 공간 */}
+              <div
+                ref={div2}
+                className={
+                  userCount.current >= 2
+                    ? "rounded-[1rem] overflow-hidden border-2 w-[28rem] my-3"
+                    : "rounded-[1rem] overflow-hidden w-[28rem] h-[21rem] border-2 my-3"
+                }
+              >
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer"
+                  ref={peerFace1}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div
+                ref={div3}
+                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+              >
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace2}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div
+                ref={div4}
+                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+              >
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace3}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div
+                ref={div5}
+                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+              >
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace4}
+                  playsInline
+                  autoPlay
+                ></video>
+              </div>
+              <div
+                ref={div6}
+                className="rounded-[1rem] overflow-hidden w-[28rem] border-2 hidden my-3"
+              >
+                <video
+                  onClick={ShowUserProfile}
+                  className="object-fill cursor-pointer hidden"
+                  ref={peerFace5}
+                  playsInline
+                  autoPlay
+                ></video>
               </div>
             </div>
             <div className="flex justify-center items-center ">
