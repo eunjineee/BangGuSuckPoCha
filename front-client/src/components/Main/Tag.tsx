@@ -192,8 +192,8 @@ function Tag(): JSX.Element {
                     console.log(e);
                   })
                 } else {
-                  // const currenDataFirst = r.data.data.reverse()
-                  const currenDataFirst = r.data.data
+                  const currenDataFirst = r.data.data.reverse()
+                  // const currenDataFirst = r.data.data
                   console.log(r.data)
                   dispatch(changeMainCreateRoomList(currenDataFirst));
                 }
@@ -243,8 +243,8 @@ function Tag(): JSX.Element {
                 console.log(e);
               })
             } else {
-              // const currenDataFirst = r.data.data.reverse()
-              const currenDataFirst = r.data.data
+              const currenDataFirst = r.data.data.reverse()
+              // const currenDataFirst = r.data.data
               console.log(r.data)
               dispatch(changeMainCreateRoomList(currenDataFirst));
             }
