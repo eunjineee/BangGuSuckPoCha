@@ -85,6 +85,21 @@ function CallIntro({
     }
   },[pochaUsers]);
   
+    
+  useEffect(()=>{
+    if ((mynum === isHost)&&(nowtitles.length === 0)){
+      titlechoice();
+    }
+  },[titles])
+
+  useEffect(()=>{
+    const SignalData = "TITLE"
+    const data = nowtitles;
+    socket.emit("game_call_submit", roomName, SignalData, data);
+  },[nowtitles])
+
+
+  
   // 포차 유저 정보 요청
   const getPochaUsers = async () => {
     try {
@@ -168,17 +183,7 @@ function CallIntro({
     }
     setNowtitles(nowtitle);
   }
-  
-  useEffect(()=>{
-    titlechoice();
-  },[titles])
 
-
-  useEffect(()=>{
-    const SignalData = "TITLE"
-    const data = nowtitles;
-    socket.emit("game_call_submit", roomName, SignalData, data);
-  },[nowtitles])
   
 
   console.log("----------인트로에서 userlist--------",pochaUsers);
