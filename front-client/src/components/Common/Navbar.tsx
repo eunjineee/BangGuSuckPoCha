@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import "./Common.css"
 
 function Navbar(): JSX.Element {
   const navigate = useNavigate();
@@ -306,7 +307,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
               />
             </div>
             <p
-              className={`text-white  sm:text-xs md:text-xm lg:text-sm flex justify-center items-center  ${styles.NanumGothic}`}
+              className={`hoverTextColor text-white  sm:text-xs md:text-xm lg:text-sm flex justify-center items-center  ${styles.NanumGothic}`}
             >
               {nickname}
             </p>
@@ -405,7 +406,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
                     alt="alarm"
                   />
                   <p
-                    className={`text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
+                    className={`hoverTextColor text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs  ${styles.NanumGothic}`}
                   >
                     알림
                   </p>
@@ -419,7 +420,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
                     alt="alarm"
                   />
                   <p
-                    className={`text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
+                    className={`hoverTextColor text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
                   >
                     알림
                   </p>
@@ -451,7 +452,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
               alt="menu"
             />
             <p
-              className={`text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
+              className={`hoverTextColor text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
             >
               메뉴
             </p>

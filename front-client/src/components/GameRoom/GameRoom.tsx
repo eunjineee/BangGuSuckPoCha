@@ -1,5 +1,5 @@
 import Loading from "../Common/Loading";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./GameRoom.module.css";
@@ -10,7 +10,8 @@ import FriendSearch from "../Common/FriendSearch";
 import { useAppSelector } from "src/store/hooks";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 import RoomUserProfile from "../Common/RoomUserProfile";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function GameRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
   let accessToken = localStorage.getItem("accessToken");
@@ -36,6 +37,20 @@ function GameRoom(): JSX.Element {
   const RoomUserProfileClickCheck: any = useAppSelector((state: any) => {
     return state.RoomUserProfileClickCheck;
   });
+
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      src="/RoomBGM/Game.mp3"
+      loop
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.2}
+      // other props here
+    />
+  );
 
   const propIsHost = (isHost: boolean) => {
     setIsHost(isHost);
@@ -168,6 +183,9 @@ function GameRoom(): JSX.Element {
 
   return (
     <>
+    {
+      <Player />
+    }
       {isLoading ? (
         <Loading />
       ) : (
