@@ -139,7 +139,7 @@ const WebRTC = ({
   async function videoOn(videoElement: any, introduceElement: any) {
     let time = new Date(pochaInfo.createAt);
     time.setHours(time.getHours() + 9);
-    time.setSeconds(time.getSeconds() + 660);
+    time.setSeconds(time.getSeconds() + 120);
     const waitEnd = time.getTime();
 
     const now = new Date().getTime();
