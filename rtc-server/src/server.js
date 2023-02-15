@@ -324,6 +324,11 @@ wsServer.on("connection", (socket) => {
     wsServer.to(roomName).emit("game_liar_number", data);
     })
   });
+  //정한 라이어 투표하기
+  socket.on("game_liar_vote", (roomName, myNum, num) => {
+    wsServer.to(roomName).emit("game_liar_vote", myNum, num);
+    })
+  });
 
   // 양세찬 게임
   // 양세찬 게임 여러 시그널
