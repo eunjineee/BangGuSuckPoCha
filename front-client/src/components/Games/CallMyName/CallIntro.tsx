@@ -51,7 +51,7 @@ function CallIntro({
     socket.on("game_call_submit", (signalData: string, data: any) => {
       setTimeout(() => {
         console.log("play" + signalData);
-        setTitles(data);
+        setNowtitles(data);
       }, 1000);
     });
     return () => {
