@@ -69,7 +69,8 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    console.log("----------------제출시작------");
+    console.log("----------------제출시작------", answer);
+    console.log("----------------제출시작------", nowtitles[mynum]?.word);
     if (answer === nowtitles[mynum]?.word){
       console.log("----------------------");
       socket.emit("game_call_pass", roomName, mynum);
@@ -86,7 +87,7 @@ function CallInput({
     socket.on("game_call_pass", (myNum: number) => {
       console.log("새로운배열 갱신되고있냐?", peopleScore);
       const newArray = peopleScore.map((score, index) => {
-        if ((index === myNum)&&(score === 0)) {
+        if ((index === myNum)&&(score === 1)) {
           return score - 1;
         }
         return score;
@@ -112,16 +113,16 @@ function CallInput({
       if (score === 0) {
         resultList.push(peopleName[index]);
         console.log("여기오냐?", peopleScore);
-      }else{
+      }else if((score === 1) && (peopleName[index]!== null)){
         result.push(peopleName[index])
       }
     });
     // console.log("여기오냐 결과가기전? 이건 result", result);
-    if (result.length === 1) {
+    if (resultList.length === totalCount-1) {
       // console.log("여기오냐 결과가기전?", peopleScore);
       const signalData = "RESULT";
       const data = result;
-      socket.emit("game_call_result", roomName, signalData, data);
+      socket.emit("game_call_signal", roomName, signalData, data);
     }
   }
 
@@ -144,32 +145,32 @@ function CallInput({
     <div className={`${styles.box} ${styles.layout}`}>
       <div className={`${styles.box2} ${styles.layout2}`}>CALL MY NAME</div>
       <div className={`${styles.buttons}`} id="bigbox">
-        <div className={`${styles.layout4}`} id = "title0" ref={title0}>
+        <div className={`${styles.layout4} flex`} id = "title0" ref={title0}>
           <div className={`${styles.text1}`} id = "people0">{peopleName[0]}</div>
           <div className={`${styles.text2}`} id = "ptitle0">{nowtitles[0]?.word}</div>
           <div className={`${styles.text3}`} id = "pass0">{peopleScore[0]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title1" ref={title1}>
+        <div className={`${styles.layout4} flex`} id = "title1" ref={title1}>
           <div className={`${styles.text1}`} id = "people1">{peopleName[1]}</div>
           <div className={`${styles.text2}`} id = "ptitle1">{nowtitles[1]?.word}</div>
           <div className={`${styles.text3}`} id = "pass1">{peopleScore[1]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title2" ref={title2}>
+        <div className={`${styles.layout4} flex`} id = "title2" ref={title2}>
           <div className={`${styles.text1}`} id = "people2">{peopleName[2]}</div>
           <div className={`${styles.text2}`} id = "ptitle2">{nowtitles[2]?.word}</div>
           <div className={`${styles.text3}`} id = "pass2">{peopleScore[2]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title3" ref={title3}>
+        <div className={`${styles.layout4} flex`} id = "title3" ref={title3}>
           <div className={`${styles.text1}`} id = "people3">{peopleName[3]}</div>
           <div className={`${styles.text2}`} id = "ptitle3">{nowtitles[3]?.word}</div>
           <div className={`${styles.text3}`} id = "pass3">{peopleScore[3]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title4" ref={title4}>
+        <div className={`${styles.layout4} flex`} id = "title4" ref={title4}>
           <div className={`${styles.text1}`} id = "people4">{peopleName[4]}</div>
           <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[4]?.word}</div>
           <div className={`${styles.text3}`} id = "pass4">{peopleScore[4]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title4" ref={title5}>
+        <div className={`${styles.layout4} flex`} id = "title4" ref={title5}>
           <div className={`${styles.text1}`} id = "people4">{peopleName[5]}</div>
           <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[5]?.word}</div>
           <div className={`${styles.text3}`} id = "pass4">{peopleScore[5]? null : "통과"}</div>
