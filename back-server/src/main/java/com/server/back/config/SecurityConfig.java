@@ -39,11 +39,12 @@ public class SecurityConfig {
 //                .antMatchers("**/refresh/**","/api/user/auth/refresh/**","/user/auth/refresh/**")
 //                .antMatchers("**/exit**","**/exit","/pocha/exit","/api/pocha/exit")
 //                .antMatchers("/v2/api-docs","/swagger**/**","/api/v2/**",
-//                        "/swagger-resources/**",
-//                        "/configuration/ui",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**", "/v3/api-docs","/swagger**/**" );
+//                            "/swagger-resources/**",
+//                            "/configuration/ui",
+//                            "/configuration/security",
+//                            "/swagger-ui.html",
+//                            "/webjars/**", "/v3/api-docs","/swagger**/**" );
+//
 //    }
 
 
@@ -63,12 +64,7 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                     .antMatchers("**").permitAll()
-//                    .antMatchers("/v3/api-docs","/swagger**/**").permitAll()
-//                    .antMatchers("/api/user/oauth2/**").hasAuthority("USER")
-//                    .antMatchers("/api/user/oauth2/**").permitAll()
-//                    .antMatchers("/api/v1/manager/**").hasAuthority("MANAGER")
-//                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
-                .anyRequest().authenticated()
+                    .anyRequest().authenticated()
 
                 .and()
                 .build();

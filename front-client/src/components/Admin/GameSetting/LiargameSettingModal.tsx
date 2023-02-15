@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "src/store/hooks";
 import { showLiargameSettingModal } from "src/store/store";
@@ -7,6 +8,7 @@ import styles from "./BalancegameSettingModal.module.css";
 
 const LiargameSettingModal = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [Type, setType] = useState<any>();
   const [Word, setWord] = useState<any>();
@@ -75,20 +77,79 @@ const LiargameSettingModal = () => {
         accessToken: accessToken,
       },
     }).then((r) => {
-      const result = r.data.message;
-      if (result === "success") {
-        toast.success("추가되었습니다!");
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
         axios({
           method: "get",
-          url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
           headers: {
-            accessToken: accessToken,
+            refreshToken: refreshToken,
           },
         }).then((r) => {
-          setLiarInfo(r.data.data);
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "post",
+              url: "https://i8e201.p.ssafy.io/api/admin/game/liar",
+              data: {
+                type: Type,
+                word: Word,
+              },
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              const result = r.data.message;
+              if (result === "success") {
+                toast.success("추가되었습니다!");
+                axios({
+                  method: "get",
+                  url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+                  headers: {
+                    accessToken: accessToken,
+                  },
+                }).then((r) => {
+                  setLiarInfo(r.data.data);
+                });
+              } else {
+                toast.warning("⛔ 추가 실패 ⛔ ");
+              }
+            });
+          }
         });
-      } else {
-        toast.warning("⛔ 추가 실패 ⛔ ");
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        const result = r.data.message;
+        if (result === "success") {
+          toast.success("추가되었습니다!");
+          axios({
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+            headers: {
+              accessToken: accessToken,
+            },
+          }).then((r) => {
+            setLiarInfo(r.data.data);
+          });
+        } else {
+          toast.warning("⛔ 추가 실패 ⛔ ");
+        }
       }
     });
   };
@@ -103,9 +164,52 @@ const LiargameSettingModal = () => {
         accessToken: accessToken,
       },
     }).then((r) => {
-      console.log(r.data.data);
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "get",
+              url: "https://i8e201.p.ssafy.io/api/pocha/game/liar",
 
-      setLiarInfo(r.data.data);
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              console.log(r.data.data);
+
+              setLiarInfo(r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+
+        setLiarInfo(r.data.data);
+      }
     });
   }, []);
 
@@ -134,7 +238,54 @@ const LiargameSettingModal = () => {
                         accessToken: accessToken,
                       },
                     }).then((r) => {
-                      console.log("라이어 게임 데이터", r.data.data);
+                      //토큰이상해
+                      if ("401" === r.data.status) {
+                        //토큰 재요청
+                        console.log("토큰 이상함");
+                        const refreshToken =
+                          localStorage.getItem("refreshToken");
+                        const Username = localStorage.getItem("Username");
+                        axios({
+                          method: "get",
+                          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                          headers: {
+                            refreshToken: refreshToken,
+                          },
+                        }).then((r) => {
+                          //재발급 실패
+                          if ("401" === r.data.status) {
+                            localStorage.clear();
+                            toast.error("인증되지 않은 유저입니다");
+                            navigate("/");
+                          }
+                          //재발급 성공
+                          else {
+                            console.log("재발급 성공", r.data.accessToken);
+                            localStorage.setItem(
+                              "accessToken",
+                              r.data.accessToken
+                            );
+                            accessToken = r.data.accessToken;
+                            //원래 axios 실행
+                            axios({
+                              method: "get",
+                              url: "https://i8e201.p.ssafy.io/api/pocha/game/liar",
+                              headers: {
+                                accessToken: accessToken,
+                              },
+                            }).then((r) => {
+                              setLiarInfo(r.data.data);
+                              console.log("라이어 게임 데이터", r.data.data);
+                            });
+                          }
+                        });
+                      }
+                      //토큰 정상이야
+                      else {
+                        //실행 결과값 그대로 실행
+                        setLiarInfo(r.data.data);
+                        console.log("라이어 게임 데이터", r.data.data);
+                      }
                     });
                   }}
                 >
@@ -177,28 +328,85 @@ const LiargameSettingModal = () => {
                               className=" p-2 cursor-pointer hover:scale-125"
                               onClick={() => {
                                 console.log("나 클릭");
-                                const accessToken =
+                                let accessToken =
                                   localStorage.getItem("accessToken");
 
                                 axios({
                                   method: "delete",
                                   url: `https://i8e201.p.ssafy.io/api/admin/game/liar/${it.liarId}`,
-
                                   headers: {
                                     accessToken: accessToken,
                                   },
                                 }).then((r) => {
-                                  axios({
-                                    method: "get",
-                                    url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+                                  //토큰이상해
+                                  if ("401" === r.data.status) {
+                                    //토큰 재요청
+                                    console.log("토큰 이상함");
+                                    const refreshToken =
+                                      localStorage.getItem("refreshToken");
+                                    const Username =
+                                      localStorage.getItem("Username");
+                                    axios({
+                                      method: "get",
+                                      url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                                      headers: {
+                                        refreshToken: refreshToken,
+                                      },
+                                    }).then((r) => {
+                                      //재발급 실패
+                                      if ("401" === r.data.status) {
+                                        localStorage.clear();
+                                        toast.error("인증되지 않은 유저입니다");
+                                        navigate("/");
+                                      }
+                                      //재발급 성공
+                                      else {
+                                        console.log(
+                                          "재발급 성공",
+                                          r.data.accessToken
+                                        );
+                                        localStorage.setItem(
+                                          "accessToken",
+                                          r.data.accessToken
+                                        );
+                                        accessToken = r.data.accessToken;
+                                        //원래 axios 실행
+                                        axios({
+                                          method: "delete",
+                                          url: `https://i8e201.p.ssafy.io/api/admin/game/liar/${it.liarId}`,
+                                          headers: {
+                                            accessToken: accessToken,
+                                          },
+                                        }).then((r) => {
+                                          axios({
+                                            method: "get",
+                                            url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
 
-                                    headers: {
-                                      accessToken: accessToken,
-                                    },
-                                  }).then((r) => {
-                                    setLiarInfo(r.data.data);
-                                  });
-                                  toast.success("삭제완료");
+                                            headers: {
+                                              accessToken: accessToken,
+                                            },
+                                          }).then((r) => {
+                                            setLiarInfo(r.data.data);
+                                          });
+                                          toast.success("삭제완료");
+                                        });
+                                      }
+                                    });
+                                  }
+                                  //토큰 정상이야
+                                  else {
+                                    //실행 결과값 그대로 실행
+                                    axios({
+                                      method: "get",
+                                      url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+                                      headers: {
+                                        accessToken: accessToken,
+                                      },
+                                    }).then((r) => {
+                                      setLiarInfo(r.data.data);
+                                    });
+                                    toast.success("삭제완료");
+                                  }
                                 });
                               }}
                             >
@@ -274,7 +482,6 @@ const LiargameSettingModal = () => {
                       className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                       onClick={() => {
                         console.log("모달창 off");
-
                         dispatch(showLiargameSettingModal());
                       }}
                     >
@@ -288,8 +495,7 @@ const LiargameSettingModal = () => {
                       <div
                         className="w-[30%] p-2 border-2 rounded-full cursor-pointer"
                         onClick={() => {
-                          const accessToken =
-                            localStorage.getItem("accessToken");
+                          let accessToken = localStorage.getItem("accessToken");
 
                           axios({
                             method: "put",
@@ -298,21 +504,82 @@ const LiargameSettingModal = () => {
                               type: Type,
                               word: Word,
                             },
-
                             headers: {
                               accessToken: accessToken,
                             },
                           }).then((r) => {
-                            toast.success("수정완료");
-                            axios({
-                              method: "get",
-                              url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
-                              headers: {
-                                accessToken: accessToken,
-                              },
-                            }).then((r) => {
-                              setLiarInfo(r.data.data);
-                            });
+                            //토큰이상해
+                            if ("401" === r.data.status) {
+                              //토큰 재요청
+                              console.log("토큰 이상함");
+                              const refreshToken =
+                                localStorage.getItem("refreshToken");
+                              const Username = localStorage.getItem("Username");
+                              axios({
+                                method: "get",
+                                url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                                headers: {
+                                  refreshToken: refreshToken,
+                                },
+                              }).then((r) => {
+                                //재발급 실패
+                                if ("401" === r.data.status) {
+                                  localStorage.clear();
+                                  toast.error("인증되지 않은 유저입니다");
+                                  navigate("/");
+                                }
+                                //재발급 성공
+                                else {
+                                  console.log(
+                                    "재발급 성공",
+                                    r.data.accessToken
+                                  );
+                                  localStorage.setItem(
+                                    "accessToken",
+                                    r.data.accessToken
+                                  );
+                                  accessToken = r.data.accessToken;
+                                  //원래 axios 실행
+                                  axios({
+                                    method: "put",
+                                    url: `https://i8e201.p.ssafy.io/api/admin/game/balance/${ModifyLiarId}`,
+                                    data: {
+                                      type: Type,
+                                      word: Word,
+                                    },
+
+                                    headers: {
+                                      accessToken: accessToken,
+                                    },
+                                  }).then((r) => {
+                                    toast.success("수정완료");
+                                    axios({
+                                      method: "get",
+                                      url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+                                      headers: {
+                                        accessToken: accessToken,
+                                      },
+                                    }).then((r) => {
+                                      setLiarInfo(r.data.data);
+                                    });
+                                  });
+                                }
+                              });
+                            }
+                            //토큰 정상이야
+                            else {
+                              //실행 결과값 그대로 실행
+                              toast.success("수정완료");
+                              axios({
+                                method: "get",
+                                url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+                                headers: {
+                                  accessToken: accessToken,
+                                },
+                              }).then((r) => {
+                                setLiarInfo(r.data.data);
+                              });
+                            }
                           });
                         }}
                       >
