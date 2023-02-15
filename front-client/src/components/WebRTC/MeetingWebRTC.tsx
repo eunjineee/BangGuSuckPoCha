@@ -148,8 +148,8 @@ const WebRTC = ({
       videoElement.current!.classList.remove("hidden");
       introduceElement.current!.classList.add("hidden");
     } else {
-      videoElement.current!.classList.remove("hidden");
-      introduceElement.current!.classList.add("hidden");
+      videoElement.current!.classList.add("hidden");
+      introduceElement.current!.classList.remove("hidden");
       setTimeout(() => {
         videoElement.current!.classList.remove("hidden");
         introduceElement.current!.classList.add("hidden");
@@ -676,7 +676,7 @@ const WebRTC = ({
 
     if (userCount.current === 1) {
       div3.current!.classList.add("hidden");
-      peerFace2.current!.classList.add("hidden");
+      // peerFace2.current!.classList.add("hidden");
       peerFace1.current.srcObject = stream;
       peerFace1.current.id = username;
       setPeerUser((prev: any) => {
@@ -687,9 +687,9 @@ const WebRTC = ({
       videoOn(peerFace1, peerIntroduce1);
     } else if (userCount.current === 2) {
       div3.current!.classList.remove("hidden");
-      peerFace2.current!.classList.remove("hidden");
+      // peerFace2.current!.classList.remove("hidden");
       div4.current!.classList.add("hidden");
-      peerFace3.current!.classList.add("hidden");
+      // peerFace3.current!.classList.add("hidden");
       peerFace2.current.srcObject = stream;
       peerFace2.current.id = username;
       setPeerUser((prev: any) => {
@@ -700,9 +700,9 @@ const WebRTC = ({
       videoOn(peerFace2, peerIntroduce2);
     } else if (userCount.current === 3) {
       div4.current!.classList.remove("hidden");
-      peerFace3.current!.classList.remove("hidden");
+      // peerFace3.current!.classList.remove("hidden");
       div5.current!.classList.add("hidden");
-      peerFace4.current!.classList.add("hidden");
+      // peerFace4.current!.classList.add("hidden");
       peerFace3.current.srcObject = stream;
       peerFace3.current.id = username;
       setPeerUser((prev: any) => {
@@ -713,9 +713,9 @@ const WebRTC = ({
       videoOn(peerFace3, peerIntroduce3);
     } else if (userCount.current === 4) {
       div5.current!.classList.remove("hidden");
-      peerFace4.current!.classList.remove("hidden");
+      // peerFace4.current!.classList.remove("hidden");
       div6.current!.classList.add("hidden");
-      peerFace5.current!.classList.add("hidden");
+      // peerFace5.current!.classList.add("hidden");
       peerFace4.current.srcObject = stream;
       peerFace4.current.id = username;
       setPeerUser((prev: any) => {
@@ -726,7 +726,7 @@ const WebRTC = ({
       videoOn(peerFace4, peerIntroduce4);
     } else if (userCount.current === 5) {
       div6.current!.classList.remove("hidden");
-      peerFace5.current!.classList.remove("hidden");
+      // peerFace5.current!.classList.remove("hidden");
       peerFace5.current.srcObject = stream;
       peerFace5.current.id = username;
       setPeerUser((prev: any) => {
@@ -903,9 +903,9 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                    </div>
-                    <div ref={myIntroduce} className="border-2 object-fill">
-                      {introduceInfo[peerUser.my]}
+                      <div ref={myIntroduce} className="border-2 object-fill">
+                        {introduceInfo[peerUser.my]}
+                      </div>
                     </div>
                     <div ref={myHeart}>💖 x {heartInfo[peerUser.my]}</div>
                   </div>
@@ -916,25 +916,22 @@ const WebRTC = ({
                     >
                       <video
                         onClick={ShowUserProfile}
-                        className=" object-fill cursor-pointer"
-                        style={{ display: "none" }}
+                        className=" object-fill cursor-pointer hidden"
                         ref={peerFace2}
                         playsInline
                         autoPlay
                       ></video>
-                    </div>
-                    <div
-                      ref={peerIntroduce2}
-                      className="border-2 object-fill"
-                      style={{ display: "none" }}
-                    >
-                      {introduceInfo[peerUser.peer2]}
+                      <div
+                        ref={peerIntroduce2}
+                        className="border-2 object-fill hidden"
+                      >
+                        {introduceInfo[peerUser.peer2]}
+                      </div>
                     </div>
                     <div
                       ref={peerHeart2}
-                      className="cursor-pointer"
+                      className="cursor-pointer hidden"
                       onClick={addHeart}
-                      style={{ display: "none" }}
                     >
                       💖 x {heartInfo[peerUser.peer2]}
                     </div>
@@ -946,24 +943,22 @@ const WebRTC = ({
                     >
                       <video
                         onClick={ShowUserProfile}
-                        className=" object-fill cursor-pointer"
+                        className=" object-fill cursor-pointer hidden"
                         ref={peerFace4}
                         playsInline
                         autoPlay
                       ></video>
-                    </div>
-                    <div
-                      ref={peerIntroduce4}
-                      className="border-2 object-fill"
-                      style={{ display: "none" }}
-                    >
-                      {introduceInfo[peerUser.peer4]}
+                      <div
+                        ref={peerIntroduce4}
+                        className="border-2 object-fill hidden"
+                      >
+                        {introduceInfo[peerUser.peer4]}
+                      </div>
                     </div>
                     <div
                       ref={peerHeart4}
-                      className="cursor-pointer"
+                      className="cursor-pointer hidden"
                       onClick={addHeart}
-                      style={{ display: "none" }}
                     >
                       💖 x {heartInfo[peerUser.peer4]}
                     </div>
@@ -1039,19 +1034,17 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                    </div>
-                    <div
-                      ref={peerIntroduce1}
-                      className="border-2 object-fill"
-                      style={{ display: "none" }}
-                    >
-                      {introduceInfo[peerUser.peer1]}
+                      <div
+                        ref={peerIntroduce1}
+                        className="border-2 object-fill hidden"
+                      >
+                        {introduceInfo[peerUser.peer1]}
+                      </div>
                     </div>
                     <div
                       ref={peerHeart1}
-                      className="cursor-pointer"
+                      className="cursor-pointer hidden"
                       onClick={addHeart}
-                      style={{ display: "none" }}
                     >
                       💖 x {heartInfo[peerUser.peer1]}
                     </div>
@@ -1068,19 +1061,17 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                    </div>
-                    <div
-                      ref={peerIntroduce3}
-                      className="border-2 object-fill"
-                      style={{ display: "none" }}
-                    >
-                      {introduceInfo[peerUser.peer3]}
+                      <div
+                        ref={peerIntroduce3}
+                        className="border-2 object-fill hidden"
+                      >
+                        {introduceInfo[peerUser.peer3]}
+                      </div>
                     </div>
                     <div
                       ref={peerHeart3}
-                      className="cursor-pointer"
+                      className="cursor-pointer hidden"
                       onClick={addHeart}
-                      style={{ display: "none" }}
                     >
                       💖 x {heartInfo[peerUser.peer3]}
                     </div>
@@ -1097,19 +1088,17 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                    </div>
-                    <div
-                      ref={peerIntroduce5}
-                      className="border-2 object-fill"
-                      style={{ display: "none" }}
-                    >
-                      {introduceInfo[peerUser.peer5]}
+                      <div
+                        ref={peerIntroduce5}
+                        className="border-2 object-fill hidden"
+                      >
+                        {introduceInfo[peerUser.peer5]}
+                      </div>
                     </div>
                     <div
                       ref={peerHeart5}
-                      className="cursor-pointer"
+                      className="cursor-pointer hidden"
                       onClick={addHeart}
-                      style={{ display: "none" }}
                     >
                       💖 x {heartInfo[peerUser.peer5]}
                     </div>
