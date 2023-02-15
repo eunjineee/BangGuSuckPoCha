@@ -1,0 +1,13 @@
+
+.hoverTextColor {
+  transition: all 0.5s;
+}
+
+.hoverTextColor:hover {
+  color: #FFA000;
+  text-shadow: 0 0 3px #FC5E01;
+}
+
+.basicTextColor {
+  color: #f9ca79;
+}

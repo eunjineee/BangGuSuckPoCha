@@ -9,7 +9,8 @@ import { useAppSelector } from "src/store/hooks";
 import FriendSearch from "../Common/FriendSearch";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 import RoomUserProfile from "../Common/RoomUserProfile";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function StoryRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
   let accessToken = localStorage.getItem("accessToken");
@@ -20,6 +21,8 @@ function StoryRoom(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // 처음에 받아오는 포차 정보
   const [pochaInfo, setPochaInfo] = useState<any>(null);
+  //  소통 포차 종류에 따른 다른 음악 - 기본은 Talk1
+  const [pochaBGM, setPochaBGM] = useState<any>("Talk1.mp3");
   // 배경 div
   const bgDiv = useRef<HTMLDivElement>(null);
   // 테마 변경
@@ -45,6 +48,21 @@ function StoryRoom(): JSX.Element {
   const propIsHost = (isHost: boolean) => {
     setIsHost(isHost);
   };
+
+  
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      src={`/RoomBGM/${pochaBGM}`}
+      loop
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.2}
+      // other props here
+    />
+  );
 
   const getPochaInfo = async () => {
     // try {
@@ -123,14 +141,17 @@ function StoryRoom(): JSX.Element {
                 case "T0B0":
                   navigate(`/storyroom/${PochaId}`);
                   setUrlImg("bg-rain");
+                  setPochaBGM('Talk1.mp3')
                   break;
                 case "T0B1":
                   navigate(`/storyroom/${PochaId}`);
                   setUrlImg(`bg-pocha`);
+                  setPochaBGM('Talk2.mp3')
                   break;
                 case "T0B2":
                   navigate(`/storyroom/${PochaId}`);
                   setUrlImg(`bg-hof`);
+                  setPochaBGM('Talk3.mp3')
                   break;
                 case "T1B0":
                   navigate(`/gameroom/${PochaId}`);
@@ -151,14 +172,17 @@ function StoryRoom(): JSX.Element {
           case "T0B0":
             navigate(`/storyroom/${PochaId}`);
             setUrlImg("bg-rain");
+            setPochaBGM('Talk1.mp3')
             break;
           case "T0B1":
             navigate(`/storyroom/${PochaId}`);
             setUrlImg(`bg-pocha`);
+            setPochaBGM('Talk2.mp3')
             break;
           case "T0B2":
             navigate(`/storyroom/${PochaId}`);
             setUrlImg(`bg-hof`);
+            setPochaBGM('Talk3.mp3')
             break;
           case "T1B0":
             navigate(`/gameroom/${PochaId}`);
@@ -180,6 +204,9 @@ function StoryRoom(): JSX.Element {
 
   return (
     <>
+    {
+      <Player />
+    }
       {isLoading ? (
         <Loading />
       ) : (
