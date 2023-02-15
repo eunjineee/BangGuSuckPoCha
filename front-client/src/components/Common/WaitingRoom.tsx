@@ -93,7 +93,8 @@ function WaitingRoom({
               limit: r.data.limitUser,
             });
           }
-          // console.log(r);
+          // console.log(r); 
+          //test
         }
       })
     } catch (error) {
