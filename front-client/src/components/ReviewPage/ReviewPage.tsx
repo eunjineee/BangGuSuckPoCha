@@ -229,6 +229,7 @@ function ReviewComponent({
   reviewBefore,
   setReviewBefore,
 }: any): JSX.Element {
+  const navigate = useNavigate();
   let showBefore: any;
   let showAfter: any;
   const before = useRef<any>();
@@ -377,7 +378,7 @@ function StartReviewComponent({
     to_username,
   } = userData;
   // console.log('127번임', userData)
-
+  const navigate = useNavigate();
   let createReviewat = "0000-00-00";
   let finishReviewat = "0000-00-00";
   if (clickReviewState) {
@@ -417,14 +418,62 @@ function StartReviewComponent({
                 className="flex justify-center items-center mr-0"
                 onClick={() => {
                   // 클릭한 유저 정보 가져와서 담아주기
-                  axios
-                    .get(
-                      `https://i8e201.p.ssafy.io/api/user/info/${to_username}`
-                    )
-                    .then((r) => {
+                  let accessToken = localStorage.getItem("accessToken");
+                  axios({
+                    method: "get",
+                    url: `https://i8e201.p.ssafy.io/api/user/info/${to_username}`,
+                    headers: {
+                      accessToken: `${accessToken}`,
+                    },
+                  }).then((r) => {
+                    //토큰이상해
+                    if ("401" === r.data.status) {
+                      //토큰 재요청
+                      console.log("토큰 이상함");
+                      const refreshToken = localStorage.getItem("refreshToken");
+                      const Username = localStorage.getItem("Username");
+                      axios({
+                        method: "get",
+                        url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                        headers: {
+                          refreshToken: refreshToken,
+                        },
+                      }).then((r) => {
+                        //재발급 실패
+                        if ("401" === r.data.status) {
+                          localStorage.clear();
+                          toast.error("인증되지 않은 유저입니다");
+                          navigate("/");
+                        }
+                        //재발급 성공
+                        else {
+                          console.log("재발급 성공", r.data.accessToken);
+                          localStorage.setItem(
+                            "accessToken",
+                            r.data.accessToken
+                          );
+                          accessToken = r.data.accessToken;
+                          //원래 axios 실행
+                          axios({
+                            method: "get",
+                            url: `https://i8e201.p.ssafy.io/api/user/info/${to_username}`,
+                            headers: {
+                              accessToken: `${accessToken}`,
+                            },
+                          }).then((r) => {
+                            dispatch(changeNavAlarmReviewEmojiUserData(r.data));
+                            dispatch(showRoomUserProfile());
+                          });
+                        }
+                      });
+                    }
+                    //토큰 정상이야
+                    else {
+                      //실행 결과값 그대로 실행
                       dispatch(changeNavAlarmReviewEmojiUserData(r.data));
                       dispatch(showRoomUserProfile());
-                    });
+                    }
+                  });
                 }}
               >
                 <img
@@ -465,6 +514,7 @@ function StartReviewComponent({
                   onClick={(e) => {
                     setRating(null);
                     let accessToken = localStorage.getItem("accessToken");
+                    //리뷰 여기부터 해야함
                     axios({
                       method: "put",
                       url: "https://i8e201.p.ssafy.io/api/user/review",
