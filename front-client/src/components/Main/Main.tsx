@@ -129,19 +129,6 @@ function Main(): JSX.Element {
       });
   }, []);
 
-  // useEffect(()=> {
-  //   exitMethod()
-  //   return () =>  exitMethod()
-  // },[])
-
-  // function exitMethod() {
-  //   if (checkMenuState) {
-  //     dispatch(changeMenuState());
-  //   } else if (alarmClickCheck) {
-  //     dispatch(changeAlarmState());
-  //   }
-  // }
-
   // 메인에 들어올 시 현재 생성된 방 리스트 state 갱신
   // useEffect(() => {
   //   axios({
