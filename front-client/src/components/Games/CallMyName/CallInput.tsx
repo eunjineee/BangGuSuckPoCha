@@ -82,15 +82,21 @@ function CallInput({
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
   },[])
+  
   useEffect(()=> {
     gamestart();
   },[mynum])
 
   useEffect(()=> {
+    finish();
+  },[peopleScore])
+
+  useEffect(()=> {
     setMyInfo();
     // 접을때 주고 받는 함수
     socket.on("game_call_pass", (myNum: number) => {
-      console.log("새로운배열 갱신되고있냐?", peopleScore);
+      finish();
+      console.log("새로운배열 갱신되고있냐? 지금배열은", peopleScore);
       const newArray = peopleScore.map((score, index) => {
         if ((index === myNum)&&(score === 1)) {
           return score - 1;
@@ -99,14 +105,13 @@ function CallInput({
       });
       console.log("새로운배열?", newArray);
       setPeopleScore((prev) => [...newArray]);
-      finish();
     });
-
     return () => {
       socket.off("game_call_pass");
     };
   }, [peopleScore]);
 
+  
 
   //게임 끝인지 확인 
   function finish() {
@@ -124,7 +129,8 @@ function CallInput({
     });
 
     if (resultList.length === totalCount-1) {
-      console.log("여기오냐 결과가기전 1점 친구 이름", result);
+      console.log("여기오냐 결과가기전 꼴찌", result);
+      console.log("여기오냐 결과가기전 정답자들", resultList);
       const signalData = "RESULT";
       const data = result;
       socket.emit("game_call_signal", roomName, signalData, data);
