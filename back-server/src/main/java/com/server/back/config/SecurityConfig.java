@@ -31,21 +31,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-                .antMatchers("/join","/", "/home","/refresh/**","/admin/join")
-                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver","/api/pocha/exit")
-                .antMatchers("**/refresh/**","/api/user/auth/refresh/**","/user/auth/refresh/**")
-                .antMatchers("**/exit**","**/exit","/pocha/exit","/api/pocha/exit")
-                .antMatchers("/v2/api-docs","/swagger**/**","/api/v2/**",
-                            "/swagger-resources/**",
-                            "/configuration/ui",
-                            "/configuration/security",
-                            "/swagger-ui.html",
-                            "/webjars/**", "/v3/api-docs","/swagger**/**" );
-
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return web -> web.ignoring()
+//                .antMatchers("/join","/", "/home","/refresh/**","/admin/join")
+//                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver","/api/pocha/exit")
+//                .antMatchers("**/refresh/**","/api/user/auth/refresh/**","/user/auth/refresh/**")
+//                .antMatchers("**/exit**","**/exit","/pocha/exit","/api/pocha/exit")
+//                .antMatchers("/v2/api-docs","/swagger**/**","/api/v2/**",
+//                            "/swagger-resources/**",
+//                            "/configuration/ui",
+//                            "/configuration/security",
+//                            "/swagger-ui.html",
+//                            "/webjars/**", "/v3/api-docs","/swagger**/**" );
+//
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -58,11 +58,11 @@ public class SecurityConfig {
                 .formLogin().disable() //formLogin(form)방식 사용 안함 , json방식으로 전달
                 .httpBasic().disable() //Bearer 방식 사용 -> header 에 authentication 에 토큰을 넣어 전달하는 방식
                 .addFilter(config.corsFilter())
-                .apply(new MyCustomDsl())
-                .and()
+//                .apply(new MyCustomDsl())
+//                .and()
 
                 .authorizeRequests()
-//                    .antMatchers("**").permitAll()
+                    .antMatchers("**").permitAll()
                     .anyRequest().authenticated()
 
                 .and()
