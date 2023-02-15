@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./CallInput.module.css";
 
 function CallInput({
@@ -7,14 +7,16 @@ function CallInput({
   pochaId,
   pochaUsers,
   nowtitles,
+  pochaInfo,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
   nowtitles: any;
+  pochaInfo: any;
 }): React.ReactElement {
   const roomName = pochaId;
-  
+  const { totalCount } = pochaInfo;
   const [mynum, setMyNum] = useState<any>(null) // 내번호
 
   const myName = localStorage.getItem("Username");    // 내 이름
@@ -23,8 +25,22 @@ function CallInput({
 
   const [answer, setAnswer] = useState<any>(null);
   // pass
+  
   const [peopleScore, setPeopleScore] = useState<number[]>([1, 1, 1, 1, 1, 1]);
-
+  const title0 = useRef<any>(null);
+  const title1 = useRef<any>(null);
+  const title2 = useRef<any>(null);
+  const title3 = useRef<any>(null);
+  const title4 = useRef<any>(null);
+  const title5 = useRef<any>(null);
+  const [txtSpanList, setTxtSpanList] = useState<any[]>([
+    title0,
+    title1,
+    title2,
+    title3,
+    title4,
+    title5,
+  ]);
   const onClickClose = () => {
     const signalData = "RESULT";
     // 다음 페이지로 이동
@@ -61,23 +77,23 @@ function CallInput({
   }
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
+    gamestart();
   },[])
 
   useEffect(()=> {
     setMyInfo();
     // 접을때 주고 받는 함수
     socket.on("game_call_pass", (myNum: number) => {
-      finish();
       console.log("새로운배열 갱신되고있냐?", peopleScore);
       const newArray = peopleScore.map((score, index) => {
-        if (index === myNum) {
+        if ((index === myNum)&&(score === 0)) {
           return score - 1;
         }
-
         return score;
       });
       console.log("새로운배열?", newArray);
       setPeopleScore((prev) => [...newArray]);
+      finish();
     });
 
     return () => {
@@ -90,9 +106,9 @@ function CallInput({
   function finish() {
     const resultList: string[] = [];
     const result: string[] = [];
-    console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    // console.log("자 여기 결과가기전", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
-      console.log("s여기@@@@@@@@@@@@", score, index);
+      // console.log("s여기@@@@@@@@@@@@", score, index);
       if (score === 0) {
         resultList.push(peopleName[index]);
         console.log("여기오냐?", peopleScore);
@@ -100,16 +116,27 @@ function CallInput({
         result.push(peopleName[index])
       }
     });
-    console.log("여기오냐 결과가기전? 이건 result", result);
+    // console.log("여기오냐 결과가기전? 이건 result", result);
     if (result.length === 1) {
-      console.log("여기오냐 결과가기전?", peopleScore);
+      // console.log("여기오냐 결과가기전?", peopleScore);
       const signalData = "RESULT";
       const data = result;
       socket.emit("game_call_result", roomName, signalData, data);
     }
   }
 
-
+  //박스만들기(인원수 넘어가는 박스은 가리기)
+  function gamestart() {
+    for (var i = 0; i < 6; i++) {
+      if (i >= totalCount) {
+        // console.log(txtSpanList[i].current);
+        txtSpanList[i].current.classList.add("hidden");
+      }
+      if(i === mynum){
+        txtSpanList[i].current.classList.add("hidden");
+      }
+    }
+  }
 
 
   return (
@@ -117,30 +144,35 @@ function CallInput({
     <div className={`${styles.box} ${styles.layout}`}>
       <div className={`${styles.box2} ${styles.layout2}`}>CALL MY NAME</div>
       <div className={`${styles.buttons}`} id="bigbox">
-        <div className={`${styles.layout4}`} id = "title0">
+        <div className={`${styles.layout4}`} id = "title0" ref={title0}>
           <div className={`${styles.text1}`} id = "people0">{peopleName[0]}</div>
           <div className={`${styles.text2}`} id = "ptitle0">{nowtitles[0]?.word}</div>
           <div className={`${styles.text3}`} id = "pass0">{peopleScore[0]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title1">
+        <div className={`${styles.layout4}`} id = "title1" ref={title1}>
           <div className={`${styles.text1}`} id = "people1">{peopleName[1]}</div>
           <div className={`${styles.text2}`} id = "ptitle1">{nowtitles[1]?.word}</div>
-          <div className={`${styles.text3}`} id = "pass1"></div>
+          <div className={`${styles.text3}`} id = "pass1">{peopleScore[1]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title2">
+        <div className={`${styles.layout4}`} id = "title2" ref={title2}>
           <div className={`${styles.text1}`} id = "people2">{peopleName[2]}</div>
           <div className={`${styles.text2}`} id = "ptitle2">{nowtitles[2]?.word}</div>
-          <div className={`${styles.text3}`} id = "pass2"></div>
+          <div className={`${styles.text3}`} id = "pass2">{peopleScore[2]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title3">
+        <div className={`${styles.layout4}`} id = "title3" ref={title3}>
           <div className={`${styles.text1}`} id = "people3">{peopleName[3]}</div>
           <div className={`${styles.text2}`} id = "ptitle3">{nowtitles[3]?.word}</div>
-          <div className={`${styles.text3}`} id = "pass3"></div>
+          <div className={`${styles.text3}`} id = "pass3">{peopleScore[3]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title4">
+        <div className={`${styles.layout4}`} id = "title4" ref={title4}>
           <div className={`${styles.text1}`} id = "people4">{peopleName[4]}</div>
           <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[4]?.word}</div>
           <div className={`${styles.text3}`} id = "pass4">{peopleScore[4]? null : "통과"}</div>
+        </div>
+        <div className={`${styles.layout4}`} id = "title4" ref={title5}>
+          <div className={`${styles.text1}`} id = "people4">{peopleName[5]}</div>
+          <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[5]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass4">{peopleScore[5]? null : "통과"}</div>
         </div>
       </div>
       <div className={`${styles.layout6}`}>

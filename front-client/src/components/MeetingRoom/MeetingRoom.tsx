@@ -1,4 +1,4 @@
-import RoomMeetingFooterNav from "../Common/RoomMeetingFooterNav";
+import RoomFooterNav from "../Common/RoomFooterNav";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { isRtcLoading, showRoomUserProfile } from "../../store/store";
 import RoomUserProfile from "../Common/RoomUserProfile";
@@ -10,7 +10,6 @@ import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import MeetingWebRTC from "../WebRTC/MeetingWebRTC";
 import WaitingRoom from "../Common/WaitingRoom";
-import RoomFooterNav from "../Common/RoomFooterNav";
 import FriendSearch from "../Common/FriendSearch";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 
