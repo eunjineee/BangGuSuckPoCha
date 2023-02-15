@@ -10,11 +10,9 @@ import axios from "axios";
 function CallIntro({
   socket,
   pochaId,
-  pochaUsers,
 }: {
   socket: any;
   pochaId: string;
-  pochaUsers: any;
 }): React.ReactElement {
   // 방 이름
   const roomName = pochaId;
@@ -22,7 +20,9 @@ function CallIntro({
   const myName = localStorage.getItem("Username");  
   // 메뉴얼 클릭
   const [signal, setSignal] = useState<string>("INTRO");
-  
+  // 포차 유저 정보
+  const [pochaUsers, setPochaUsers] = useState<any>(null);
+
   const [pochaInfo, setPochaInfo] = useState<any>(null)
 
   const [isHost, setIshost] = useState<any>(null)
@@ -30,24 +30,8 @@ function CallIntro({
 
   const [titles, setTitles] = useState<any>(null)
   const [nowtitles, setNowtitles] = useState<any>(null);
-  const nowtitle: any[] = [];
 
   const [mynum, setMyNum] = useState<any>(null) // 내번호
-
-  // 포차 정보 요청
-  const getPochaInfo = async () => {
-    try {
-      const {data : {data}} = await axios({
-        method: "GET",
-        url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
-      })
-      console.log("포차정보 데이터 잘 오냐!? call",data);
-      setPochaInfo(data);
-
-    } catch(error) {
-      console.log("Call게임에서 포차정보 에러", error);
-    }
-  }
 
   useEffect(() => {
     // 양세찬 게임 시그널받기
@@ -76,13 +60,43 @@ function CallIntro({
   }, []);
 
   useEffect(() => {
+    getPochaInfo();
+    getPochaUsers();
     setHostInfo();
     setPeopleInfo();
     if (mynum === isHost){
       getCallSubject();
     }
   },[]);
+  
+  // 포차 유저 정보 요청
+  const getPochaUsers = async () => {
+    try {
+      const {data: {data}} = await axios({
+        method: "GET",
+        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`
+      })
+      console.log("포차유저정보왔냐",data)
+      setPochaUsers(data);
+    } catch(error) {
+      console.log("손병호intro", error);
+    }
+  } 
 
+  // 포차 정보 요청
+  const getPochaInfo = async () => {
+    try {
+      const {data : {data}} = await axios({
+        method: "GET",
+        url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
+      })
+      console.log("포차정보 데이터 잘 오냐!? call",data);
+      setPochaInfo(data);
+
+    } catch(error) {
+      console.log("Call게임에서 포차정보 에러", error);
+    }
+  }
 
   // 클릭하면 서버로 시그널 보냄
   const onClickSignal = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -127,6 +141,17 @@ function CallIntro({
       console.log("라이어 게임 주제 axios error", error);
     }
   }
+
+  const titlechoice = () => {
+    const nowtitle: string[] = [];
+    for (var i = 0; i < 6 ; i++) {
+      if (titles){
+        var newnum = Math.floor(Math.random()* (titles.length))
+        nowtitle.push(titles[newnum]);
+      }
+    }
+    setNowtitles(nowtitle);
+  }
   
   useEffect(()=>{
     titlechoice();
@@ -139,15 +164,6 @@ function CallIntro({
     socket.emit("game_call_submit", roomName, SignalData, data);
   },[nowtitles])
   
-  const titlechoice = () => {
-    for (var i = 0; i < 6 ; i++) {
-      if (titles){
-        var newnum = Math.floor(Math.random()* (titles.length))
-        nowtitle.push(titles[newnum]);
-      }
-    }
-    setNowtitles(nowtitle);
-  }
 
   console.log("----------userlist--------",pochaUsers);
   console.log("----------mynum--------",mynum);

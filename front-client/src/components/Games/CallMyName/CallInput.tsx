@@ -69,17 +69,22 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    console.log("----------------제출시작------", answer);
-    console.log("----------------제출시작------", nowtitles[mynum]?.word);
+
+    console.log("----------------정답지------", nowtitles);
+    console.log("----------------제출한 답------", answer);
+    console.log("----------------정답------", nowtitles[mynum]?.word);
     if (answer === nowtitles[mynum]?.word){
-      console.log("----------------------");
+      console.log("------------정답이다!!!!!!!!!!!!!!----------");
       socket.emit("game_call_pass", roomName, mynum);
     }
+    console.log("------------틀렸어----------");
   }
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
-    gamestart();
   },[])
+  useEffect(()=> {
+    gamestart();
+  },[mynum])
 
   useEffect(()=> {
     setMyInfo();
@@ -107,19 +112,19 @@ function CallInput({
   function finish() {
     const resultList: string[] = [];
     const result: string[] = [];
-    // console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    console.log("게임 끝인지 확인중입니다", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
-      // console.log("s여기@@@@@@@@@@@@", score, index);
+      console.log("s여기@@@@@@@@@@@@", score, index);
       if (score === 0) {
         resultList.push(peopleName[index]);
-        console.log("여기오냐?", peopleScore);
-      }else if((score === 1) && (peopleName[index]!== null)){
+        console.log("정답자", peopleScore);
+      }else{
         result.push(peopleName[index])
       }
     });
-    // console.log("여기오냐 결과가기전? 이건 result", result);
+
     if (resultList.length === totalCount-1) {
-      // console.log("여기오냐 결과가기전?", peopleScore);
+      console.log("여기오냐 결과가기전 1점 친구 이름", result);
       const signalData = "RESULT";
       const data = result;
       socket.emit("game_call_signal", roomName, signalData, data);
@@ -128,12 +133,14 @@ function CallInput({
 
   //박스만들기(인원수 넘어가는 박스은 가리기)
   function gamestart() {
+    console.log("totalCount----------------",totalCount)
     for (var i = 0; i < 6; i++) {
-      if (i >= totalCount) {
-        // console.log(txtSpanList[i].current);
+      if (i > totalCount-1) {
+        console.log("전체 멤버 넘어가면 가려",i);
         txtSpanList[i].current.classList.add("hidden");
       }
       if(i === mynum){
+        console.log("이건 나라서 가림",mynum)
         txtSpanList[i].current.classList.add("hidden");
       }
     }
@@ -170,10 +177,10 @@ function CallInput({
           <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[4]?.word}</div>
           <div className={`${styles.text3}`} id = "pass4">{peopleScore[4]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4} flex`} id = "title4" ref={title5}>
-          <div className={`${styles.text1}`} id = "people4">{peopleName[5]}</div>
-          <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[5]?.word}</div>
-          <div className={`${styles.text3}`} id = "pass4">{peopleScore[5]? null : "통과"}</div>
+        <div className={`${styles.layout4} flex`} id = "title5" ref={title5}>
+          <div className={`${styles.text1}`} id = "people5">{peopleName[5]}</div>
+          <div className={`${styles.text2}`} id = "ptitle5">{nowtitles[5]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass5">{peopleScore[5]? null : "통과"}</div>
         </div>
       </div>
       <div className={`${styles.layout6}`}>

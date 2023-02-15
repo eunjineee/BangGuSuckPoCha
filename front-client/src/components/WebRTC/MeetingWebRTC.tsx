@@ -145,14 +145,14 @@ const WebRTC = ({
     const now = new Date().getTime();
 
     if (waitEnd <= now) {
-      videoElement.current!.style.display = "block";
-      introduceElement.current!.style.display = "none";
+      videoElement.current!.classList.remove("hidden");
+      introduceElement.current!.classList.add("hidden");
     } else {
-      videoElement.current!.style.display = "none";
-      introduceElement.current!.style.display = "block";
+      videoElement.current!.classList.remove("hidden");
+      introduceElement.current!.classList.add("hidden");
       setTimeout(() => {
-        videoElement.current!.style.display = "block";
-        introduceElement.current!.style.display = "none";
+        videoElement.current!.classList.remove("hidden");
+        introduceElement.current!.classList.add("hidden");
       }, waitEnd - now);
     }
   }
@@ -683,7 +683,7 @@ const WebRTC = ({
         return { ...prev, peer1: username };
       });
       peerHeart1.current.setAttribute("value", username);
-      peerHeart1.current.style.display = "block";
+      peerHeart1.current.classList.remove("hidden");
       videoOn(peerFace1, peerIntroduce1);
     } else if (userCount.current === 2) {
       div3.current!.classList.remove("hidden");
@@ -696,7 +696,7 @@ const WebRTC = ({
         return { ...prev, peer2: username };
       });
       peerHeart2.current.setAttribute("value", username);
-      peerHeart2.current.style.display = "block";
+      peerHeart2.current.classList.remove("hidden");
       videoOn(peerFace2, peerIntroduce2);
     } else if (userCount.current === 3) {
       div4.current!.classList.remove("hidden");
@@ -709,7 +709,7 @@ const WebRTC = ({
         return { ...prev, peer3: username };
       });
       peerHeart3.current.setAttribute("value", username);
-      peerHeart3.current.style.display = "block";
+      peerHeart3.current.classList.remove("hidden");
       videoOn(peerFace3, peerIntroduce3);
     } else if (userCount.current === 4) {
       div5.current!.classList.remove("hidden");
@@ -722,7 +722,7 @@ const WebRTC = ({
         return { ...prev, peer4: username };
       });
       peerHeart4.current.setAttribute("value", username);
-      peerHeart4.current.style.display = "block";
+      peerHeart4.current.classList.remove("hidden");
       videoOn(peerFace4, peerIntroduce4);
     } else if (userCount.current === 5) {
       div6.current!.classList.remove("hidden");
@@ -733,7 +733,7 @@ const WebRTC = ({
         return { ...prev, peer5: username };
       });
       peerHeart5.current.setAttribute("value", username);
-      peerHeart5.current.style.display = "block";
+      peerHeart5.current.classList.remove("hidden");
       videoOn(peerFace5, peerIntroduce5);
     }
 
@@ -749,21 +749,21 @@ const WebRTC = ({
 
   // 유저들 프로파일 모달 띄우기
   const ShowUserProfile = async (event: React.MouseEvent<any>) => {
-  if (userCount.current >= 2) {
-    const username = event.currentTarget.id;
-    console.log("모달용 데이터 닉?", username);
-    const { data } = await axios({
-      url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
-      headers: {
-        accessToken: `${accessToken}`,
-      },
-    });
-    console.log("모달용 데이터?", data);
-    dispatch(changeNavAlarmReviewEmojiUserData(data));
-    dispatch(showRoomUserProfile());
-    // setUserProfileData(data);
-    // dispatch(isRtcLoading(false));
-     }
+    if (userCount.current >= 2) {
+      const username = event.currentTarget.id;
+      console.log("모달용 데이터 닉?", username);
+      const { data } = await axios({
+        url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+        headers: {
+          accessToken: `${accessToken}`,
+        },
+      });
+      console.log("모달용 데이터?", data);
+      dispatch(changeNavAlarmReviewEmojiUserData(data));
+      dispatch(showRoomUserProfile());
+      // setUserProfileData(data);
+      // dispatch(isRtcLoading(false));
+    }
   };
 
   // 하트 시그널 클릭
@@ -903,9 +903,9 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={myIntroduce} className="border-2 object-fill">
-                        {introduceInfo[peerUser.my]}
-                      </div>
+                    </div>
+                    <div ref={myIntroduce} className="border-2 object-fill">
+                      {introduceInfo[peerUser.my]}
                     </div>
                     <div ref={myHeart}>💖 x {heartInfo[peerUser.my]}</div>
                   </div>
@@ -922,13 +922,13 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce2}
-                        className="border-2 object-fill"
-                        style={{ display: "none" }}
-                      >
-                        {introduceInfo[peerUser.peer2]}
-                      </div>
+                    </div>
+                    <div
+                      ref={peerIntroduce2}
+                      className="border-2 object-fill"
+                      style={{ display: "none" }}
+                    >
+                      {introduceInfo[peerUser.peer2]}
                     </div>
                     <div
                       ref={peerHeart2}
@@ -951,13 +951,13 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce4}
-                        className="border-2 object-fill"
-                        style={{ display: "none" }}
-                      >
-                        {introduceInfo[peerUser.peer4]}
-                      </div>
+                    </div>
+                    <div
+                      ref={peerIntroduce4}
+                      className="border-2 object-fill"
+                      style={{ display: "none" }}
+                    >
+                      {introduceInfo[peerUser.peer4]}
                     </div>
                     <div
                       ref={peerHeart4}
@@ -1040,13 +1040,13 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce1}
-                        className="border-2 object-fill"
-                        style={{ display: "none" }}
-                      >
-                        {introduceInfo[peerUser.peer1]}
-                      </div>
+                    </div>
+                    <div
+                      ref={peerIntroduce1}
+                      className="border-2 object-fill"
+                      style={{ display: "none" }}
+                    >
+                      {introduceInfo[peerUser.peer1]}
                     </div>
                     <div
                       ref={peerHeart1}
@@ -1069,13 +1069,13 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce3}
-                        className="border-2 object-fill"
-                        style={{ display: "none" }}
-                      >
-                        {introduceInfo[peerUser.peer3]}
-                      </div>
+                    </div>
+                    <div
+                      ref={peerIntroduce3}
+                      className="border-2 object-fill"
+                      style={{ display: "none" }}
+                    >
+                      {introduceInfo[peerUser.peer3]}
                     </div>
                     <div
                       ref={peerHeart3}
@@ -1098,13 +1098,13 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce5}
-                        className="border-2 object-fill"
-                        style={{ display: "none" }}
-                      >
-                        {introduceInfo[peerUser.peer5]}
-                      </div>
+                    </div>
+                    <div
+                      ref={peerIntroduce5}
+                      className="border-2 object-fill"
+                      style={{ display: "none" }}
+                    >
+                      {introduceInfo[peerUser.peer5]}
                     </div>
                     <div
                       ref={peerHeart5}
