@@ -44,6 +44,7 @@ function WaitingRoom({
       });
       setPochaInfo(data.data);
 
+
       if (flag) {
         setIsLoading(false);
         socket.emit("wait", {
