@@ -51,12 +51,15 @@ function CallIntro({
 
   useEffect(()=>{
     // 타이틀 받아오기
-    socket.on("game_call_submit", (signalData: string, data: any) => {
-      console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]")
+    socket.on("game_call_submit", (data: any) => {
       setTimeout(() => {
-        console.log("play" + signalData);
-        setNowtitles(data);
+        console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]");
+        if(!nowtitles){
+          setNowtitles(data);
+        }
       }, 1000);
+      
+      console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]", nowtitles)
     });
     return () => {
       socket.off("game_call_submit");
@@ -65,9 +68,6 @@ function CallIntro({
   useEffect(() => {
     getPochaInfo();
     getPochaUsers();
-    if (pochaUsers){
-      setHostInfo();
-      setPeopleInfo();}
   },[]);
 
   useEffect(() => {
@@ -85,20 +85,10 @@ function CallIntro({
 
 
   useEffect(()=>{
-    if (mynum === isHost){
+    if ((mynum === isHost)&&(!nowtitles)){
       titlechoice();
     }
   },[titles])
-
-  useEffect(()=>{
-    if (mynum === isHost){
-      const SignalData = "TITLE"
-      const data = nowtitles;
-      socket.emit("game_call_submit", roomName, SignalData, data);
-      console.log("에밋으로 보낸당고 ㅇ닐ㅇㄴㅁ러ㅗㄴ아ㅣㅓㅗ리ㅏㅇ너모",data);
-    }
-  },[nowtitles])
-
 
 
   // 포차 유저 정보 요청
@@ -182,7 +172,8 @@ function CallIntro({
         nowtitle.push(titles[newnum]);
       }
     }
-    setNowtitles(nowtitle);
+    const data = nowtitle;
+    socket.emit("game_call_submit", roomName, data);
   }
 
   
