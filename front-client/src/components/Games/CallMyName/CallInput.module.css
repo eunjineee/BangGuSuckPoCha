@@ -61,6 +61,24 @@ input.txt {
   text-shadow: 0px 0px 30px #FF0000;
 }
 
+.box22 {
+  width: 652px;
+  height: 92px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-size: 60px;
+  line-height: 85px;
+  text-align: center;
+
+
+  color: #FFFFFF;
+
+  text-shadow: 0px 0px 30px #70FF00;
+  -webkit-text-stroke: 1px #007C2A;
+}
+
 .box3 {
 /* 손가락 접기 */
   /* position: absolute; */
@@ -172,7 +190,7 @@ input.txt {
 }
 
 .buttons {
-  border: solid 1px #fff;
+
   margin-top: 150px;
 }
 

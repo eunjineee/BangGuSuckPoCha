@@ -102,39 +102,35 @@ const PointHistory = () => {
       {/* 알림 클릭시 보이기 */}
       <NavbarAlarm />
       <div
-        className="grid grid-rows-4 w-screen h-screen font-nanum text-white bg-neutral-800"
-        style={{ gridTemplateRows: "11rem" }}
+        className="w-screen min-h-screen font-nanum text-white"
+        style={{ backgroundColor : "#1C1C1C" }}
       >
         <Navbar />
         {History ? (
           <>
-            <div className="h-full"></div>
-            <div className="flex flex-col h-full ">
-              <div className="flex flex-row h-[45%] ">
-                <div className="w-[30%] border-b-2 "></div>
-                <div className="w-[40%] pt-16 pl-12 pr-12 border-b-2">
+            <div className="flex flex-col h-fit" style={{ paddingTop : "11rem"}}>
+              <div className="flex flex-row border-b-2">
+                <div className="w-[50rem] mx-auto pt-16 pl-12 pr-12">
                   <div className="flex flex-col w-[18rem] h-[7rem]">
-                    <div className="h-[50%] text-justify text-4xl font-extrabold">
+                    <div className="h-[50%] text-justify text-3xl font-extrabold">
                       포인트
                     </div>
-                    <div className="h-[50%] text-justify text-[20px]">
+                    <div className="h-[50%] text-justify text-lg">
                       {MyInfo ? <>{MyInfo.nickname}님 환영합니다.</> : null}
                     </div>
                   </div>
-                  <div className="h-[2rem] text-2xl ">현재 포인트</div>
+                  <div className="h-[2rem] text-xl ">현재 포인트</div>
                   <div className="h-[4rem] text-5xl font-extrabold text-sky-500 ">
                     {MyInfo ? <>{MyInfo.point}p</> : null}
                   </div>
-                  <div className="h-[4rem] w-[13rem] text-justify pt-4 text-[25px] font-extrabold">
+                  <div className="h-[4rem] w-[13rem] text-justify pt-4 text-2xl font-extrabold">
                     포인트 내역
                   </div>
                 </div>
-                <div className="w-[30%] border-b-2"> </div>
               </div>
-              <div className="flex flex-row h-[55%] ">
-                <div className="w-[30%] "></div>
+              <div className="flex flex-row">
                 <div
-                  className={`flex flex-col-reverse  w-[40%] pt-3 max-h-[25rem] ${styles.hideScroll}`}
+                  className={`flex flex-col-reverse w-[50rem] mx-auto pt-3 max-h-[28rem] ${styles.hideScroll}`}
                   style={{ overflow: "auto" }}
                 >
                   {History ? (
@@ -179,7 +175,7 @@ const PointHistory = () => {
                     </>
                   ) : null}
                 </div>
-                <div className="w-[30%] "></div>
+
               </div>
             </div>
           </>
