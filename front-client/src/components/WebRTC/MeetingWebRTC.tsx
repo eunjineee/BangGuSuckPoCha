@@ -75,7 +75,7 @@ const WebRTC = ({
   const [userProfileData, setUserProfileData] = useState<any>(null);
 
   const [peerUser, setPeerUser] = useState<any>({
-    my: myUserName
+    my: myUserName,
   });
   // 자기소개 정보
   const [introduceInfo, setIntroduceInfo] = useState<any>({});
@@ -172,10 +172,15 @@ const WebRTC = ({
       });
       // setUserProfileData((prev: any) => data);
       if (username === myUserName) {
-        console.log("처음에 여기 들어오나??", "젠더정보@@@@@@@@@@@@", data.nickname, data.gender)
+        console.log(
+          "처음에 여기 들어오나??",
+          "젠더정보@@@@@@@@@@@@",
+          data.nickname,
+          data.gender
+        );
         setPeerUser((prev: any) => {
-          return {...prev, nick: data.nickname, gender: data.gender}
-        })
+          return { ...prev, nick: data.nickname, gender: data.gender };
+        });
       }
       console.log("정보요청 잘왔냐", data);
       return data;
@@ -215,12 +220,10 @@ const WebRTC = ({
   }
 
   // 카메라 뮤트
-  let muted = false;
+  const [muted, setMuted] = useState<boolean>(false);
   // 카메라 오프
-  let cameraOff = false;
+  const [cameraOff, setCameraOff] = useState<boolean>(false);
   // let userCount = 1;
-
-  
 
   // 최초실행
   useEffect(() => {
@@ -236,7 +239,6 @@ const WebRTC = ({
       return waitEnd.getTime();
     });
     //propSocket(socket);
-
   }, []);
 
   const getCameras = async () => {
@@ -314,12 +316,12 @@ const WebRTC = ({
     myStream.current
       .getAudioTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!muted) {
-      muteBtn.current!.innerText = "🔈";
-    } else {
-      muteBtn.current!.innerText = "🔊";
-    }
-    muted = !muted;
+    // if (!muted) {
+    //   muteBtn.current!.innerText = "🔈";
+    // } else {
+    //   muteBtn.current!.innerText = "🔊";
+    // }
+    setMuted((prev) => !prev);
   }
 
   // 카메라 끄는 함수
@@ -328,12 +330,12 @@ const WebRTC = ({
     myStream.current
       .getVideoTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!cameraOff) {
-      cameraBtn.current!.innerText = "Camera On";
-    } else {
-      cameraBtn.current!.innerText = "Camera Off";
-    }
-    cameraOff = !cameraOff;
+    // if (!cameraOff) {
+    //   cameraBtn.current!.innerText = "Camera On";
+    // } else {
+    //   cameraBtn.current!.innerText = "Camera Off";
+    // }
+    setCameraOff((prev) => !prev);
   }
 
   // 카메라 바꿀때 옵션 변경했으니 getMedia 다시실행해준다(이제는 특정카메라id도 담아서 실행)
@@ -708,7 +710,7 @@ const WebRTC = ({
     // 정보 요청해서 젠더 뽑아냄
     const { gender } = await getUserProfile(username);
     console.log("사람수ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ", userCount.current);
-    console.log(peerUser, "젠더정보좀 볼까?")
+    console.log(peerUser, "젠더정보좀 볼까?");
     setHeartInfo((hearts: any) => {
       hearts[username] = hearts[username] ? hearts[username] : 0;
       return { ...hearts };
@@ -985,7 +987,13 @@ const WebRTC = ({
                         ref={myIntroduce}
                         className="w-full h-full relative flex flex-col justify-center items-center"
                       >
-                        <div className={`text-xl absolute top-3 ${peerUser.gender === "M" ? 'text-sky-300' : ' text-pink-400'}`}>
+                        <div
+                          className={`text-xl absolute top-3 ${
+                            peerUser.gender === "M"
+                              ? "text-sky-300"
+                              : " text-pink-400"
+                          }`}
+                        >
                           {peerUser.nick}
                         </div>
                         <div className=" flex flex-wrap justify-center">
@@ -1019,7 +1027,13 @@ const WebRTC = ({
                         ref={peerIntroduce2}
                         className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
                       >
-                        <div className={peerUser.peer2gender === "M" ? `text-xl absolute top-3 text-sky-300` : `text-xl absolute top-3 text-pink-400`}>
+                        <div
+                          className={
+                            peerUser.peer2gender === "M"
+                              ? `text-xl absolute top-3 text-sky-300`
+                              : `text-xl absolute top-3 text-pink-400`
+                          }
+                        >
                           {peerUser.peer2nick}
                         </div>
                         <div className=" flex flex-wrap justify-center">
@@ -1059,7 +1073,13 @@ const WebRTC = ({
                         ref={peerIntroduce4}
                         className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
                       >
-                        <div className={peerUser.peer4gender === "M" ? `text-xl absolute top-3 text-sky-300` : `text-xl absolute top-3 text-pink-400`}>
+                        <div
+                          className={
+                            peerUser.peer4gender === "M"
+                              ? `text-xl absolute top-3 text-sky-300`
+                              : `text-xl absolute top-3 text-pink-400`
+                          }
+                        >
                           {peerUser.peer4nick}
                         </div>
                         {introduceInfo[peerUser.peer4] &&
@@ -1124,10 +1144,7 @@ const WebRTC = ({
                     : null}
                   {selectedId === "call"
                     ? pochaUsers && (
-                        <CallIntro
-                          socket={socket}
-                          pochaId={pochaId}
-                        />
+                        <CallIntro socket={socket} pochaId={pochaId} />
                       )
                     : null}
                   {selectedId === "twenty"
@@ -1156,7 +1173,13 @@ const WebRTC = ({
                         ref={peerIntroduce1}
                         className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
                       >
-                        <div className={peerUser.peer1gender === "M" ? `text-xl absolute top-3 text-sky-300` : `text-xl absolute top-3 text-pink-400`}>
+                        <div
+                          className={
+                            peerUser.peer1gender === "M"
+                              ? `text-xl absolute top-3 text-sky-300`
+                              : `text-xl absolute top-3 text-pink-400`
+                          }
+                        >
                           {peerUser.peer1nick}
                         </div>
                         <div className=" flex flex-wrap justify-center">
@@ -1196,7 +1219,13 @@ const WebRTC = ({
                         ref={peerIntroduce3}
                         className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
                       >
-                        <div className={peerUser.peer3gender === "M" ? `text-xl absolute top-3 text-sky-300` : `text-xl absolute top-3 text-pink-400`}>
+                        <div
+                          className={
+                            peerUser.peer3gender === "M"
+                              ? `text-xl absolute top-3 text-sky-300`
+                              : `text-xl absolute top-3 text-pink-400`
+                          }
+                        >
                           {peerUser.peer3nick}
                         </div>
                         <div className=" flex flex-wrap justify-center">
@@ -1236,7 +1265,13 @@ const WebRTC = ({
                         ref={peerIntroduce5}
                         className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
                       >
-                        <div className={peerUser.peer5gender === "M" ? `text-xl absolute top-3 text-sky-300` : `text-xl absolute top-3 text-pink-400`}>
+                        <div
+                          className={
+                            peerUser.peer5gender === "M"
+                              ? `text-xl absolute top-3 text-sky-300`
+                              : `text-xl absolute top-3 text-pink-400`
+                          }
+                        >
                           {peerUser.peer5nick}
                         </div>
                         <div className=" flex flex-wrap justify-center">
@@ -1265,28 +1300,54 @@ const WebRTC = ({
                 <div className="flex w-fit text-white">
                   {/* 뮤트 */}
                   <button
-                    className="border-2 px-3"
+                    className="p-3 w-16"
                     onClick={handleMuteClick}
                     ref={muteBtn}
                   >
-                    🔊
+                    {muted ? (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/offmic.png")}
+                        alt="offmic"
+                      />
+                    ) : (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/onmic.png")}
+                        alt="mic"
+                      />
+                    )}
                   </button>
                   {/* 카메라 */}
                   <button
-                    className="border-2 px-3"
+                    className="p-3 w-16"
                     onClick={handleCameraClick}
                     ref={cameraBtn}
                   >
-                    Camera Off
+                    {cameraOff ? (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/offcamera.png")}
+                        alt="offcamera"
+                      />
+                    ) : (
+                      <img
+                        className=""
+                        src={require("src/assets/roomIcon/oncamera.png")}
+                        alt="onmic"
+                      />
+                    )}
                   </button>
                   {/* 카메라 옵션 */}
-                  <select
-                    className="text-black"
-                    onInput={handleCameraChange}
-                    ref={cameraSelect}
-                  >
-                    {optionList}
-                  </select>
+                  <div className="h-6 pt-6 mx-5">
+                    <select
+                      className="text-black"
+                      onInput={handleCameraChange}
+                      ref={cameraSelect}
+                    >
+                      {optionList}
+                    </select>
+                  </div>
                 </div>
               </div>
             </>

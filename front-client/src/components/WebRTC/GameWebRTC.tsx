@@ -204,9 +204,9 @@ const WebRTC = ({
   }
 
   // 카메라 뮤트
-  let muted = false;
+  const [muted, setMuted] = useState<boolean>(false);
   // 카메라 오프
-  let cameraOff = false;
+  const [cameraOff, setCameraOff] = useState<boolean>(false);
   // let userCount = 1;
 
   // 최초실행
@@ -289,12 +289,12 @@ const WebRTC = ({
     myStream.current
       .getAudioTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!muted) {
-      muteBtn.current!.innerText = "🔈";
-    } else {
-      muteBtn.current!.innerText = "🔊";
-    }
-    muted = !muted;
+    // if (!muted) {
+    //   muteBtn.current!.innerText = "🔈";
+    // } else {
+    //   muteBtn.current!.innerText = "🔊";
+    // }
+    setMuted((prev) => !prev);
   }
 
   // 카메라 끄는 함수
@@ -303,12 +303,12 @@ const WebRTC = ({
     myStream.current
       .getVideoTracks()
       .forEach((track: any) => (track.enabled = !track.enabled));
-    if (!cameraOff) {
-      cameraBtn.current!.innerText = "Camera On";
-    } else {
-      cameraBtn.current!.innerText = "Camera Off";
-    }
-    cameraOff = !cameraOff;
+    // if (!cameraOff) {
+    //   cameraBtn.current!.innerText = "Camera On";
+    // } else {
+    //   cameraBtn.current!.innerText = "Camera Off";
+    // }
+    setCameraOff((prev) => !prev);
   }
 
   // 카메라 바꿀때 옵션 변경했으니 getMedia 다시실행해준다(이제는 특정카메라id도 담아서 실행)
@@ -958,12 +958,7 @@ const WebRTC = ({
                   )
                 : null}
               {selectedId === "call"
-                ? pochaUsers && (
-                    <CallIntro
-                      socket={socket}
-                      pochaId={pochaId}
-                    />
-                  )
+                ? pochaUsers && <CallIntro socket={socket} pochaId={pochaId} />
                 : null}
               {selectedId === "twenty"
                 ? pochaUsers && (
@@ -1016,28 +1011,54 @@ const WebRTC = ({
             <div className="flex w-fit text-white">
               {/* 뮤트 */}
               <button
-                className="border-2 px-3"
+                className="p-3 w-16"
                 onClick={handleMuteClick}
                 ref={muteBtn}
               >
-                🔊
+                {muted ? (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/offmic.png")}
+                    alt="offmic"
+                  />
+                ) : (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/onmic.png")}
+                    alt="mic"
+                  />
+                )}
               </button>
               {/* 카메라 */}
               <button
-                className="border-2 px-3"
+                className="p-3 w-16"
                 onClick={handleCameraClick}
                 ref={cameraBtn}
               >
-                Camera Off
+                {cameraOff ? (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/offcamera.png")}
+                    alt="offcamera"
+                  />
+                ) : (
+                  <img
+                    className=""
+                    src={require("src/assets/roomIcon/oncamera.png")}
+                    alt="onmic"
+                  />
+                )}
               </button>
               {/* 카메라 옵션 */}
-              <select
-                className="text-black"
-                onInput={handleCameraChange}
-                ref={cameraSelect}
-              >
-                {optionList}
-              </select>
+              <div className="h-6 pt-6 mx-5">
+                <select
+                  className="text-black"
+                  onInput={handleCameraChange}
+                  ref={cameraSelect}
+                >
+                  {optionList}
+                </select>
+              </div>
             </div>
           </div>
         </>
