@@ -61,6 +61,14 @@ function CallIntro({
 
   useEffect(() => {
     getPochaInfo();
+    socket.on("game_call_signal", (signalData: string, data: any) => {
+      console.log("끝나는 시그널?", signalData);
+      getPochaInfo();
+      setTimeout(() => {
+        setSignal(signalData);
+        setResultData(data);
+      }, 1000);
+    });
     getPochaUsers();
     if (pochaUsers){
       setHostInfo();
@@ -173,7 +181,7 @@ function CallIntro({
   },[nowtitles])
   
 
-  console.log("----------userlist--------",pochaUsers);
+  console.log("----------인트로에서 userlist--------",pochaUsers);
   console.log("----------mynum--------",mynum);
 
 
