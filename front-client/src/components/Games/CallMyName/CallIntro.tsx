@@ -62,6 +62,9 @@ function CallIntro({
   useEffect(() => {
     getPochaInfo();
     getPochaUsers();
+    if (pochaUsers){
+      setHostInfo();
+      setPeopleInfo();}
   },[]);
 
   useEffect(() => {
