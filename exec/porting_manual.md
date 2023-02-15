@@ -181,6 +181,14 @@ services:
         user: root
 ```
 ```bash
+# ssl 설정
+$ cd
+$ sudo mkdir certbot
+$ cd certbot
+$ sudo mkdir conf www logs
+$ sudo docker pull certbot/certbot
+$ sudo docker run -it --rm --name certbot -p 80:80 -v "/home/ubuntu/certbot/conf:/etc/letsencrypt" -v "/home/ubuntu/certbot/log:/var/log/letsencrypt" -v "/home/ubuntu/certbot/www:/var/www/certbot" certbot/certbot certonly
+
 # 컨테이너 생성
 $ sudo docker-compose up -d
 
@@ -191,12 +199,110 @@ $ sudo docker ps
 ```bash
 # 젠킨스 Administrator password 확인
 $ sudo docker logs jenkins
-```
+
 1. 서버 공인 IP:9090 => 젠킨스 접속
 2. 관리자 접속(위의 패스워드 사용)
 3. 기본 플러그인 자동 설치
 4. 젠킨스 계정 생성
 5. Jenkins 관리 -> 플러그인 관리 -> 설치 가능
-6. `gitlab 플러그인 설치` : GitLab, Generic Webhook Trigger, Gitlab API, GitLab Authentication
-7. `docker 플러그인 설치` : Docker, Docker Commons, Docker Pipeline, Docker API
-8. `SSH 플러그인 설치` : Publish OPver SSH
+6. gitlab 플러그인 설치 : GitLab, Generic Webhook Trigger, Gitlab API, GitLab Authentication
+7. docker 플러그인 설치 : Docker, Docker Commons, Docker Pipeline, Docker API
+8. SSH 플러그인 설치 : Publish OPver SSH
+```
+### 5. NGINX 설정
+```bash
+#######################################
+# Frontend, Backend Server Config
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  [공인 IP];
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+server{
+    listen 443 ssl;
+    listen [::]:443;
+
+    server_name [공인 IP];
+    
+    access_log  /var/log/nginx/access.log;
+    error_log  /var/log/nginx/error.log;
+
+    ssl_certificate /etc/letsencrypt/live/i8e201.p.ssafy.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/i8e201.p.ssafy.io/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 SSLv3;
+    ssl_ciphers ALL;
+
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+	location /api {
+        proxy_pass http://[공인 IP]:9999;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+#######################################
+
+#######################################
+# Socket(RTC) Server Config
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  [공인 IP];
+
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server{
+    listen 443 ssl;
+    listen [::]:443;
+
+    server_name [공인 IP];
+    
+    access_log  /var/log/nginx/access.log;
+    error_log  /var/log/nginx/error.log;
+
+    ssl_certificate /etc/letsencrypt/live/pocha.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/pocha.online/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 SSLv3;
+    ssl_ciphers ALL;
+
+    location / {
+        proxy_pass http://[공인 IP]:4000;
+        
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+#######################################
+```
