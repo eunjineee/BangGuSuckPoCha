@@ -43,6 +43,7 @@ function WaitingRoom({
         },
       });
       setPochaInfo(data.data);
+      console.log("getPochaInfo-----------------", flag);
 
       if (flag) {
         setIsLoading(false);
