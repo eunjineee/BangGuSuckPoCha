@@ -187,18 +187,18 @@ const WebRTC = ({
       //토큰 정상이야
       else {
         //실행 결과값 그대로 실행
-        const lastIndex = r.data.length - 1;
-        console.log("참여 유저들 데이터?", r.data);
+        const lastIndex = r.data.data.length - 1;
+        console.log("참여 유저들 데이터?", r.data.data);
         // 방장 여부 체크
-        r.data.forEach((user: any) => {
+        r.data.data.forEach((user: any) => {
           if (user.username === myUserName) {
             setIsHost(user.isHost);
             propIsHost(user.isHost);
           }
         });
-        setPochaUsers(r.data);
+        setPochaUsers(r.data.data);
         dispatch(isRtcLoading(false));
-        handleWelcomeSubmit(r.data[lastIndex]);
+        handleWelcomeSubmit(r.data.data[lastIndex]);
       }
     });
   }
