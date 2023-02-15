@@ -35,72 +35,94 @@ function WaitingRoom({
     setIntroduce(event.target.value);
   };
 
+  // const getPochaInfo = async (flag: boolean) => {
+  //   try {
+  //     await axios({
+  //       url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+  //       headers: {
+  //         accessToken: `${accessToken}`,
+  //       },
+  //     }).then((r)=> {
+  //       // 토큰 갱신 필요
+  //       if (r.data.status === '401') {
+  //         axios({
+  //           method: 'get',
+  //           url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+  //           headers: {
+  //             refreshToken: `${refreshToken}`,
+  //           }
+  //         }).then((r)=> {
+  //           // 돌려보내기
+  //           if (r.data.status === '401') {
+  //             localStorage.clear();
+  //             toast.error('인증되지 않은 유저입니다')
+  //             navigate('/')
+  //           } else {
+  //             // 엑세스 토큰 추가
+  //             localStorage.setItem("accessToken", r.data.accessToken);
+  //             // 재요청
+  //             axios({
+  //               url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+  //               headers: {
+  //                 accessToken: `${r.data.accessToken}`,
+  //               },
+  //             }).then((r)=> {
+  //               setPochaInfo(r.data);
+  //               if (flag) {
+  //                 setIsLoading(false);
+  //                 socket.emit("wait", {
+  //                   roomName: pochaId,
+  //                   username: myInfo.username,
+  //                   nickname: myInfo.nickname,
+  //                   limit: r.data.limitUser,
+  //                 });
+  //               }
+  //               // console.log(r);
+  //             })
+  //           }
+  //         })
+  //       } else {
+  //         setPochaInfo(r.data);
+
+  //         if (flag) {
+  //           setIsLoading(false);
+  //           socket.emit("wait", {
+  //             roomName: pochaId,
+  //             username: myInfo.username,
+  //             nickname: myInfo.nickname,
+  //             limit: r.data.limitUser,
+  //           });
+  //         }
+  //         // console.log(r); 
+  //         //test
+  //       }
+  //     })
+  //   } catch (error) {
+  //     console.log("포차 정보 받아오기", error);
+  //   }
+  // };
   const getPochaInfo = async (flag: boolean) => {
     try {
-      await axios({
+      const { data } = await axios({
         url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
-        headers: {
-          accessToken: `${accessToken}`,
-        },
-      }).then((r)=> {
-        // 토큰 갱신 필요
-        if (r.data.status === '401') {
-          axios({
-            method: 'get',
-            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
-            headers: {
-              refreshToken: `${refreshToken}`,
-            }
-          }).then((r)=> {
-            // 돌려보내기
-            if (r.data.status === '401') {
-              localStorage.clear();
-              toast.error('인증되지 않은 유저입니다')
-              navigate('/')
-            } else {
-              // 엑세스 토큰 추가
-              localStorage.setItem("accessToken", r.data.accessToken);
-              // 재요청
-              axios({
-                url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
-                headers: {
-                  accessToken: `${r.data.accessToken}`,
-                },
-              }).then((r)=> {
-                setPochaInfo(r.data);
-                if (flag) {
-                  setIsLoading(false);
-                  socket.emit("wait", {
-                    roomName: pochaId,
-                    username: myInfo.username,
-                    nickname: myInfo.nickname,
-                    limit: r.data.limitUser,
-                  });
-                }
-                // console.log(r);
-              })
-            }
-          })
-        } else {
-          setPochaInfo(r.data);
+      });
+      setPochaInfo(data.data);
 
-          if (flag) {
-            setIsLoading(false);
-            socket.emit("wait", {
-              roomName: pochaId,
-              username: myInfo.username,
-              nickname: myInfo.nickname,
-              limit: r.data.limitUser,
-            });
-          }
-          // console.log(r); 
-          //test
-        }
-      })
+      if (flag) {
+        setIsLoading(false);
+        socket.emit("wait", {
+          roomName: pochaId,
+          username: myInfo.username,
+          nickname: myInfo.nickname,
+          limit: data.data.limitUser,
+        });
+      }
+      console.log(data);
     } catch (error) {
       console.log("포차 정보 받아오기", error);
     }
   };
+
 
   // 자기소개 추가
   const addMyIntroduce = async (e: any) => {
