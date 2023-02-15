@@ -1,22 +1,22 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./CallInput.module.css";
 
 function CallInput({
   socket,
   pochaId,
   pochaUsers,
+  nowtitles,
+  pochaInfo,
 }: {
   socket: any;
   pochaId: string;
   pochaUsers: any;
+  nowtitles: any;
+  pochaInfo: any;
 }): React.ReactElement {
   const roomName = pochaId;
-  
-  const [titles, setTitles] = useState<any>(null)
-  
-  const [nowtitle, setNowtitle] = useState<any>(null)
- 
+  const { totalCount } = pochaInfo;
   const [mynum, setMyNum] = useState<any>(null) // 내번호
 
   const myName = localStorage.getItem("Username");    // 내 이름
@@ -24,7 +24,23 @@ function CallInput({
   const [peopleName, setPeopleName] = useState<string[]>([]);
 
   const [answer, setAnswer] = useState<any>(null);
-
+  // pass
+  
+  const [peopleScore, setPeopleScore] = useState<number[]>([1, 1, 1, 1, 1, 1]);
+  const title0 = useRef<any>(null);
+  const title1 = useRef<any>(null);
+  const title2 = useRef<any>(null);
+  const title3 = useRef<any>(null);
+  const title4 = useRef<any>(null);
+  const title5 = useRef<any>(null);
+  const [txtSpanList, setTxtSpanList] = useState<any[]>([
+    title0,
+    title1,
+    title2,
+    title3,
+    title4,
+    title5,
+  ]);
   const onClickClose = () => {
     const signalData = "RESULT";
     // 다음 페이지로 이동
@@ -35,36 +51,12 @@ function CallInput({
   const setPeopleInfo = () => {
     console.log(pochaUsers, "유저들 리스트");
     pochaUsers.forEach((user: any, index: number) => {
-      // setPeopleScore();
-      // setTxtSpanList((prev) => prev = [txtSpan0, txtSpan1, txtSpan2, txtSpan3, txtSpan4, txtSpan5]);
       setPeopleName((prev) => [...prev, user.nickname]);
       if (user.username === myName) {
         setMyNum(index);
       }
     });
   };
-
-  // 양세찬 게임 주제 받아오기
-  const getLiarSubject = async() => {
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-      });
-      setTitles(data);
-    } catch (error) {
-      console.log("양세찬 게임 주제 axios error", error);
-    }
-  }
-  
-  // 이번 턴 주제
-  const maintitle = () => {
-    if (titles){
-      const titleone = Math.floor(Math.random()*(titles.length-1));
-      setNowtitle(titles[titleone]);
-    }
-  }
 
   // 내가 몇번째인지
   const setMyInfo = () => {
@@ -77,59 +69,111 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    if (answer === titles[mynum]){
-      // 통과()
+    console.log("----------------제출시작------", answer);
+    console.log("----------------제출시작------", nowtitles[mynum]?.word);
+    if (answer === nowtitles[mynum]?.word){
+      console.log("----------------------");
+      socket.emit("game_call_pass", roomName, mynum);
     }
   }
-
-  // function 통과(){
-  //   소켓에 신호주기 (소켓에서 신호 5개 받으면끝)
-  // }
-
   useEffect(()=> {
-    getLiarSubject(); //라이어 주제 받아오기
     setPeopleInfo();  // 방참가인원 정보
-    setMyInfo();
+    gamestart();
   },[])
 
   useEffect(()=> {
-    maintitle();
-  },[titles])
+    setMyInfo();
+    // 접을때 주고 받는 함수
+    socket.on("game_call_pass", (myNum: number) => {
+      console.log("새로운배열 갱신되고있냐?", peopleScore);
+      const newArray = peopleScore.map((score, index) => {
+        if ((index === myNum)&&(score === 1)) {
+          return score - 1;
+        }
+        return score;
+      });
+      console.log("새로운배열?", newArray);
+      setPeopleScore((prev) => [...newArray]);
+      finish();
+    });
+
+    return () => {
+      socket.off("game_call_pass");
+    };
+  }, [peopleScore]);
+
+
+  //게임 끝인지 확인 
+  function finish() {
+    const resultList: string[] = [];
+    const result: string[] = [];
+    // console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    peopleScore.forEach((score, index) => {
+      // console.log("s여기@@@@@@@@@@@@", score, index);
+      if (score === 0) {
+        resultList.push(peopleName[index]);
+        console.log("여기오냐?", peopleScore);
+      }else if((score === 1) && (peopleName[index]!== null)){
+        result.push(peopleName[index])
+      }
+    });
+    // console.log("여기오냐 결과가기전? 이건 result", result);
+    if (resultList.length === totalCount-1) {
+      // console.log("여기오냐 결과가기전?", peopleScore);
+      const signalData = "RESULT";
+      const data = result;
+      socket.emit("game_call_signal", roomName, signalData, data);
+    }
+  }
+
+  //박스만들기(인원수 넘어가는 박스은 가리기)
+  function gamestart() {
+    for (var i = 0; i < 6; i++) {
+      if (i >= totalCount) {
+        // console.log(txtSpanList[i].current);
+        txtSpanList[i].current.classList.add("hidden");
+      }
+      if(i === mynum){
+        txtSpanList[i].current.classList.add("hidden");
+      }
+    }
+  }
+
 
   return (
   <div className={`${styles.layout3}`}>
     <div className={`${styles.box} ${styles.layout}`}>
       <div className={`${styles.box2} ${styles.layout2}`}>CALL MY NAME</div>
       <div className={`${styles.buttons}`} id="bigbox">
-        <div className={`${styles.layout4}`} id = "title0">
+        <div className={`${styles.layout4} flex`} id = "title0" ref={title0}>
           <div className={`${styles.text1}`} id = "people0">{peopleName[0]}</div>
-          <div className={`${styles.text2}`} id = "ptitle0">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass0"></div>
+          <div className={`${styles.text2}`} id = "ptitle0">{nowtitles[0]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass0">{peopleScore[0]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title1">
+        <div className={`${styles.layout4} flex`} id = "title1" ref={title1}>
           <div className={`${styles.text1}`} id = "people1">{peopleName[1]}</div>
-          <div className={`${styles.text2}`} id = "ptitle1">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass1"></div>
+          <div className={`${styles.text2}`} id = "ptitle1">{nowtitles[1]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass1">{peopleScore[1]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title2">
+        <div className={`${styles.layout4} flex`} id = "title2" ref={title2}>
           <div className={`${styles.text1}`} id = "people2">{peopleName[2]}</div>
-          <div className={`${styles.text2}`} id = "ptitle2">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass2"></div>
+          <div className={`${styles.text2}`} id = "ptitle2">{nowtitles[2]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass2">{peopleScore[2]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title3">
+        <div className={`${styles.layout4} flex`} id = "title3" ref={title3}>
           <div className={`${styles.text1}`} id = "people3">{peopleName[3]}</div>
-          <div className={`${styles.text2}`} id = "ptitle3">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass3"></div>
+          <div className={`${styles.text2}`} id = "ptitle3">{nowtitles[3]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass3">{peopleScore[3]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title4">
+        <div className={`${styles.layout4} flex`} id = "title4" ref={title4}>
           <div className={`${styles.text1}`} id = "people4">{peopleName[4]}</div>
-          <div className={`${styles.text2}`} id = "ptitle4">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass4"></div>
+          <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[4]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass4">{peopleScore[4]? null : "통과"}</div>
         </div>
-        <div className={`${styles.layout4}`} id = "title5">
-          <div className={`${styles.text1}`} id = "people5">{peopleName[5]}</div>
-          <div className={`${styles.text2}`} id = "ptitle5">Titles[i]</div>
-          <div className={`${styles.text3}`} id = "pass5"></div>
+        <div className={`${styles.layout4} flex`} id = "title4" ref={title5}>
+          <div className={`${styles.text1}`} id = "people4">{peopleName[5]}</div>
+          <div className={`${styles.text2}`} id = "ptitle4">{nowtitles[5]?.word}</div>
+          <div className={`${styles.text3}`} id = "pass4">{peopleScore[5]? null : "통과"}</div>
         </div>
       </div>
       <div className={`${styles.layout6}`}>
@@ -139,8 +183,13 @@ function CallInput({
           type="text" 
           onChange={(e) => {setAnswer(e.target.value)}}
         />
-          <div className="flex justify-center mr-1 ">
-            <div className={`${styles.button}`} onClick={inputAnswer}>START</div>
+        <div className={`${styles.layout6}`}>
+          <input 
+            type="button" 
+            onClick={inputAnswer} 
+            className={`${styles.retry}`} 
+            value="제출" 
+          />
         </div>
       </div>
     </div>

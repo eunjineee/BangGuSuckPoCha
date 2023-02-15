@@ -24,7 +24,7 @@ const UpdateRoomInfo = ({
   socket: any;
 }): React.ReactElement => {
   const dispatch = useAppDispatch();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 로딩중
   const [isLoading, setIsLoading] = useState<boolean>(true);

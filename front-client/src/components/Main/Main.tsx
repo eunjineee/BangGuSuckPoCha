@@ -58,7 +58,7 @@ function Main(): JSX.Element {
             console.log('Tag의 57번줄: ', r.data.status);
             
               // 돌려보내기
-            if (r.data.status === '403') {
+            if (r.data.status === '401') {
               localStorage.clear();
               toast.error('인증되지 않은 유저입니다')
               navigate('/')
@@ -126,31 +126,6 @@ function Main(): JSX.Element {
             };
           });
         }
-
-        localStorage.setItem("userId", r.data.data.userId);
-        console.log("나의 데이터", r.data.data);
-        const now: any = new Date();
-        const myData: any = r.data.data;
-        const birth: string[] = myData.birth.split(".");
-        let age: number;
-        if (Number(birth[1]) > now.getMonth()) {
-          age =
-            Math.floor((now.getFullYear() - Number(birth[0]) - 1) / 10) * 10;
-        } else {
-          age = Math.floor((now.getFullYear() - Number(birth[0])) / 10) * 10;
-        }
-        // console.log('내 나이는?',age)
-        localStorage.setItem("age", `${age}`);
-        localStorage.setItem("region", `${myData.region}`);
-        localStorage.setItem("gender", `${myData.gender}`);
-        setMyState((preState: any) => {
-          return {
-            ...preState,
-            age: age,
-            region: myData.region,
-            gender: myData.gender,
-          };
-        });
       });
   }, []);
 
@@ -411,7 +386,7 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
               }
             }).then((r)=> {
                 // 돌려보내기
-                if (r.data.status === '403') {
+                if (r.data.status === '401') {
                   localStorage.clear();
                   toast.error('인증되지 않은 유저입니다')
                   navigate('/')
@@ -474,7 +449,7 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
                 console.log('Tag의 57번줄: ', r.data.status);
                 
                   // 돌려보내기
-                if (r.data.status === '403') {
+                if (r.data.status === '401') {
                   localStorage.clear();
                   toast.error('인증되지 않은 유저입니다')
                   navigate('/')
@@ -539,7 +514,7 @@ function Room({ mainCreateRoomList, myState }: any): JSX.Element {
               console.log('Tag의 57번줄: ', r.data.status);
               
                 // 돌려보내기
-              if (r.data.status === '403') {
+              if (r.data.status === '401') {
                 localStorage.clear();
                 toast.error('인증되지 않은 유저입니다')
                 navigate('/')

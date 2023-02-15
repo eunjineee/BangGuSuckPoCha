@@ -17,7 +17,7 @@ import FriendSearch from "./FriendSearch";
 
 function FriendList(): JSX.Element {
 
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 친구 검색
   const [searchFriend,setSearchFriend] = useState<any>()

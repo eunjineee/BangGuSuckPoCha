@@ -16,7 +16,7 @@ function NavbarMenu(): JSX.Element {
   let dispatch = useAppDispatch();
   // username (현재는 내꺼)
   const username = localStorage.getItem("Username");
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const menuIcon = useRef<any>(null);
   // 메뉴 클릭 상태

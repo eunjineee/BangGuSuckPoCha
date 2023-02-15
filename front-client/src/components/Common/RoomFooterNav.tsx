@@ -24,7 +24,7 @@ function RoomFooterNav({
   isHost: boolean;
 }): JSX.Element {
   const dispatch = useAppDispatch();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const myName = localStorage.getItem("Username");
@@ -178,8 +178,13 @@ function RoomFooterNav({
       dispatch(showPublicModal(true));
       return;
     }
-    let input = prompt("Ssul을 입력하세요!", "새로운 타이틀!");
+    let input = prompt("Ssul을 입력하세요!", "썰을 등록해주세요");
     if (input == null) return;
+    if (input.length > 20) {
+      alert("썰 제한은 20글자 입니다");
+      handleSsulClick();
+      return
+    }
     try {
       await axios({
         method: "PUT",

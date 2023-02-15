@@ -18,7 +18,7 @@ const PublicModal = ({
   console.log("여기까지는 오니??ㅇㅇ", data);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 내 아이디
   const myName = localStorage.getItem("Username");
