@@ -10,6 +10,7 @@ import {
   changeMenuState,
   changeMyInfo,
 } from "../../store/store";
+import "./Common.css"
 
 function NavbarMenu(): JSX.Element {
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ function NavbarMenu(): JSX.Element {
             className="bg-white bg-cover rounded-full"
             style={{ height: "90%", border: "solid 1px white" }}
           />
-          <p className="text-stone-200 text-xs">My</p>
+          <p className="hoverTextColor text-stone-200 text-xs">My</p>
         </div>
         {/* 친구 */}
         <div
@@ -211,7 +212,7 @@ function NavbarMenu(): JSX.Element {
             className="bg-white bg-cover rounded-full"
             style={{ height: "90%" }}
           />
-          <p className="text-stone-200 text-xs">friend</p>
+          <p className="hoverTextColor text-stone-200 text-xs">friend</p>
         </div>
         <div
           className="mr-5 cursor-pointer"
@@ -275,7 +276,7 @@ function NavbarMenu(): JSX.Element {
             className="bg-white bg-cover rounded-full"
             style={{ height: "90%" }}
           />
-          <p className="text-stone-200 text-xs">logout</p>
+          <p className="hoverTextColor text-stone-200 text-xs">logout</p>
         </div>
       </div>
     </div>

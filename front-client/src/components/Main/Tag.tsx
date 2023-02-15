@@ -8,7 +8,7 @@ import {
   changeMainCreateRoomList,
 } from "../../store/store";
 import styles from './Tag.module.css'
-
+import "../Common/Common.css"
 function Tag(): JSX.Element {
 
   const dispatch = useAppDispatch()
@@ -469,7 +469,7 @@ function Tag(): JSX.Element {
           <div className="flex justify-center items-center font-normal ml-2 "> &nbsp;&nbsp;&nbsp;&nbsp;</div>
           {/* All */}
           <div className={`flex justify-center items-center font-normal rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn}`}>
-            <select className={`flex text-center justify-center items-center font-bold text-lg border-0 rounded-full ml-auto h-[2rem] w-full cursor-pointer  ${styles.tagSelect}`} onClick={()=> {
+            <select className={`hoverTextColor flex text-center justify-center items-center font-bold text-lg border-0 rounded-full ml-auto h-[2rem] w-full cursor-pointer  ${styles.tagSelect}`} onClick={()=> {
                 setFilter((preState:any)=> {
                   return {...preState, isAll:true, age:'연령',region:'지역',theme:'테마',sul:'술',hobby:'태그', speedEnter: false}
                 })
@@ -480,7 +480,7 @@ function Tag(): JSX.Element {
           </div>
           {/* 연령 */}
           <div className={`flex justify-center items-center font-normal rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn} `}>
-            <select ref={ageRef} className={`flex justify-center font-bold text-lg items-center w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id="" onChange={(e)=> {
+            <select ref={ageRef} className={`hoverTextColor flex justify-center font-bold text-lg items-center w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id="" onChange={(e)=> {
               setFilter((preState:any)=> {
                 return {...preState, isAll:false, age: e.target.value}
               } )
@@ -492,7 +492,7 @@ function Tag(): JSX.Element {
           </div>
           {/* 지역 */}
           <div className={`flex justify-center items-center font-normal border-2 rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn}`}>
-            <select ref={regionRef} className={`flex justify-center font-bold text-lg items-center  w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id="" onChange={(e)=> {
+            <select ref={regionRef} className={`hoverTextColor flex justify-center font-bold text-lg items-center  w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id="" onChange={(e)=> {
               setFilter((preState:any)=> {
                 return {...preState, isAll:false ,region: e.target.value}
               } )
@@ -504,7 +504,7 @@ function Tag(): JSX.Element {
           </div>
           {/* 테마 */}
           <div className={`flex justify-center items-center font-normal border-2 rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn}`}>
-            <select ref={themeRef} className={`flex justify-center font-bold text-lg items-center w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id=""  onChange={(e)=> {
+            <select ref={themeRef} className={`hoverTextColor flex justify-center font-bold text-lg items-center w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id=""  onChange={(e)=> {
               setFilter((preState:any)=> {
                 return {...preState, isAll:false ,theme: e.target.value}
               } )
@@ -517,7 +517,7 @@ function Tag(): JSX.Element {
           </div>
           {/* 술 종류 */}
           <div className={`flex justify-center items-center font-normal border-2 rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn}`}>
-            <select ref={sulRef} className={`flex justify-center items-center font-bold text-lg w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id=""  onChange={(e)=> {
+            <select ref={sulRef} className={`hoverTextColor flex justify-center items-center font-bold text-lg w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id=""  onChange={(e)=> {
               setFilter((preState:any)=> {
                 return {...preState, isAll:false ,sul: e.target.value}
               } )
@@ -531,7 +531,7 @@ function Tag(): JSX.Element {
             </select>
           </div>
           <div className={`flex justify-center items-center font-normal border-2 rounded-full ml-auto w-[85%] h-[2rem] ${styles.tagBtn}`}>
-            <select ref={hobbyRef} className={`flex justify-center items-center font-bold text-lg  w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id=""  onChange={(e)=> {
+            <select ref={hobbyRef} className={`hoverTextColor flex justify-center items-center font-bold text-lg  w-full rounded-full h-full cursor-pointer ${styles.tagSelect}`} name="" id=""  onChange={(e)=> {
               setFilter((preState:any)=> {
                 return {...preState, isAll:false ,hobby: e.target.value}
               } )

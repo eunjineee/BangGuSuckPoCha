@@ -1,5 +1,5 @@
 import Loading from "../Common/Loading";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./GameRoom.module.css";
@@ -10,7 +10,8 @@ import FriendSearch from "../Common/FriendSearch";
 import { useAppSelector } from "src/store/hooks";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 import RoomUserProfile from "../Common/RoomUserProfile";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function GameRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
   let accessToken = localStorage.getItem("accessToken");
@@ -23,8 +24,10 @@ function GameRoom(): JSX.Element {
   const [pochaInfo, setPochaInfo] = useState<any>(null);
   // 방장 여부
   const [isHost, setIsHost] = useState<boolean>(false);
-// 친구 요청 검색 모달
-  const friendSearchState = useAppSelector((state)=> {return  state.friendSearchState})
+  // 친구 요청 검색 모달
+  const friendSearchState = useAppSelector((state) => {
+    return state.friendSearchState;
+  });
   const propSocket = (socket: any) => {
     setSocket(socket);
   };
@@ -35,6 +38,20 @@ function GameRoom(): JSX.Element {
     return state.RoomUserProfileClickCheck;
   });
 
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      src="/RoomBGM/Game.mp3"
+      loop
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.2}
+      // other props here
+    />
+  );
+
   const propIsHost = (isHost: boolean) => {
     setIsHost(isHost);
   };
@@ -42,36 +59,122 @@ function GameRoom(): JSX.Element {
   console.log("pochaInfo", pochaInfo);
 
   const getPochaInfo = async () => {
-    try {
-      const { data } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/${Number(PochaId)}`,
-        headers: {
-          accessToken: `${accessToken}`,
-        },
-      });
-      setPochaInfo(data.data);
-      switch (data.data.themeId) {
-        case "T0B0":
-          navigate(`/storyroom/${PochaId}`);
-          // toast.success("포차 설정이 변경되었습니다");
-          break;
-        case "T0B1":
-          navigate(`/storyroom/${PochaId}`);
-          // toast.success("포차 설정이 변경되었습니다");
-          break;
-        case "T0B2":
-          navigate(`/storyroom/${PochaId}`);
-          // toast.success("포차 설정이 변경되었습니다");
-          break;
-        case "T1B0":
-          navigate(`/gameroom/${PochaId}`);
-          break;
+    // try {
+    //   const { data } = await axios({
+    //     url: `https://i8e201.p.ssafy.io/api/pocha/${Number(PochaId)}`,
+    //     headers: {
+    //       accessToken: `${accessToken}`,
+    //     },
+    //   });
+    //   setPochaInfo(data.data);
+    //   switch (data.data.themeId) {
+    //     case "T0B0":
+    //       navigate(`/storyroom/${PochaId}`);
+    //       // toast.success("포차 설정이 변경되었습니다");
+    //       break;
+    //     case "T0B1":
+    //       navigate(`/storyroom/${PochaId}`);
+    //       // toast.success("포차 설정이 변경되었습니다");
+    //       break;
+    //     case "T0B2":
+    //       navigate(`/storyroom/${PochaId}`);
+    //       // toast.success("포차 설정이 변경되었습니다");
+    //       break;
+    //     case "T1B0":
+    //       navigate(`/gameroom/${PochaId}`);
+    //       break;
+    //   }
+    //   setIsLoading(false);
+
+    // } catch (error) {
+    //   console.log("포차 정보 받아오기", error);
+    // }
+    axios({
+      method: "GET",
+      url: `https://i8e201.p.ssafy.io/api/pocha/${Number(PochaId)}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "GET",
+              url: `https://i8e201.p.ssafy.io/api/pocha/${Number(PochaId)}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              setPochaInfo(r.data.data);
+              switch (r.data.data.themeId) {
+                case "T0B0":
+                  navigate(`/storyroom/${PochaId}`);
+                  // toast.success("포차 설정이 변경되었습니다");
+                  break;
+                case "T0B1":
+                  navigate(`/storyroom/${PochaId}`);
+                  // toast.success("포차 설정이 변경되었습니다");
+                  break;
+                case "T0B2":
+                  navigate(`/storyroom/${PochaId}`);
+                  // toast.success("포차 설정이 변경되었습니다");
+                  break;
+                case "T1B0":
+                  navigate(`/gameroom/${PochaId}`);
+                  break;
+              }
+              setIsLoading(false);
+            });
+          }
+        });
       }
-      setIsLoading(false);
-      
-    } catch (error) {
-      console.log("포차 정보 받아오기", error);
-    }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        setPochaInfo(r.data.data);
+        switch (r.data.data.themeId) {
+          case "T0B0":
+            navigate(`/storyroom/${PochaId}`);
+            // toast.success("포차 설정이 변경되었습니다");
+            break;
+          case "T0B1":
+            navigate(`/storyroom/${PochaId}`);
+            // toast.success("포차 설정이 변경되었습니다");
+            break;
+          case "T0B2":
+            navigate(`/storyroom/${PochaId}`);
+            // toast.success("포차 설정이 변경되었습니다");
+            break;
+          case "T1B0":
+            navigate(`/gameroom/${PochaId}`);
+            break;
+        }
+        setIsLoading(false);
+      }
+    });
   };
 
   useEffect(() => {
@@ -80,15 +183,16 @@ function GameRoom(): JSX.Element {
 
   return (
     <>
+    {
+      <Player />
+    }
       {isLoading ? (
         <Loading />
       ) : (
         <div
           className={`w-screen min-h-screen ${styles.gameroomimg} bg-cover bg-no-repeat bg-center bg-scroll`}
         >
-          {
-            friendSearchState? <FriendSearch/>:null
-          }
+          {friendSearchState ? <FriendSearch /> : null}
           {RoomUserProfileClickCheck ? (
             <RoomUserProfile userData={navAlarmReviewEmojiUserData} pochaId={String(PochaId)} isHost={isHost} socket={socket}/>
           ) : null}

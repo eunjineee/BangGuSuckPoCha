@@ -50,21 +50,6 @@ function SonPlay({
   ]);
   const turnDiv = useRef<HTMLDivElement>(null);
 
-  // 이미지들 가져옴
-  // const img0 = useRef<any>(null);
-  // const img1 = useRef<any>(null);
-  // const img2 = useRef<any>(null);
-  // const img3 = useRef<any>(null);
-  // const img4 = useRef<any>(null);
-  // const img5 = useRef<any>(null);
-  // const [imgList, setImgList] = useState<any[]>([
-  //   img0,
-  //   img1,
-  //   img2,
-  //   img3,
-  //   img4,
-  //   img5,
-  // ]);
 
   const setPeopleInfo = () => {
     console.log(pochaUsers, "유저들 리스트");
@@ -77,25 +62,12 @@ function SonPlay({
       }
     });
   };
-  // 턴 넘어오면 실행하는 함수
-  // const nextTurn = (turn: number) => {
-  //   // 현재 전달받은 값으로 턴 세팅하고
-  //   setCurrentTurn(turn);
-  //   // 우선 세팅전에 턴값을 줘서
-  //   const nowTurn = turn;
-  //   // 현재턴이 내 이름과 같으면 내턴으로 세팅함
-  //   if (nowTurn === myNum) {
-  //     setMyTurn(true);
-  //     return;
-  //   }
-  // };
 
   // 최초 실행
   useEffect(() => {
 
     // 접을때 주고 받는 함수
     socket.on("game_son_fold", (myNum: number) => {
-      finish();
       console.log("새로운배열 갱신되고있냐?", peopleScore);
       const newArray = peopleScore.map((score, index) => {
         if (index === myNum) {
@@ -105,6 +77,7 @@ function SonPlay({
       });
       console.log("새로운배열?", newArray);
       setPeopleScore((prev) => [...newArray]);
+      finish(myNum);
       // console.log("새로운배열zzzzzzzz?", peopleScore);
     });
 
@@ -169,12 +142,12 @@ function SonPlay({
   // }
 
   //게임 끝인지 확인 > 주먹이냐?? 오키 그럼 넘겨
-  function finish() {
+  function finish(userindex: any) {
     const resultList: string[] = [];
     console.log("자 여기 결과가기전", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
       console.log("s여기@@@@@@@@@@@@", score, index);
-      if (score === 1) {
+      if (score === 1 && index === userindex) {
         resultList.push(peopleName[index]);
         console.log("여기오냐?", peopleScore);
       }

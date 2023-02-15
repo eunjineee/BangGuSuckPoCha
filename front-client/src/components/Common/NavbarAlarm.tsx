@@ -5,7 +5,8 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { changeMenuState, changeAlarmClickState, changeAlarmApiDataState } from "../../store/store";
 import AlarmRequest from "./AlarmRequest";
-
+import "./NavbarAlarm.css"
+import "./Common.css"
 function NavbarAlarm(): JSX.Element {
 
   let dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ function NavbarAlarm(): JSX.Element {
   const username = localStorage.getItem('Username')
 
   const alarmIcon = useRef<any>(null);
+  const resetIcon = useRef<any>(null);
   // 알람 클릭 상태
   const alarmClickCheck: any = useAppSelector((state: any) => {
     return state.alarmClickCheck;
@@ -39,16 +41,26 @@ function NavbarAlarm(): JSX.Element {
     } 
   }, [alarmClickCheck])
   
+
+  function handleReset() {
+    resetIcon.current.classList.add('reset_cycle')
+    setTimeout(() => {
+      resetIcon.current.classList.remove('reset_cycle')
+    }, 600);
+    
+  }
+
   return (
     <div ref={alarmIcon} className={`absolute w-[16rem] `} style={{ right: "3rem", top: "11.5rem", height: "35.2rem"}}>
       <div className="grid h-full w-full rounded-3xl bg-black text-white" style={{gridTemplateRows: '0.5fr 0.5fr 5fr' }}>
         <div className="grid" style={{gridTemplateColumns: '2fr 1fr 1fr 1fr'}}>
           <div></div>
-          <div className="flex justify-center items-center">알람</div>
+          <div className="flex justify-center items-center basicTextColor">알람</div>
           <div></div>
           {/* 새로고침 */}
           <div className="flex justify-center items-center cursor-pointer">
-            <img className="h-[40%]" src={require('../../assets/NavIcon/reset.png')} alt="" onClick={()=> {
+            <img ref={resetIcon} className={`h-[40%] `} src={require('../../assets/NavIcon/reset.png')} alt="" onClick={()=> {
+              handleReset()
               if (alarmClickState === 0) {
                 axios({
                   method:'get',
@@ -266,7 +278,7 @@ function NavbarAlarm(): JSX.Element {
         </div>
         {/* 요청 */}
         <div className="grid" style={{gridTemplateColumns: '1fr 1fr 1fr'}}>
-          <div className="flex justify-center items-center cursor-pointer" onClick={()=> {
+          <div className="flex justify-center items-center cursor-pointer hoverTextColor" onClick={()=> {
             axios({
               method:'get',
               url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
@@ -331,7 +343,7 @@ function NavbarAlarm(): JSX.Element {
             })
           }}>요청</div>
           {/* 초대 */}
-          <div className="flex justify-center items-center cursor-pointer" onClick={()=> {
+          <div className="flex justify-center items-center cursor-pointer hoverTextColor" onClick={()=> {
             axios({
               method:'get',
               url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
@@ -397,7 +409,7 @@ function NavbarAlarm(): JSX.Element {
             })
           }}>초대</div>
           {/* review_at이 null 값인 리뷰 목록을 보이도록 하기 */}
-          <div className="flex justify-center items-center cursor-pointer" onClick={()=> {
+          <div className="flex justify-center items-center cursor-pointer hoverTextColor" onClick={()=> {
             axios({
               method: 'get',
               url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,

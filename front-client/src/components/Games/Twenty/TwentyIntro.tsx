@@ -1,11 +1,12 @@
 import styles from "./Twenty.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TwentyManual from "./TwentyManual";
 import TwentyPlay from "./TwentyPlay";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function TwentyIntro({
   socket,
   pochaId,
@@ -22,6 +23,22 @@ function TwentyIntro({
 
   // 포차 정보
   const [pochaInfo, setPochaInfo] = useState<any>(null);
+
+  // 효과음
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      // preload='auto'
+      // loop
+      src="/balanceGame/BBong.mp3"
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.5}
+      // other props here
+    />
+  );
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
@@ -128,6 +145,9 @@ function TwentyIntro({
 
   return (
     <>
+      {
+        <Player/>
+      }
       {signal === "PLAY" ? (
         <TwentyPlay socket={socket} pochaId={pochaId} />
       ) : null}

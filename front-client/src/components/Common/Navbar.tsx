@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import "./Common.css"
 
 function Navbar(): JSX.Element {
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
   });
 
   // 알림 유무 체크
-  // 친구 요청, 방 초대 요청 순으로 데이터가 있을 경우 중간에 멈추기
+  // 친구 요청, 방 초대 요청 -> 완료하지 않은 리뷰 순으로 데이터가 있을 경우 중간에 멈추기
   useEffect(()=> {
     axios({
       method:'get',
@@ -172,6 +173,40 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
                   // 친구 요청이 있다면 변경
                   if (r.data.length) {
                     setCheckAlarm(true)
+                  } else {
+                    // 없다면 리뷰 안한게 있다면 변경
+                    axios({
+                      method: 'get',
+                      url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+                      headers: {
+                        accessToken: `${r.data.accessToken}`,
+                      },
+                    }).then((r)=> {
+                      const datas:any[] = r.data.data
+                      // 현재 날짜 지정
+                      const now = new Date()
+                      // 현재 연도
+                      let now_year = now.getFullYear()
+                      // 현재 월
+                      let now_month = ('0' + (now.getMonth() +  1 )).slice(-2);
+                      // 현재 일
+                      let now_day= ('0'+(now.getDate())).slice(-2)
+                      let two_day_ago= ('0'+(now.getDate()-2)).slice(-2)
+                      // 현재 연도-월-일
+                      const nowYMD:any = new Date(now_year+"-"+now_month+"-"+now_day)
+                      const threeBeforeYMD:any = new Date(now_year+"-"+now_month+"-"+two_day_ago)
+                      
+                      // 3일 
+                      // 리뷰 이전
+                      const Beforedata:any = datas.filter((data)=> {  
+                        const review_create_at = new Date(((data.create_at).split('T'))[0])
+                        return ((data.review_at === null)&&(review_create_at<=nowYMD)&&(threeBeforeYMD<=review_create_at))
+                      })
+                      if (Beforedata.length) {
+                        // 리뷰를 안했고 3일이 지나지 않은 리뷰가 있다면
+                        setCheckAlarm(true)
+                      }
+                    })
                   }
                 })
               }
@@ -210,6 +245,40 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
               // 친구 요청이 있다면 변경
               if (r.data.data.length) {
                 setCheckAlarm(true)
+              } else {
+                // 없다면 리뷰 안한게 있는지 조사
+                axios({
+                  method: 'get',
+                  url: `https://i8e201.p.ssafy.io/api/user/review/${username}`,
+                  headers: {
+                    accessToken: `${accessToken}`,
+                  },
+                }).then((r)=> {
+                  const datas:any[] = r.data.data
+                  // 현재 날짜 지정
+                  const now = new Date()
+                  // 현재 연도
+                  let now_year = now.getFullYear()
+                  // 현재 월
+                  let now_month = ('0' + (now.getMonth() +  1 )).slice(-2);
+                  // 현재 일
+                  let now_day= ('0'+(now.getDate())).slice(-2)
+                  let two_day_ago= ('0'+(now.getDate()-2)).slice(-2)
+                  // 현재 연도-월-일
+                  const nowYMD:any = new Date(now_year+"-"+now_month+"-"+now_day)
+                  const threeBeforeYMD:any = new Date(now_year+"-"+now_month+"-"+two_day_ago)
+                  
+                  // 3일 
+                  // 리뷰 이전
+                  const Beforedata:any = datas.filter((data)=> {  
+                    const review_create_at = new Date(((data.create_at).split('T'))[0])
+                    return ((data.review_at === null)&&(review_create_at<=nowYMD)&&(threeBeforeYMD<=review_create_at))
+                  })
+                  if (Beforedata.length) {
+                    // 리뷰를 안했고 3일이 지나지 않은 리뷰가 있다면
+                    setCheckAlarm(true)
+                  }
+                })
               }
             })
           }
@@ -238,7 +307,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
               />
             </div>
             <p
-              className={`text-white  sm:text-xs md:text-xm lg:text-sm flex justify-center items-center  ${styles.NanumGothic}`}
+              className={`hoverTextColor text-white  sm:text-xs md:text-xm lg:text-sm flex justify-center items-center  ${styles.NanumGothic}`}
             >
               {nickname}
             </p>
@@ -337,28 +406,28 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
                     alt="alarm"
                   />
                   <p
-                    className={`text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
+                    className={`hoverTextColor text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs  ${styles.NanumGothic}`}
                   >
                     알림
                   </p>
                 </>
               ): (
                 <>
-                   <img
+                  <img
                     className={`object-contain`}
                     style={{ width: "1.5rem", height: "1.5rem" }}
                     src={require("../../assets/logoIcon/alarmFalse.png")}
                     alt="alarm"
                   />
                   <p
-                    className={`text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
+                    className={`hoverTextColor text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
                   >
                     알림
                   </p>
                 </>
               )
             }
-           
+          
 
           </div>
         </div>
@@ -383,7 +452,7 @@ function MenuOption({ profile, nickname, myData,  refreshToken }: any): JSX.Elem
               alt="menu"
             />
             <p
-              className={`text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
+              className={`hoverTextColor text-white mt-1 sm:text-xs md:text-xm lg:text-sm text-xs ${styles.NanumGothic}`}
             >
               메뉴
             </p>
