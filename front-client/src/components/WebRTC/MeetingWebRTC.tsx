@@ -73,6 +73,7 @@ const WebRTC = ({
 
   const [peerUser, setPeerUser] = useState<any>({
     my: myUserName,
+    nick: "유저",
   });
   // 자기소개 정보
   const [introduceInfo, setIntroduceInfo] = useState<any>({});
@@ -139,7 +140,7 @@ const WebRTC = ({
   async function videoOn(videoElement: any, introduceElement: any) {
     let time = new Date(pochaInfo.createAt);
     time.setHours(time.getHours() + 9);
-    time.setSeconds(time.getSeconds() + 60);
+    time.setSeconds(time.getSeconds() + 660);
     const waitEnd = time.getTime();
 
     const now = new Date().getTime();
@@ -322,6 +323,13 @@ const WebRTC = ({
   async function handleWelcomeSubmit(userData: any) {
     // event : React.FormEvent<HTMLFormElement>
     // event.preventDefault();
+    setPeerUser(
+      (prev: any) =>
+        (prev = {
+          my: myUserName,
+          nick: userData.nickname,
+        })
+    );
     await getMedia();
     console.log("@@@@@@@@@@@@@@@@", userData);
     setHeartInfo((hearts: any) => {
@@ -332,6 +340,7 @@ const WebRTC = ({
       const locaIntroduce = localStorage.getItem("myIntroduce");
       const introduce = locaIntroduce ? locaIntroduce : "[]";
       prev[peerUser.my] = JSON.parse(introduce);
+      console.log("!!!!!!!!!!!!!!!!!!!1", prev[peerUser.my]);
       return { ...prev };
     });
     socket.emit("join_room", {
@@ -680,57 +689,61 @@ const WebRTC = ({
       peerFace1.current.srcObject = stream;
       peerFace1.current.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer1: username };
+        return { ...prev, peer1: username, peer1nick: nickname };
       });
       peerHeart1.current.setAttribute("value", username);
       peerHeart1.current.classList.remove("hidden");
       videoOn(peerFace1, peerIntroduce1);
     } else if (userCount.current === 2) {
       div3.current!.classList.remove("hidden");
+      div3.current!.classList.add("flex");
       // peerFace2.current!.classList.remove("hidden");
       div4.current!.classList.add("hidden");
       // peerFace3.current!.classList.add("hidden");
       peerFace2.current.srcObject = stream;
       peerFace2.current.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer2: username };
+        return { ...prev, peer2: username, peer2nick: nickname };
       });
       peerHeart2.current.setAttribute("value", username);
       peerHeart2.current.classList.remove("hidden");
       videoOn(peerFace2, peerIntroduce2);
     } else if (userCount.current === 3) {
       div4.current!.classList.remove("hidden");
+      div4.current!.classList.add("flex");
       // peerFace3.current!.classList.remove("hidden");
       div5.current!.classList.add("hidden");
       // peerFace4.current!.classList.add("hidden");
       peerFace3.current.srcObject = stream;
       peerFace3.current.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer3: username };
+        return { ...prev, peer3: username, peer3nick: nickname };
       });
       peerHeart3.current.setAttribute("value", username);
       peerHeart3.current.classList.remove("hidden");
       videoOn(peerFace3, peerIntroduce3);
     } else if (userCount.current === 4) {
       div5.current!.classList.remove("hidden");
+      div5.current!.classList.add("flex");
       // peerFace4.current!.classList.remove("hidden");
       div6.current!.classList.add("hidden");
       // peerFace5.current!.classList.add("hidden");
       peerFace4.current.srcObject = stream;
       peerFace4.current.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer4: username };
+        return { ...prev, peer4: username, peer4nick: nickname };
       });
       peerHeart4.current.setAttribute("value", username);
       peerHeart4.current.classList.remove("hidden");
       videoOn(peerFace4, peerIntroduce4);
     } else if (userCount.current === 5) {
       div6.current!.classList.remove("hidden");
+      div6.current!.classList.add("flex");
       // peerFace5.current!.classList.remove("hidden");
       peerFace5.current.srcObject = stream;
       peerFace5.current.id = username;
       setPeerUser((prev: any) => {
-        return { ...prev, peer5: username };
+        return { ...prev, peer5: username, peer5nick: nickname };
       });
       peerHeart5.current.setAttribute("value", username);
       peerHeart5.current.classList.remove("hidden");
@@ -895,7 +908,7 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div1}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center "
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center border-2"
                     >
                       <video
                         className="object-fill"
@@ -903,8 +916,21 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div ref={myIntroduce} className="border-2 object-fill">
-                        {introduceInfo[peerUser.my]}
+                      <div
+                        ref={myIntroduce}
+                        className="object-fill flex flex-wrap justify-center text-2xl"
+                      >
+                        <div className="text-xl text-sky-300">
+                          {peerUser.nick}
+                        </div>
+                        {introduceInfo[peerUser.my] &&
+                          introduceInfo[peerUser.my].map((tag: any) => {
+                            return (
+                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                #{tag}
+                              </div>
+                            );
+                          })}
                       </div>
                     </div>
                     <div ref={myHeart}>💖 x {heartInfo[peerUser.my]}</div>
@@ -912,20 +938,27 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div3}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden border-2"
                     >
                       <video
                         onClick={ShowUserProfile}
-                        className=" object-fill cursor-pointer hidden"
+                        className=" object-fill cursor-pointer"
                         ref={peerFace2}
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce2}
-                        className="border-2 object-fill hidden"
-                      >
-                        {introduceInfo[peerUser.peer2]}
+                      <div ref={peerIntroduce2} className="object-fill hidden">
+                        <div className="text-xl text-sky-300">
+                          {peerUser.peer2nick}
+                        </div>
+                        {introduceInfo[peerUser.peer2] &&
+                          introduceInfo[peerUser.peer2].map((tag: any) => {
+                            return (
+                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                #{tag}
+                              </div>
+                            );
+                          })}
                       </div>
                     </div>
                     <div
@@ -939,19 +972,16 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div5}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden border-2"
                     >
                       <video
                         onClick={ShowUserProfile}
-                        className=" object-fill cursor-pointer hidden"
+                        className=" object-fill cursor-pointer"
                         ref={peerFace4}
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce4}
-                        className="border-2 object-fill hidden"
-                      >
+                      <div ref={peerIntroduce4} className="object-fill hidden">
                         {introduceInfo[peerUser.peer4]}
                       </div>
                     </div>
@@ -1025,7 +1055,7 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div2}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center "
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center border-2"
                     >
                       <video
                         onClick={ShowUserProfile}
@@ -1034,11 +1064,18 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce1}
-                        className="border-2 object-fill hidden"
-                      >
-                        {introduceInfo[peerUser.peer1]}
+                      <div ref={peerIntroduce1} className="object-fill hidden">
+                        <div className="text-xl text-sky-300">
+                          {peerUser.peer1nick}
+                        </div>
+                        {introduceInfo[peerUser.peer1] &&
+                          introduceInfo[peerUser.peer1].map((tag: any) => {
+                            return (
+                              <div className="border-2 border-white text-xl p-2 m-2 rounded-xl">
+                                #{tag}
+                              </div>
+                            );
+                          })}
                       </div>
                     </div>
                     <div
@@ -1052,7 +1089,7 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div4}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden border-2"
                     >
                       <video
                         onClick={ShowUserProfile}
@@ -1061,10 +1098,7 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce3}
-                        className="border-2 object-fill hidden"
-                      >
+                      <div ref={peerIntroduce3} className="object-fill hidden">
                         {introduceInfo[peerUser.peer3]}
                       </div>
                     </div>
@@ -1079,7 +1113,7 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div6}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden"
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center hidden border-2"
                     >
                       <video
                         onClick={ShowUserProfile}
@@ -1088,10 +1122,7 @@ const WebRTC = ({
                         playsInline
                         autoPlay
                       ></video>
-                      <div
-                        ref={peerIntroduce5}
-                        className="border-2 object-fill hidden"
-                      >
+                      <div ref={peerIntroduce5} className="object-fill hidden">
                         {introduceInfo[peerUser.peer5]}
                       </div>
                     </div>
