@@ -388,8 +388,7 @@ function StartReviewComponent({
     createReviewat = create_at.slice(0, 10);
   }
 
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();  
   const [starState, setStarState] = useState();
   const username = localStorage.getItem("Username");
   const [rating, setRating] = useState(null) as any;
