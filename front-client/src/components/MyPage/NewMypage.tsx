@@ -27,7 +27,7 @@ const NewMyPage = () => {
   let refreshToken = localStorage.getItem("refreshToken");
   const Username: any = localStorage.getItem("Username");
 
-  //--------------useState-------------------
+ //--------------useState-------------------
   //내 정보
   const [MyInfo, setMyInfo] = useState<any>();
 
@@ -421,33 +421,24 @@ const NewMyPage = () => {
           <NavbarMenu />
           {/* 알림 클릭시 보이기 */}
           <NavbarAlarm />
-          <div
-            className="grid grid-rows-4 w-screen h-screen font-nanum "
-            style={{ gridTemplateRows: "11rem" }}
-          >
+          <div className="w-screen h-screen" style={{backgroundColor : "#1C1C1C"}}>
             <Navbar />
-            <div className="w-full"></div>
+            <div className="w-full" style={{ paddingTop: "11rem" }}></div>
             {/* 여기가 배경색 */}
-            <div className="w-full flex flex-col  text-white">
-              <div className="flex flex-row h-[15%] ">
-                <div className="w-[25%] "></div>
-                <div className="flex flex-row w-[46%]">
-                  <div className="w-[28%]text-justify font-bold text-4xl pt-16">
-                    프로필 편집
-                  </div>
-                </div>
-                <div className="w-[29%] "></div>
+            <div className="w-[67rem] mx-auto text-white">
+              <div className="font-bold text-4xl text-left pt-20 pb-8 mb-7">
+                프로필 편집
               </div>
-              <div className="h-[5%]"></div>
-              <div className="flex flex-row h-[80%]">
-                <div className="w-[25%] "></div>
-                <div className="flex flex-row w-[45%]">
-                  <div className="flex flex-row w-[28%] h-[30%]">
+
+              <div className="flex">
+                <div className="flex w-[70%]">
+                  {/* 이모지 변경 */}
+                  <div className="flex w-[25%]">
                     {MyInfo ? (
                       <>
-                        <div className="w-[80%]">
+                        <div className="w-[70%]">
                           <img
-                            className=" h-[9rem] w-[9rem] ml-6 rounded-full"
+                            className=" h-[7rem] w-[7rem] ml-6 rounded-full"
                             style={{ objectFit: "contain" }}
                             src={`${MyPageProfileImg}`}
                             alt="프로필"
@@ -455,7 +446,7 @@ const NewMyPage = () => {
                         </div>
                         <div className="w-[20%] pt-[45%]">
                           <img
-                            className="h-[2rem] w-[2rem]  cursor-pointer"
+                            className="h-[1.5rem] w-[1.5rem]  cursor-pointer"
                             style={{ objectFit: "contain" }}
                             src={require("../../assets/myPage/settings.png")}
                             alt=""
@@ -467,316 +458,301 @@ const NewMyPage = () => {
                       </>
                     ) : null}
                   </div>
-                  <div className="flex flex-col w-[72%] ">
-                    <div className="h-[30%] ">
-                      <div className="h-[32%] pt-4">
-                        <div className="w-[30%] h-[80%] text-justify text-2xl ">
-                          닉네임
-                        </div>
-                      </div>
-                      <div className="flex flex-row h-[45%]">
-                        <div className="w-[70%] pr-5 pt-2 pb-2">
-                          <input
-                            className="w-[100%] h-full bg-neutral-600 text-2xl pl-5 caret-white"
-                            value={ModifyNickname}
-                            type="text"
-                            maxLength={6}
-                            onChange={onChangeNikename}
-                          />
-                        </div>
-                        <div className="w-[30%] pl-3 pt-[8px]">
-                          <div
-                            className="w-[10rem] h-[3.5rem] text-2xl pt-3 border-2 cursor-pointer"
-                            onClick={() => {
-                              if (ModifyNickname.length < 2) {
-                                toast.warning(`2글자 이상 입력바랍니다`);
-                              } else {
-                                duffle();
-                              }
-                            }}
-                          >
-                            중복확인
-                          </div>
-                        </div>
-                      </div>
-                      <div className="h-[20%] text-justify text-stone-500">
-                        *6자 이내로 입력 가능합니다.
-                      </div>
-                    </div>
-                    <div className="h-[28%]">
-                      <div className="h-[40%] pt-6 ">
-                        <div className="w-[7rem] text-2xl text-justify">
-                          자기소개
-                        </div>
-                      </div>
-                      <div className="h-[40%] w-[80%] border-b-2">
+
+                  {/* 회원 정보 변경 */}
+                  <div className="w-[75%]">
+                    <div className="text-left font-bold text-xl ">닉네임</div>
+
+                    <div className="flex">
+                      <div className="w-[70%] pr-5 py-2">
                         <input
-                          className="h-full w-full bg-transparent text-2xl pl-3 caret-white"
-                          value={comment}
-                          placeholder={"#오늘의날씨 #맑음 #오운완 적어봐요!"}
+                          className="w-[100%] h-full bg-neutral-600 text-lg pl-4 py-2 caret-white"
+                          value={ModifyNickname}
                           type="text"
-                          onChange={onChangeComment}
+                          maxLength={6}
+                          onChange={onChangeNikename}
                         />
                       </div>
-                    </div>
-                    <div className="h-[25%] ">
-                      <div className="h-[30%]  text-justify text-2xl">지역</div>
-                      <div className="flex flex-row h-[70%] ">
-                        <div className="w-[35%] h-[55%] pr-6 ">
-                          {MyInfo ? (
-                            <select
-                              className="w-full h-full border-2 text-[1.5rem] bg-black text-center overflow-auto"
-                              onChange={handleSelect}
-                            >
-                              {RegionlistFirst
-                                ? RegionlistFirst.map((it: any) => {
-                                    return it.regionCode.substr(0, 2) ===
-                                      SelectedFirst.substr(0, 2) ? (
-                                      <option
-                                        className="text-[20px]"
-                                        value={it.regionCode}
-                                        selected
-                                      >
-                                        {it.sidoName}
-                                      </option>
-                                    ) : (
-                                      <option
-                                        className="text-[20px]"
-                                        value={it.regionCode}
-                                      >
-                                        {it.sidoName}
-                                      </option>
-                                    );
-                                  })
-                                : null}
-                            </select>
-                          ) : null}
-                        </div>
-                        <div className="w-[35%] h-[55%] pr-6 ">
-                          {isSelected === false ? (
-                            <select
-                              className="w-full h-full border-2 text-[1.5rem] bg-black text-center overflow-auto"
-                              onChange={handleSelectSecond}
-                              value={SelectedSecond}
-                            >
-                              {RegionlistSecond
-                                ? RegionlistSecond.map((it: any): any =>
-                                    SelectedFirst.substr(0, 2) ===
-                                    it.regionCode.substr(0, 2) ? (
-                                      <option
-                                        className="text-[20px]"
-                                        value={it.regionCode}
-                                      >
-                                        {it.gugunName}
-                                      </option>
-                                    ) : null
-                                  )
-                                : null}
-                            </select>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-row font-extrabold text-[20px] h-[17%] ">
-                      <div className="w-[25%] pt-3 pb-[27px] pr-3 ">
-                        {modifydisplay === true ? (
-                          <div
-                            className="h-full pt-3 border-2 cursor-pointer"
-                            onClick={() => {
-                              let back = SelectedSecond;
-                              console.log("city", city);
-                              console.log("SelectedFirst", SelectedFirst);
-                              console.log("SelectedSecond", SelectedSecond);
 
-                              city.map((it: any) => {
-                                if (
-                                  it.regionCode.substr(0, 2) ===
-                                  SelectedFirst.substr(0, 2)
-                                ) {
-                                  back = "0000000000";
-                                  setSelectSecond("0000000000");
-                                }
-                              });
-                              console.log("뒤쪽꺼", back.substr(2, 8));
-                              const Code =
-                                SelectedFirst.substr(0, 2) + back.substr(2, 8);
-                              console.log("수정될Code입니다", Code);
-
-                              axios({
-                                method: "put",
-                                url: `https://i8e201.p.ssafy.io/api/user/${Username}`,
-                                data: {
-                                  comment: comment,
-                                  nickname: ModifyNickname,
-                                  profile: MyPageProfileImg,
-                                  regionCode: Code,
-                                },
-                                headers: {
-                                  accessToken: accessToken,
-                                },
-                              }).then((r) => {
-                                console.log("토큰 상태?", r.data.status);
-                                //토큰 이상하네?
-                                if ("401" === r.data.status) {
-                                  //토큰 요청
-                                  axios({
-                                    method: "get",
-                                    url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
-                                    headers: {
-                                      refreshToken: refreshToken,
-                                    },
-                                  }).then((r) => {
-                                    console.log("해치웠나?", r.data);
-                                    //token갱신
-                                    if ("401" === r.data.status) {
-                                      localStorage.clear();
-                                      toast.error("인증되지 않은 유저입니다");
-                                      navigate("/");
-                                    } else {
-                                      localStorage.setItem(
-                                        "accessToken",
-                                        r.data.accessToken
-                                      );
-                                      accessToken = r.data.accessToken;
-                                      //새 토큰 받았으니까 axios요청
-                                      axios({
-                                        method: "put",
-                                        url: `https://i8e201.p.ssafy.io/api/user/${Username}`,
-                                        data: {
-                                          comment: comment,
-                                          nickname: ModifyNickname,
-                                          profile: MyPageProfileImg,
-                                          regionCode: Code,
-                                        },
-                                        headers: {
-                                          accessToken: accessToken,
-                                        },
-                                      }).then(() => {
-                                        toast.success("수정에 성공하셨습니다");
-                                        window.location.reload();
-                                      });
-                                    }
-                                  });
-                                }
-                                //음 토큰이 정상적이군
-                                else if ("401" !== r.data.status) {
-                                  toast.success("수정에 성공하셨습니다");
-                                  window.location.reload();
-                                }
-                              });
-                            }}
-                          >
-                            저장
-                          </div>
-                        ) : (
-                          <div className="h-full opacity-50  pt-3 border-2">
-                            <div className="h-[80%]">중복필수</div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="w-[25%] pt-3 pb-[27px] pr-3 ">
-                        <div className="h-full pt-3 border-2 cursor-pointer">
-                          <div
-                            className="h-[80%]"
-                            onClick={() => {
-                              navigate("/main");
-                            }}
-                          >
-                            나가기
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-[25%] pt-3 pb-[27px] pr-3 ">
+                      <div className="w-[30%] pl-2 py-2">
                         <div
-                          className="h-full pt-3 border-2 cursor-pointer"
+                          className="w-[95%] text-xl py-2 border-2 cursor-pointer"
                           onClick={() => {
-                            clickSecession();
+                            if (ModifyNickname.length < 2) {
+                              toast.warning(`2글자 이상 입력바랍니다`);
+                            } else {
+                              duffle();
+                            }
                           }}
                         >
-                          <div className="h-[80%]">탈퇴</div>
+                          중복확인
                         </div>
+                      </div>
+                    </div>
+
+                    <div className="text-left text-stone-400">
+                      *6자 이내로 입력 가능합니다.
+                    </div>
+                    <div className="font-bold text-xl text-left pt-16">
+                      자기소개
+                    </div>
+                    <div className="w-[80%] py-2 border-b-2">
+                      <input
+                        className="w-full bg-transparent text-xl pl-2 caret-white"
+                        value={comment}
+                        placeholder={"#오늘의날씨 #맑음 #오운완 적어봐요!"}
+                        type="text"
+                        onChange={onChangeComment}
+                      />
+                    </div>
+
+                    <div className="font-bold text-left text-xl pt-16">
+                      지역
+                    </div>
+                    <div className="flex">
+                      <div className="w-[35%] py-3 pr-3 ">
+                        {MyInfo ? (
+                          <select
+                            className="w-full h-full py-2 border-2 text-lg bg-black text-center overflow-auto"
+                            onChange={handleSelect}
+                          >
+                            {RegionlistFirst
+                              ? RegionlistFirst.map((it: any) => {
+                                  return it.regionCode.substr(0, 2) ===
+                                    SelectedFirst.substr(0, 2) ? (
+                                    <option
+                                      className="text-lg"
+                                      value={it.regionCode}
+                                      selected
+                                    >
+                                      {it.sidoName}
+                                    </option>
+                                  ) : (
+                                    <option
+                                      className="text-lg"
+                                      value={it.regionCode}
+                                    >
+                                      {it.sidoName}
+                                    </option>
+                                  );
+                                })
+                              : null}
+                          </select>
+                        ) : null}
+                      </div>
+                      <div className="w-[35%] py-3 pr-3 ">
+                        {isSelected === false ? (
+                          <select
+                            className="w-full h-full py-2 border-2 text-lg bg-black text-center overflow-auto"
+                            onChange={handleSelectSecond}
+                            value={SelectedSecond}
+                          >
+                            {RegionlistSecond
+                              ? RegionlistSecond.map((it: any): any =>
+                                  SelectedFirst.substr(0, 2) ===
+                                  it.regionCode.substr(0, 2) ? (
+                                    <option
+                                      className="text-lg"
+                                      value={it.regionCode}
+                                    >
+                                      {it.gugunName}
+                                    </option>
+                                  ) : null
+                                )
+                              : null}
+                          </select>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className="pt-10 flex font-bold text-xl">
+                      {modifydisplay === true ? (
+                        <div
+                          className="w-[25%] mr-3 py-2 border-2 cursor-pointer"
+                          onClick={() => {
+                            let back = SelectedSecond;
+                            console.log("city", city);
+                            console.log("SelectedFirst", SelectedFirst);
+                            console.log("SelectedSecond", SelectedSecond);
+
+                            city.map((it: any) => {
+                              if (
+                                it.regionCode.substr(0, 2) ===
+                                SelectedFirst.substr(0, 2)
+                              ) {
+                                back = "0000000000";
+                                setSelectSecond("0000000000");
+                              }
+                            });
+                            console.log("뒤쪽꺼", back.substr(2, 8));
+                            const Code =
+                              SelectedFirst.substr(0, 2) + back.substr(2, 8);
+                            console.log("수정될Code입니다", Code);
+                            
+                            axios({
+                              method: "put",
+                              url: `https://i8e201.p.ssafy.io/api/user/${Username}`,
+                              data: {
+                                comment: comment,
+                                nickname: ModifyNickname,
+                                profile: MyPageProfileImg,
+                                regionCode: Code,
+                              },
+                              headers: {
+                                accessToken: accessToken,
+                              },
+                            }).then((r) => {
+                              console.log("토큰 상태?", r.data.status);
+                              //토큰 이상하네?
+                              if ("401" === r.data.status) {
+                                //토큰 요청
+                                axios({
+                                  method: "get",
+                                  url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                                  headers: {
+                                    refreshToken: refreshToken,
+                                  },
+                                }).then((r) => {
+                                  console.log("해치웠나?", r.data);
+                                  //token갱신
+                                  if ("401" === r.data.status) {
+                                    localStorage.clear();
+                                    toast.error("인증되지 않은 유저입니다");
+                                    navigate("/");
+                                  } else {
+                                    localStorage.setItem(
+                                      "accessToken",
+                                      r.data.accessToken
+                                    );
+                                    accessToken = r.data.accessToken;
+                                    //새 토큰 받았으니까 axios요청
+                                    axios({
+                                      method: "put",
+                                      url: `https://i8e201.p.ssafy.io/api/user/${Username}`,
+                                      data: {
+                                        comment: comment,
+                                        nickname: ModifyNickname,
+                                        profile: MyPageProfileImg,
+                                        regionCode: Code,
+                                      },
+                                      headers: {
+                                        accessToken: accessToken,
+                                      },
+                                    }).then(() => {
+                                      toast.success("수정에 성공하셨습니다");
+                                      window.location.reload();
+                                    });
+                                  }
+                                });
+                              }
+                              //음 토큰이 정상적이군
+                              else if ("401" !== r.data.status) {
+                                toast.success("수정에 성공하셨습니다");
+                                window.location.reload();
+                              }
+                            });
+                         
+                          }}
+                        >
+                          저장
+                        </div>
+                      ) : (
+                        <div className="w-[25%] mr-3 opacity-50 py-2 border-2">
+                          중복 필수
+                        </div>
+                      )}
+
+                      <div className="w-[25%] mr-3 py-2 border-2 cursor-pointer">
+                        <div
+                          onClick={() => {
+                            navigate("/main");
+                          }}
+                        >
+                          나가기
+                        </div>
+                      </div>
+
+                      <div
+                        className="w-[25%] py-2 mr-3 border-2 cursor-pointer"
+                        onClick={() => {
+                          clickSecession();
+                        }}
+                      >
+                        탈퇴
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="w-[20%] h-[90%] border-l-2">
-                  <div className="h-[27%] pt-7 pl-4 pr-2">
-                    <div className="flex flex-row w-full h-full border-2">
-                      <div className="w-[50%] pt-[25px] pl-[25px]">
-                        <div className="w-[6rem] h-[3rem] text-justify text-[20px] ">
-                          매너온도
-                        </div>
-                      </div>
-                      <div className="w-[50%] pl-10 pt-8">
-                        <div className="flex flex-row h-[4rem] font-bold  text-[38px] text-amber-700">
-                          <div>{MyInfo.manner.toFixed(1)}</div>
-                          <div className="text-[25px] pl-2 pt-4">℃</div>
-                        </div>
-                      </div>
+
+                <div className="w-auto border-l-2 ml-12">
+                  <div className="w-full border-2 p-5 ml-4">
+                    <div className="text-left font-bold text-xl pl-1">
+                      매너온도
+                    </div>
+                    <div className="flex justify-end font-bold text-4xl text-orange-500">
+                      <div>{MyInfo.manner.toFixed(1)}</div>
+                      <div className="text-2xl pl-2 pt-3">℃</div>
                     </div>
                   </div>
-                  <div className="h-[27%] pt-7 pl-4 pr-2">
-                    <div className="flex flex-row w-full h-full border-2">
-                      <div className="w-[50%] pt-[25px] pl-[25px]">
-                        <div className="w-[7rem] h-[3rem] text-justify text-[20px] ">
-                          현재 포인트
-                        </div>
-                      </div>
-                      <div className="w-[50%] pl-7 pt-8">
-                        <div className="flex flex-row h-[4rem] font-bold  text-[38px] text-cyan-600">
-                          <div>{MyInfo.point}</div>
-                          <div className="text-[25px] pl-2 pt-4">P</div>
-                        </div>
-                      </div>
+
+                  <div className="w-full border-2 p-5 m-4">
+                    <div className="text-left font-bold text-xl pl-1">
+                      현재 포인트
+                    </div>
+                    <div className="flex justify-end font-bold text-4xl text-sky-600">
+                      <div>{MyInfo.point}</div>
+                      <div className="text-2xl pl-2 pt-3">P</div>
                     </div>
                   </div>
-                  <div className="h-[35%] pl-[15rem] pr-2 pt-2">
-                    <div
-                      className="w-full h-[30%] cursor-pointer"
-                      onClick={() => {
-                        navigate("/pointhistory");
-                      }}
-                    >
-                      포인트 내역
-                    </div>
+
+                  <div
+                    className="w-full font-bold text-right ml-3 cursor-pointer"
+                    onClick={() => {
+                      navigate("/pointhistory");
+                    }}
+                  >
+                    포인트 내역
                   </div>
-                  <div className="h-[21%] pl-6 pr-6 ">
-                    <div className="flex flex-row h-[75%] ">
+
+
+                    <div className="flex flex-row p-1 mt-24 ml-3">
+
                       <div className="flex flex-col w-[33.3%] ">
-                        <div className="h-[40%] pt-2"> 나이</div>
-                        <div className="h-[60%] font-bold text-[28px] ">
+                        <div className="pt-2 text-md"> 나이</div>
+                        <div className="font-bold text-2xl py-2">
                           {" "}
                           {age}살
                         </div>
                       </div>
-                      <div className="flex flex-col w-[33.3%] ">
-                        <div className="h-[40%] pt-2 "> 성별</div>
+
+                      <div className="flex flex-col w-[33.3%]">
+                        <div className="pt-2 text-md">성별</div>
                         {MyInfo.gender === "M" ? (
-                          <div className="h-[60%] font-bold  text-[28px]">
+                          <div className="font-bold text-2xl py-2">
                             남성
                           </div>
                         ) : (
-                          <div className="h-[60%] font-bold  text-[28px]">
+                          <div className="font-bold text-2xl py-2">
                             여성
                           </div>
                         )}
                       </div>
+
                       <div className="flex flex-col w-[33.3%] ">
-                        <div className="h-[40%] pt-2"> 생일</div>
-                        <div className="h-[60%]  font-bold text-[28px] ">
+                        <div className="pt-2 text-md"> 생일</div>
+                        <div className="font-bold text-2xl py-2">
                           {MyInfo.birth.split(".")[1]}.
                           {MyInfo.birth.split(".")[2]}
                         </div>
                       </div>
                     </div>
-                    <div className="h-[25%]">
+
+                    <div className="ml-3 w-full text-stone-400">
                       나이, 성별, 생일은 변경하실 수 없습니다
                     </div>
-                  </div>
+
                 </div>
-                <div className="w-[9%]"></div>
               </div>
-              <div className="h-[10%]"></div>
             </div>
           </div>
         </>
