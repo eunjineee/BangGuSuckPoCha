@@ -319,8 +319,8 @@ wsServer.on("connection", (socket) => {
     wsServer.to(roomName).emit("game_call_signal", signalData, data);
   });
   //주제들 뿌려줌
-  socket.on("game_call_titles", (roomName, signalData, data) => {
-    wsServer.to(roomName).emit("game_call_titles", signalData, data);
+  socket.on("game_call_submit", (roomName, signalData, data) => {
+    wsServer.to(roomName).emit("game_call_submit", signalData, data);
   });
   // 통과
   socket.on("game_call_pass", (roomName, data) => {
