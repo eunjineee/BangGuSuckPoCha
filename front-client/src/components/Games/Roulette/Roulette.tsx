@@ -3,7 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import PublicModal from "src/components/Common/PublicModal";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import { showRouletteResultModal } from "src/store/store";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function Roulette({
   socket,
   pochaId,
@@ -56,6 +57,22 @@ function Roulette({
       socket.off("game_roulette");
     };
   }, []);
+
+  // 효과음
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      // preload='auto'
+      // loop
+      src="/balanceGame/BBong.mp3"
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.5}
+      // other props here
+    />
+  );
 
   const newMake = () => {
     const [cw, ch] = [
@@ -146,6 +163,9 @@ function Roulette({
 
   return (
     <>
+      {
+        <Player />
+      }
       {showModal && <PublicModal data={modalData} socket={socket} />}
       <div className={`${styles.setSize} w-full h-full`}>
         <div className={`${styles.title}`}>

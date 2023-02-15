@@ -1,12 +1,13 @@
 import styles from "./CallIntro.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CallManual from "./CallManual";
 import CallTitle from "./CallTitle";
 import CallResult from "./CallResult";
 import CallInput from "./CallInput";
 
 import axios from "axios";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 function CallIntro({
   socket,
   pochaId,
@@ -91,6 +92,21 @@ function CallIntro({
     }
   },[titles])
 
+
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      // preload='auto'
+      // loop
+      src="/balanceGame/BBong.mp3"
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.5}
+      // other props here
+    />
+  );
 
   // 포차 유저 정보 요청
   const getPochaUsers = async () => {
@@ -192,6 +208,9 @@ function CallIntro({
 
   return (
     <>
+      {
+        <Player />
+      }
       {signal === "PLAY" ? (
         <CallTitle
           socket={socket}
@@ -222,6 +241,7 @@ function CallIntro({
             <img
               src={require("src/assets/game_call/탐정.png")}
               className={`${styles.img1}`}
+              alt=""
             />
             <div className={`${styles.box2}  ${styles.layout2}`}>
               CALL MY NAME

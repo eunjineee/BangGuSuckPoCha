@@ -4,7 +4,7 @@ import { isRtcLoading, showRoomUserProfile } from "../../store/store";
 import RoomUserProfile from "../Common/RoomUserProfile";
 import Loading from "../Common/Loading";
 import styles from "./MeetingRoom.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -12,7 +12,8 @@ import MeetingWebRTC from "../WebRTC/MeetingWebRTC";
 import WaitingRoom from "../Common/WaitingRoom";
 import FriendSearch from "../Common/FriendSearch";
 import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
-
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 const socket = io("https://pocha.online");
 
 function MeetingRoom(): JSX.Element {
@@ -47,6 +48,19 @@ function MeetingRoom(): JSX.Element {
   const propIsHost = (isHost: boolean) => {
     setIsHost(isHost);
   };
+
+  const player = useRef<any>();
+  const Player = () => (
+    <AudioPlayer
+      ref={player}
+      autoPlay={true}
+      src="/RoomBGM/Meeting.mp3"
+      onPlay={(e) => console.log("onPlay")}
+      style={{ display: "none" }}
+      volume={0.2}
+      // other props here
+    />
+  );
 
   const getPochaInfo = async () => {
     try {
@@ -105,6 +119,9 @@ function MeetingRoom(): JSX.Element {
 
   return (
     <>
+    {
+      <Player />
+    }
       {socket == null || myInfo == null ? (
         <div></div>
       ) : isWaiting ? (
