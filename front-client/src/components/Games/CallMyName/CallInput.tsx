@@ -133,7 +133,7 @@ function CallInput({
       console.log("여기오냐 결과가기전 정답자들", resultList);
       const signalData = "RESULT";
       const data = result;
-      socket.emit("game_call_signal", roomName, signalData, data);
+      socket.emit("game_call_result", roomName, signalData, data);
     }
   }
 
