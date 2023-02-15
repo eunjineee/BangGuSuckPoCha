@@ -17,32 +17,37 @@ function LiarIntro({
   // 방 이름
   const roomName = pochaId;
   // 내 이름
-  const myName = localStorage.getItem("Username");  
+  const myName = localStorage.getItem("Username");
   // 메뉴얼 클릭
   const [signal, setSignal] = useState<string>("INTRO");
-  
-  const [pochaInfo, setPochaInfo] = useState<any>(null)
 
-  const [isHost, setIshost] = useState<any>(null)
+  const [pochaInfo, setPochaInfo] = useState<any>(null);
 
-  const [liarnum, setLiarnum] = useState<any>(false) // 라이어의 넘버
+  const [isHost, setIshost] = useState<any>(null);
 
-  const [mynum, setMyNum] = useState<any>(null) // 내번호
+  const [liarnum, setLiarnum] = useState<any>(false); // 라이어의 넘버
+
+  const [mynum, setMyNum] = useState<any>(null); // 내번호
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
+    let accessToken = localStorage.getItem("accessToken");
     try {
-      const {data : {data}} = await axios({
+      const {
+        data: { data },
+      } = await axios({
         method: "GET",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
-      })
-      console.log("포차정보 데이터 잘 오냐!? SON",data);
+        headers: {
+          accessToken: accessToken,
+        },
+      });
+      console.log("포차정보 데이터 잘 오냐!? SON", data);
       setPochaInfo(data);
-
-    } catch(error) {
+    } catch (error) {
       console.log("Son게임에서 포차정보 에러", error);
     }
-  }
+  };
 
   useEffect(() => {
     // 라이어 게임 시그널받기
@@ -90,52 +95,62 @@ function LiarIntro({
   //라이어 지정하기
   //라이어 넘버 정해주기
   const liarnumber = () => {
-    if (mynum === isHost){
+    if (mynum === isHost) {
       const totalCount = pochaInfo.totalCount;
-      const liarnum = Math.floor(Math.random()*totalCount);
+      const liarnum = Math.floor(Math.random() * totalCount);
       setLiarnum(liarnum);
       setPeopleInfo();
       socket.emit("game_liar_number", roomName, liarnum);
     }
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     // console.log(pochaInfo);
-    setHostInfo();    // 방장 누군지 > 라이어 뽑기 해줘야함
-    if (mynum === isHost && pochaInfo){
+    setHostInfo(); // 방장 누군지 > 라이어 뽑기 해줘야함
+    if (mynum === isHost && pochaInfo) {
       liarnumber();
     }
-  },[pochaInfo])
+  }, [pochaInfo]);
 
   return (
     <>
       {signal === "PLAY" ? (
-        <LiarTitle socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} liarnum={liarnum}/>
+        <LiarTitle
+          socket={socket}
+          pochaId={pochaId}
+          pochaUsers={pochaUsers}
+          pochaInfo={pochaInfo}
+          liarnum={liarnum}
+        />
       ) : null}
       {signal === "MANUAL" ? (
-        <LiarManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>
+        <LiarManual socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} />
       ) : null}
       {signal === "VOTE" ? (
-        <LiarVote socket={socket} pochaId={pochaId} pochaUsers={pochaUsers} pochaInfo={pochaInfo} liarnum={liarnum}/>
+        <LiarVote
+          socket={socket}
+          pochaId={pochaId}
+          pochaUsers={pochaUsers}
+          pochaInfo={pochaInfo}
+          liarnum={liarnum}
+        />
       ) : null}
       {signal === "INTRO" ? (
         <div className={`${styles.layout3}`}>
           <div className={`${styles.box} ${styles.layout}`}>
-            <img 
+            <img
               src={require("src/assets/game_liar/LiarImg.png")}
               className={`${styles.img1}`}
               alt=""
             />
-            <div className={`${styles.box2} ${styles.layout2}`}>
-              LIAR GAME 
-            </div>
+            <div className={`${styles.box2} ${styles.layout2}`}>LIAR GAME</div>
             <div className={`${styles.box3} ${styles.layout5}`}>
               라이어 게임
             </div>
             <div className={`${styles.layout4}`}>
-              <input 
-                type="button" 
-                className={`${styles.retry}`} 
+              <input
+                type="button"
+                className={`${styles.retry}`}
                 onClick={onClickClose}
                 value="EXIT"
               />
