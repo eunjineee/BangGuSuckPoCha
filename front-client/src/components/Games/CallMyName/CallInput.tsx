@@ -69,12 +69,15 @@ function CallInput({
 
   // 정답 제출
   function inputAnswer(){
-    console.log("----------------제출시작------", answer);
-    console.log("----------------제출시작------", nowtitles[mynum]?.word);
+
+    console.log("----------------정답지------", nowtitles);
+    console.log("----------------제출한 답------", answer);
+    console.log("----------------정답------", nowtitles[mynum]?.word);
     if (answer === nowtitles[mynum]?.word){
-      console.log("----------------------");
+      console.log("------------정답이다!!!!!!!!!!!!!!----------");
       socket.emit("game_call_pass", roomName, mynum);
     }
+    console.log("------------틀렸어----------");
   }
   useEffect(()=> {
     setPeopleInfo();  // 방참가인원 정보
@@ -109,19 +112,19 @@ function CallInput({
   function finish() {
     const resultList: string[] = [];
     const result: string[] = [];
-    console.log("자 여기 결과가기전", peopleScore, resultList.length);
+    console.log("게임 끝인지 확인중입니다", peopleScore, resultList.length);
     peopleScore.forEach((score, index) => {
       console.log("s여기@@@@@@@@@@@@", score, index);
       if (score === 0) {
         resultList.push(peopleName[index]);
-        console.log("여기오냐?", peopleScore);
-      }else if(score === 1){
+        console.log("정답자", peopleScore);
+      }else{
         result.push(peopleName[index])
       }
     });
-    // console.log("여기오냐 결과가기전? 이건 result", result);
+
     if (resultList.length === totalCount-1) {
-      console.log("여기오냐 결과가기전?", result);
+      console.log("여기오냐 결과가기전 1점 친구 이름", result);
       const signalData = "RESULT";
       const data = result;
       socket.emit("game_call_signal", roomName, signalData, data);
@@ -133,11 +136,11 @@ function CallInput({
     console.log("totalCount----------------",totalCount)
     for (var i = 0; i < 6; i++) {
       if (i > totalCount-1) {
-        console.log("tttttttttttttttt",i);
+        console.log("전체 멤버 넘어가면 가려",i);
         txtSpanList[i].current.classList.add("hidden");
       }
       if(i === mynum){
-        console.log("---------------t",mynum)
+        console.log("이건 나라서 가림",mynum)
         txtSpanList[i].current.classList.add("hidden");
       }
     }
