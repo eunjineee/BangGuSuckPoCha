@@ -174,7 +174,7 @@ function Tag(): JSX.Element {
                       username: username
                       },
                     headers: {
-                      accessToken: `${accessToken}`,
+                      accessToken: `${localStorage.getItem("accessToken")}`,
                     },
                   })
                   .then((r)=> {
@@ -375,7 +375,7 @@ function Tag(): JSX.Element {
                   username: username
                   },
                   headers: {
-                    accessToken: `${accessToken}`,
+                    accessToken: `${localStorage.getItem("accessToken")}`,
                   }
                 })
                 .then(()=> {

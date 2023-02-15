@@ -57,14 +57,14 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                             method: 'post',
                             url: `https://i8e201.p.ssafy.io/api/user/friend/accept/${f_request_id}`,
                             headers: {
-                              accessToken: `${accessToken}`,
+                              accessToken: `${r.data.accessToken}`,
                             },
                           }).then((r)=> {
                             axios({
                               method:'get',
                               url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
                               headers: {
-                                accessToken: `${accessToken}`,
+                                accessToken: `${localStorage.getItem("accessToken")}`,
                               },
                             })
                             .then((r)=> {
@@ -97,6 +97,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                   },
                 })
                 .then((r)=> {
+                  // 갱신이 필요할 때 
                   if (r.data.status === '401') {
                     axios({
                       method: 'get',
@@ -133,7 +134,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                               method:'get',
                               url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
                               headers: {
-                                accessToken: `${accessToken}`,
+                                accessToken: `${localStorage.getItem("accessToken")}`,
                               },
                             })
                             .then((r)=> {
@@ -181,7 +182,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                                         username: username,
                                       },
                                       headers: {
-                                        accessToken: `${accessToken}`,
+                                        accessToken: `${localStorage.getItem("accessToken")}`,
                                       },
                                     }).then(()=> {
                                       if (themeId === 'T0') {
@@ -199,6 +200,7 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                         }                    
                       })                
                     } else {
+                      // 갱신이 필요 없을 때 
                       console.log('초대 승인해따', r.data.data);
                       // 못들어 갈 경우
                       if (r.data.message === 'fail') {
@@ -288,19 +290,64 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                     accessToken: `${accessToken}`,
                   },
                 })
-                .then(()=> {
-                  axios({
-                    method:'get',
-                    url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
-                    headers: {
-                      accessToken: `${accessToken}`,
-                    },
-                  })
-                  .then((r)=> {
-                    dispatch(changeAlarmApiDataState(r.data.data))
-                    toast.success("요청을 거절하였습니다.");
-                  })
+                .then((r)=> {
+                  // 갱신이 필요할 때 
+                  if (r.data.status === '401') {
+                    axios({
+                      method: 'get',
+                      url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                      headers: {
+                        refreshToken: `${refreshToken}`,
+                      }
+                    }).then((r)=> {
+                      console.log('Tag의 57번줄: ', r.data.status);
+          
+                      // 돌려보내기
+                      if (r.data.status === '401') {
+                        localStorage.clear();
+                        toast.error('인증되지 않은 유저입니다')
+                        navigate('/')
+                      } else {
+                        // 엑세스 토큰 추가
+                        // 원래 작동 순서
+                        localStorage.setItem("accessToken", r.data.accessToken);
+                        axios({
+                          method: 'delete',
+                          url: `https://i8e201.p.ssafy.io/api/user/friend/refuse/${f_request_id}`,
+                          headers: {
+                            accessToken: `${r.data.accessToken}`,
+                          },
+                        }).then((r)=> {
+                          axios({
+                            method:'get',
+                            url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+                            headers: {
+                              accessToken: `${localStorage.getItem("accessToken")}`,
+                            },
+                          })
+                          .then((r)=> {
+                            dispatch(changeAlarmApiDataState(r.data.data))
+                            toast.success("요청을 거절하였습니다.");
+                          })
+                        })
+                      }        
+                    })
+                  } else {
+                    // 토큰에 문제 없을 때
+                    axios({
+                      method:'get',
+                      url: `https://i8e201.p.ssafy.io/api/user/friend/request/${username}`,
+                      headers: {
+                        accessToken: `${accessToken}`,
+                      },
+                    })
+                    .then((r)=> {
+                      dispatch(changeAlarmApiDataState(r.data.data))
+                      toast.success("요청을 거절하였습니다.");
+                    })
+                  }
                 })
+                // 1번 클릭시
               } else if (alarmClickState === 1) {
                 axios({
                   method: 'delete',
@@ -310,18 +357,62 @@ function RequestListComponent({from_nickname,sentence,invite_id,pocha_id,f_reque
                   },
                 })
                 .then((r)=> {
-                  axios({
-                    method:'get',
-                    url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
-                    headers: {
-                      accessToken: `${accessToken}`,
-                    },
-                  })
-                  .then((r)=> {
-                    dispatch(changeAlarmClickState(1))
-                    dispatch(changeAlarmApiDataState(r.data.data))
-                    toast.success("요청을 거절하였습니다.");
-                  })
+                  if (r.data.status === '401') {
+                    axios({
+                      method: 'get',
+                      url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+                      headers: {
+                        refreshToken: `${refreshToken}`,
+                      }
+                    }).then((r)=> {
+                      console.log('Tag의 57번줄: ', r.data.status);
+          
+                      // 돌려보내기
+                      if (r.data.status === '401') {
+                        localStorage.clear();
+                        toast.error('인증되지 않은 유저입니다')
+                        navigate('/')
+                      } else {
+                        // 엑세스 토큰 추가
+                        localStorage.setItem("accessToken", r.data.accessToken);
+                        // 재요청
+                        axios({
+                          method: 'delete',
+                          url: `https://i8e201.p.ssafy.io/api/pocha/invite/refuse/${invite_id}`,
+                          headers: {
+                            accessToken: `${r.data.accessToken}`,
+                          },
+                        }).then((r)=> {
+                          axios({
+                            method:'get',
+                            url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
+                            headers: {
+                              accessToken: `${localStorage.getItem("accessToken")}`,
+                            },
+                          })
+                          .then((r)=> {
+                            dispatch(changeAlarmClickState(1))
+                            dispatch(changeAlarmApiDataState(r.data.data))
+                            toast.success("요청을 거절하였습니다.");
+                          })
+                        })
+                      }      
+                    })
+                  } else {
+                    // 토큰에 문제 없을 때
+                    axios({
+                      method:'get',
+                      url: `https://i8e201.p.ssafy.io/api/pocha/invite/${username}`,
+                      headers: {
+                        accessToken: `${accessToken}`,
+                      },
+                    })
+                    .then((r)=> {
+                      dispatch(changeAlarmClickState(1))
+                      dispatch(changeAlarmApiDataState(r.data.data))
+                      toast.success("요청을 거절하였습니다.");
+                    })
+                  }
                 })
               }
             }}

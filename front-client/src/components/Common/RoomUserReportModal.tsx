@@ -4,9 +4,11 @@ import { showRoomUserReportModal } from "../../store/store";
 import { toast } from "react-toastify";
 import styles from "./RoomUserProfile.module.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RoomUserRepotModal = ({ userData }: { userData: any }) => {
   let dispatch = useAppDispatch();
+  const navigate = useNavigate()
   const { username, nickname, userId } = userData.data;
   const [reportReason, setReportReason] = useState<string>("");
   const [reportType, setReportType] = useState<number>(0);
@@ -35,7 +37,7 @@ const RoomUserRepotModal = ({ userData }: { userData: any }) => {
     event.preventDefault();
     console.log('신고내역', username, reportReason, reportType, myId);
     try {
-      const rreport = await axios({
+      await axios({
         method: "POST",
         url: "https://i8e201.p.ssafy.io/api/user/report",
         data: {
@@ -47,9 +49,46 @@ const RoomUserRepotModal = ({ userData }: { userData: any }) => {
         headers: {
           accessToken: `${accessToken}`,
         },
-      });
-      toast.success(`${nickname}을 신고하였습니다`)
-      console.log("report신고갔냐", rreport);
+      }).then((r)=> {
+        // 토큰 갱신 필요
+        if (r.data.status === '401') {
+          axios({
+            method: 'get',
+            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            headers: {
+              refreshToken: `${refreshToken}`,
+            }
+          }).then((r)=> {
+            // 돌려보내기
+            if (r.data.status === '401') {
+              localStorage.clear();
+              toast.error('인증되지 않은 유저입니다')
+              navigate('/')
+            } else {
+               // 엑세스 토큰 추가
+              localStorage.setItem("accessToken", r.data.accessToken);
+              // 재요청
+              axios({
+                method: "POST",
+                url: "https://i8e201.p.ssafy.io/api/user/report",
+                data: {
+                  attackerId: userId,
+                  reportReason: reportReason,
+                  reportType: reportType,
+                  reporterId: myId,
+                },
+                headers: {
+                  accessToken: `${r.data.accessToken}`,
+                },
+              }).then((r)=> {
+                toast.success(`${nickname}을 신고하였습니다`)
+              })
+            }
+          })
+        } else {
+          toast.success(`${nickname}을 신고하였습니다`)
+        }
+      })
     } catch (error) {
       console.log("유저신고에러", error);
     }
