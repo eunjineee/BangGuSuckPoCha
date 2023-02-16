@@ -177,7 +177,7 @@ function UserList() {
                 accessToken: accessToken,
               },
             }).then((r) => {
-              console.log(r.data);
+              console.log(r.data.data);
               dispatch(changeUserList(r.data.data));
             });
           }
