@@ -75,7 +75,7 @@ function WaitingRoom({
                     roomName: pochaId,
                     username: myInfo.username,
                     nickname: myInfo.nickname,
-                    limit: r.data.limitUser,
+                    limit: r.data.data.limitUser,
                   });
                 }
                 // console.log(r);
@@ -90,13 +90,13 @@ function WaitingRoom({
               roomName: pochaId,
               username: myInfo.username,
               nickname: myInfo.nickname,
-              limit: r.data.limitUser,
+              limit: r.data.data.limitUser,
             });
           }
-          // console.log(r); 
+          // console.log(r);
           //test
         }
-      })
+      });
     } catch (error) {
       console.log("포차 정보 받아오기", error);
     }
@@ -122,7 +122,6 @@ function WaitingRoom({
   //     console.log("포차 정보 받아오기", error);
   //   }
   // };
-
 
   // 자기소개 추가
   const addMyIntroduce = async (e: any) => {
