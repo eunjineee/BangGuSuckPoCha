@@ -168,10 +168,10 @@ function MeetingRoom(): JSX.Element {
       }
       //토큰 정상이야
       else {
-        //실행 결과값 그대로 실행
+        //실행 결과값 그대로 실행        
         setMyInfo({
-          username: r.data.data.data.username,
-          nickname: r.data.data.data.nickname,
+          username: r.data.data.username,
+          nickname: r.data.data.nickname,
         });
       }
     });

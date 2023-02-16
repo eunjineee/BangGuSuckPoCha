@@ -153,6 +153,10 @@ const PublicModal = ({
               refreshToken: `${refreshToken}`,
             }
           }).then((r)=> {
+            console.log('갱신되서 받아온 값은?: ', r);
+            console.log('갱신되서 받아온 값은?: ', r.data);
+            console.log('갱신되서 받아온 값은?: ', r.data.accessToken);
+            
             // 돌려보내기
             if (r.data.status === '401') {
               localStorage.clear();
@@ -160,13 +164,13 @@ const PublicModal = ({
               navigate('/')
             } else {
               // 엑세스 토큰 추가
-              localStorage.setItem("accessToken", r.data.data.accessToken);
+              localStorage.setItem("accessToken", r.data.accessToken);
               // 재요청  
               axios({
                 method:'put',
                 url: `https://i8e201.p.ssafy.io/api/pocha/alcohol/${roomName}`,
                 headers: {
-                  refreshToken: `${r.data.data.accessToken}`,
+                  refreshToken: `${r.data.accessToken}`,
                 }
               }).then((r)=> {
                 socket.emit("pocha_cheers", roomName)

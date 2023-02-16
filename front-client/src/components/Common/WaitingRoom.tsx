@@ -290,7 +290,7 @@ function WaitingRoom({
                 </div>
               )}
               <div className="text-center m-2 text-2xl font-bold">
-                {pochaInfo.totalCount} / {pochaInfo.limitUser}
+                {pochaInfo.data.totalCount} / {pochaInfo.data.limitUser}
               </div>
               {timer > 0 ? (
                 <div className="text-center m-1 text-3xl font-bold">

@@ -22,7 +22,11 @@ const MainCreateRoomTheme = ({ selectOption, pochaInfo }: { selectOption: string
   useEffect(() => {
     // 포차 정보 있을때
     if (pochaInfo) {
-      switch (pochaInfo.themeId) {
+      console.log('룸 테마: ',pochaInfo );
+      console.log('룸 테마: ',pochaInfo.data );
+      console.log('룸 테마: ',pochaInfo.data.themeId );
+      
+      switch (pochaInfo.data.themeId) {
         case "T0B0":
           selectTheme.current[0].classList.toggle("grayscale");
           selectTheme.current[0].classList.toggle("scale-125");
