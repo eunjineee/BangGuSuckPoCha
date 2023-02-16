@@ -59,7 +59,7 @@ function NavbarMenu(): JSX.Element {
     <div
       ref={menuIcon}
       className={`absolute rounded-full w-48 min-w-[12rem] h-16 min-h-[4rem] hidden`}
-      style={{ right: "6rem", top: "11.1rem" }}
+      style={{ right: "6.7rem", top: "11.1rem" }}
     >
       <img
         src={require("../../assets/logoIcon/menuBground.png")}
