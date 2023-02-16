@@ -89,20 +89,28 @@ const AdminAdd = () => {
                             );
                             accessToken = r.data.accessToken;
                             //원래 axios 실행
-                            console.log("r.data재발급", r.data);
-                            console.log("r.data.data재발급", r.data.data);
-                            const isDouble = r.data.data;
-                            if (isDouble) {
-                              toast.success(
-                                `${NickName}(은)는 수정가능한 닉네임입니다`
-                              );
-                              setModifydisplay(isDouble);
-                            } else {
-                              toast.warning(
-                                `${NickName}(은)는 중복된 닉네임입니다`
-                              );
-                              setModifydisplay(isDouble);
-                            }
+                            axios({
+                              method: "get",
+                              url: `https://i8e201.p.ssafy.io/api/admin/check/${NickName}`,
+                              headers: {
+                                accessToken: `${accessToken}`,
+                              },
+                            }).then((r) => {
+                              console.log("r.data재발급", r.data);
+                              console.log("r.data.data재발급", r.data.data);
+                              const isDouble = r.data.data;
+                              if (isDouble) {
+                                toast.success(
+                                  `${NickName}(은)는 수정가능한 닉네임입니다`
+                                );
+                                setModifydisplay(isDouble);
+                              } else {
+                                toast.warning(
+                                  `${NickName}(은)는 중복된 닉네임입니다`
+                                );
+                                setModifydisplay(isDouble);
+                              }
+                            });
                           }
                         });
                       }
