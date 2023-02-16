@@ -79,7 +79,7 @@ function WaitingRoom({
                   console.log('fleg: ', flag);
                   setIsLoading(false);
                   socket.emit("wait", {
-                    roomName: pochaId,
+                    roomName: pochaId, 
                     username: myInfo.username,
                     nickname: myInfo.nickname,
                     limit: r.data.limitUser,
