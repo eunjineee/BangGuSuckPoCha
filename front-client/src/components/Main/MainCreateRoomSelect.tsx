@@ -28,7 +28,7 @@ const MainCreateRoomSelect = ({
       console.log('룸 선택: ', pochaInfo.data.age);
       console.log('룸 선택: ', pochaInfo.age);
       
-      if (pochaInfo.age !== 0 && selectTitle === "나이") {
+      if ( pochaInfo.data.age !== 0 && selectTitle === "나이") {
         selectChoiceAge.current.classList.remove("text-black");
         selectChoiceAge.current.classList.remove("bg-white");
         selectRegionCity.current.classList.add("text-black");
@@ -41,8 +41,8 @@ const MainCreateRoomSelect = ({
         selectRegionCity.current.classList.add("bg-white");
       }
       // 우선 받아온 포차정보대로 값세팅 그래야 선택된것처럼 보이는값 들어가니
-      dispatch(changeCreateRoomChoiceAge(pochaInfo.age));
-      dispatch(changeCreateRoomChoiceRegion(pochaInfo.region));
+      dispatch(changeCreateRoomChoiceAge( pochaInfo.data.age));
+      dispatch(changeCreateRoomChoiceRegion(pochaInfo.data.region));
     }
   }, []);
 
