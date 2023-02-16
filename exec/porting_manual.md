@@ -4,6 +4,8 @@
 
 ### - [기술 스택 & 버전 정보](#🛠기술-스택--버전-정보)
 
+### 
+
 ### - [빌드 방법](#⚙빌드-방법)
 
 ### - [Docker & Jenkins](#docker--jenkins-1)
@@ -305,4 +307,90 @@ server{
     }
 }
 #######################################
+```
+
+### 6. DockerFile 생성
+#### Back-End
+```bash
+# **/back-server/DockerFile
+FROM adoptopenjdk/openjdk8 AS builder
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY src src
+RUN chmod +x ./gradlew
+RUN ./gradlew bootJAR
+
+FROM adoptopenjdk/openjdk8
+COPY --from=builder build/libs/*.jar app.jar
+EXPOSE 10080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+```
+#### Front-End
+```bash
+# **/front-clinet/DockerFile
+FROM node:18.12.1 as build-stage
+WORKDIR /var/jenkins_home/workspace/pocha_deploy/front-client
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+FROM nginx:stable-alpine as production-stage
+
+COPY --from=build-stage /var/jenkins_home/workspace/pocha_deploy/front-client/build /usr/share/nginx/html
+COPY --from=build-stage /var/jenkins_home/workspace/pocha_deploy/front-client/deploy-conf/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g","daemon off;"]
+```
+#### RTC(Socker ServeR)
+```bash
+# **/rtc-server/DockerFile
+FROM node:18.12.1 as build-stage
+WORKDIR /var/jenkins_home/workspace/deploytest/rtc-server
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "dev"]
+```
+#### RTC - NGINX
+```bash
+# **/rtc-server/deploy_conf/DockerFile
+FROM nginx:stable-alpine as production-stage
+
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g","daemon off;"]
+```
+
+### 7. Jenkins Shell Script
+#### 1) EC2 : Front, Back
+#### ◼Back-End
+```bash
+docker build -t backimg ./back-server
+if (docker ps | grep "backimg"); then docker stop backimg; fi
+docker run -it -d --rm -p 9999:9999 --name backimg backimg
+echo "Run back-server"
+```
+#### ◼Front-End
+```bash
+docker build -t frontimg ./front-client
+if (docker ps | grep "frontimg"); then docker stop frontimg; fi
+docker run -it -d --rm -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf/letsencrypt:/etc/letsencrypt --name frontimg frontimg
+echo "Run front-client"
+```
+#### 2) EC2 : RTC(Socker Server)
+#### ◼ RTC(Socker ServeR)
+```bash
+docker build -t rtcimg ./rtc-server
+if (docker ps | grep "rtcimg"); then docker stop rtcimg; fi
+docker run -it -d --rm -p 4000:4000 --name rtcimg rtcimg
+echo "Run rtc-server"
+```
+#### ◼ RTC - NGINX
+```bash
+docker build -t nginximg ./rtc-server/src/deploy_conf
+if (docker ps | grep "nginximg"); then docker stop nginximg; fi
+docker run -it -d --rm -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt --name nginximg nginximg
+echo "Run nginx"
 ```
