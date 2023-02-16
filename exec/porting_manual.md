@@ -2,13 +2,13 @@
 
 ## 📑목차
 
-### - [기술 스택 & 버전 정보](#🛠기술-스택--버전-정보)
+### [1. 기술 스택 & 버전 정보](#🛠기술-스택--버전-정보)
 
-### 
+### [2. 빌드 방법](#⚙빌드-방법)
 
-### - [빌드 방법](#⚙빌드-방법)
+### [3. Docker & Jenkins](#🌞docker--jenkins)
 
-### - [Docker & Jenkins](#docker--jenkins-1)
+### [4. 기타 설정](#기타-설정)
 
 ---
 
@@ -113,7 +113,7 @@
 
 ---
 
-## 🌞Docker & Jenkins
+ ## 🌞Docker & Jenkins
 
 <img src = "./img/server.png" />
 
@@ -393,4 +393,32 @@ docker build -t nginximg ./rtc-server/src/deploy_conf
 if (docker ps | grep "nginximg"); then docker stop nginximg; fi
 docker run -it -d --rm -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt --name nginximg nginximg
 echo "Run nginx"
+```
+
+## 기타 설정
+### 1. DB : MySQL
+> back-server/src/main/resources/application.properties
+```bash
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://{Domain}:{Port}/{DB_Name}?serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull
+spring.datasource.username={username}
+spring.datasource.password={password}
+```
+
+### 2. 네이버 로그인
+>
+```bash
+# naver OAuth
+spring.security.oauth2.client.registration.naver.client-id={네이버 API Client Id}
+spring.security.oauth2.client.registration.naver.client-secret={네이버 API Secret Code}
+spring.security.oauth2.client.registration.naver.redirect-uri={Domain}:{Port}/login/oauth2/code/naver
+spring.security.oauth2.client.registration.naver.scope=gender,birthday,birthyear
+spring.security.oauth2.client.registration.naver.client-name=Naver
+spring.security.oauth2.client.registration.naver.authorization-grant-type=authorization_code
+
+# naver Provider
+spring.security.oauth2.client.provider.naver.authorization-uri=https://nid.naver.com/oauth2.0/authorize
+spring.security.oauth2.client.provider.naver.token-uri=https://nid.naver.com/oauth2.0/token
+spring.security.oauth2.client.provider.naver.user-info-uri=https://openapi.naver.com/v1/nid/me
+spring.security.oauth2.client.provider.naver.user-name-attribute=response
 ```
