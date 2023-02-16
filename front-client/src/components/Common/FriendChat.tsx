@@ -96,7 +96,7 @@ function FriendChat():JSX.Element {
     client.current = new StompJs.Client({
       brokerURL: 'ws://i8e201.p.ssafy.io/api/ws/chat', // 왜 websocket을 붙여줘야하는거지..?
       connectHeaders: {
-        'Content-Type': 'application/json'
+        "Content-Type": "text/event-stream;charset=utf-8",
       },
       webSocketFactory: () => new SockJS("https://i8e201.p.ssafy.io/api/ws/chat"),
       debug: function (str) {
