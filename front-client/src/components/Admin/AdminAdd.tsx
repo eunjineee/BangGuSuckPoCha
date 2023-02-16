@@ -109,7 +109,8 @@ const AdminAdd = () => {
                       else {
                         console.log("토큰 정상함");
                         //실행 결과값 그대로 실행
-                        console.log(r.data);
+                        console.log("r.data", r.data);
+                        console.log("r.data.data", r.data.data);
                         const isDouble = r.data.data;
                         if (isDouble) {
                           toast.success(
