@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import styles from "./LiarTitle.module.css";
 
 function LiarTitle({
@@ -16,7 +18,7 @@ function LiarTitle({
   liarnum: any;
 }): React.ReactElement {
   const roomName = pochaId;
-
+  const navigate = useNavigate();
   const [titles, setTitles] = useState<any>(null);
 
   const [nowtitle, setNowtitle] = useState<any>(null);
@@ -36,19 +38,56 @@ function LiarTitle({
   // 라이어 게임 주제 받아오기
   const getLiarSubject = async () => {
     let accessToken = localStorage.getItem("accessToken");
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
-        headers: {
-          accessToken: accessToken,
-        },
-      });
-      setTitles(data);
-    } catch (error) {
-      console.log("라이어 게임 주제 axios error", error);
-    }
+
+    await axios({
+      url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+      headers: {
+        accessToken: accessToken,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              url: `https://i8e201.p.ssafy.io/api/pocha/game/liar`,
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              setTitles(r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        console.log("토큰 정상함");
+        //실행 결과값 그대로 실행
+        setTitles(r.data.data);
+      }
+    });
   };
 
   // 이번 턴 주제
