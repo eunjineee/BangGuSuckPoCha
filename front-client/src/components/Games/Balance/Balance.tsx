@@ -220,10 +220,16 @@ function Balance({
     socket.emit("game_back_select", roomName);
   };
 
-  // 인트로 밸런스
+  // 밸런스 시작?
   const introBalance = () => {
     const roomName = pochaId;
-    const isTrueFalse = !isBalance;
+    const isTrueFalse = true;
+    socket.emit("game_balance_Intro", roomName, isTrueFalse);
+  };
+  // 밸런스 끝?
+  const endBalance = () => {
+    const roomName = pochaId;
+    const isTrueFalse = false;
     socket.emit("game_balance_Intro", roomName, isTrueFalse);
   };
 
@@ -328,7 +334,7 @@ function Balance({
             onClick={() => {
               onClickClose();
               setTimeout(() => {
-                introBalance();
+                endBalance();
               }, 1000);
             }}
           >
@@ -338,7 +344,7 @@ function Balance({
         <div className="imgDiv">
           <img
             src="/balanceGame/bunny.png"
-            className="h-[5rem] bunnyImg"
+            className="object-contain bunnyImg"
             alt=""
           />
         </div>
@@ -413,7 +419,7 @@ function Balance({
               onClickClose();
               setTimeout(() => {
                 typeChange(e.target.innerText);
-                introBalance();
+                endBalance();
               }, 1000);
             }}
           >

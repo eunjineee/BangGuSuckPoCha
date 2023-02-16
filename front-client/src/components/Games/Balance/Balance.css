@@ -24,7 +24,7 @@
   border: solid 2px;
   width: 54rem;
   margin: 0 auto;
-  height: 48.9rem;
+  height: 49.9rem;
   background-color: #000000;
   border-radius: 1rem;
 }
@@ -157,12 +157,12 @@
 .imgDiv {
   display: flex;
   justify-content: center;
-  padding-top: 7rem;
+  padding-top: 8rem;
   transition: all 0.5s;
 }
 
 .imgDiv:hover {
-  padding-top: 5rem;
+  padding-top: 6.6rem;
 }
 
 .romOrNor{
