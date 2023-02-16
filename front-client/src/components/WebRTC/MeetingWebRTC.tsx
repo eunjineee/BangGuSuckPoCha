@@ -997,8 +997,8 @@ const WebRTC = ({
         //토큰 정상이야
         else {
           //실행 결과값 그대로 실행
-          console.log("모달용 데이터?", r.data.data);
-          dispatch(changeNavAlarmReviewEmojiUserData(r.data.data));
+          console.log("모달용 데이터?", r.data);
+          dispatch(changeNavAlarmReviewEmojiUserData(r.data));
           dispatch(showRoomUserProfile());
         }
       });
