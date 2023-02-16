@@ -200,14 +200,14 @@ function ReviewPage(): JSX.Element {
       ) : null}
 
       <div
-        className={`grid w-screen min-w-[75rem] h-screen ${styles.hideScroll}`}
+        className={`grid w-screen h-screen min-w-[75rem] ${styles.hideScroll}`}
         style={{
           backgroundColor: "rgb(25, 25, 25)",
-          gridTemplateRows: "11.7rem 1fr",
+          gridTemplateRows: "11rem 1fr",
           overflow: "scroll",
         }}
       >
-        <div className="grid" style={{ gridTemplateRows: "12rem 8rem" }}>
+        <div className="grid h-full" style={{ gridTemplateRows: "12rem 1fr" }}>
           <div></div>
           <Navbar />
         </div>
@@ -280,7 +280,7 @@ function ReviewComponent({
 
   return (
     <div
-      className="max-h-[67rem] grid"
+      className="h-full grid "
       style={{ gridTemplateColumns: "1fr 1fr 1fr" }}
     >
       {/* 빈칸 */}
@@ -288,23 +288,23 @@ function ReviewComponent({
       {/* 했는지 안했는지에 대한 체크 */}
       <div
         className="grid text-white pb-4 "
-        style={{ gridTemplateRows: "0.3fr 3fr 0.3fr" }}
+        style={{ gridTemplateRows: "0.3fr 0.3fr 3fr" }}
       >
-        <div className="flex-column justify-front absolute mt-[1.5rem]">
+        <div className="mt-4">
           <div
-            className="flex justify-content: end"
+            className="flex justify-start"
             style={{ fontSize: "xx-large", fontWeight: "bold" }}
           >
             리뷰
           </div>
-          <div className="flex justify-content: end">
+          <div className="flex justify-start my-1">
             즐거운 시간 보내셨나요?
           </div>
-          <div className="flex justify-content: end">
+          <div className="flex justify-start">
             3일 내 리뷰를 등록해주세요!
           </div>
         </div>
-        <div className="flex justify-center items-center mt-[10rem]">
+        <div className="flex justify-center items-center mt-6">
           <div
             className="h-full w-[25rem] text-xl cursor-pointer"
             id="reviewlist"
@@ -335,7 +335,7 @@ function ReviewComponent({
           </div>
         </div>
         {/* 리뷰 목록 */}
-        <div className="flex flex-col w-full max-h-[37.5rem] overflow-scroll hideScroll py-3">
+        <div className="flex flex-col w-full max-h-[25.5rem] overflow-scroll hideScroll   py-3">
           {clickReviewState === false ? (
             showBefore === 0 ? (
               <div className="flex justify-center items-center">
@@ -661,7 +661,7 @@ function StartReviewComponent({
 
                           // 3일
                           // 리뷰 이전
-                          const Beforedata:any[] = datas.filter((data) => {
+                          const Beforedata: any = datas.filter((data) => {
                             const review_create_at = new Date(
                               data.create_at.split("T")[0]
                             );
@@ -671,15 +671,12 @@ function StartReviewComponent({
                               threeBeforeYMD <= review_create_at
                             );
                           });
-                          console.log('리뷰 안한 것들: ', Beforedata);
-                          
                           const currentBeforedata = Beforedata.reverse();
                           setReviewBefore(currentBeforedata);
                           // 리뷰 이후
-                          const Afterdata: any[] = datas.filter((data) => {
+                          const Afterdata: any = datas.filter((data) => {
                             return data.review_at !== null;
                           });
-                          console.log('리뷰 완료 된것들',Afterdata)
                           const currentAfterReview = Afterdata.reverse();
                           setReviewAfter(currentAfterReview);
                         });
