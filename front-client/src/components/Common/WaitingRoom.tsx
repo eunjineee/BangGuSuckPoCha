@@ -95,7 +95,7 @@ function WaitingRoom({
           console.log('93번줄: ',r.data);
           
           setPochaInfo(r.data);
-
+          console.log('98번줄 fleg: ', flag);
           if (flag) {
             setIsLoading(false);
             socket.emit("wait", {

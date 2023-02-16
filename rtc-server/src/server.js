@@ -190,7 +190,8 @@ wsServer.on("connection", (socket) => {
       ];
     }
     waitToRoom[socket.id] = roomName;
-
+    console.log("wait 확인용");
+    console.log(waitUsers[roomName]);
     // 대기 인원이 가득 찼는지 확인.
     if (waitUsers[roomName].length == waitRoom[roomName]) {
       // await axios : 미팅 포차 시작.
