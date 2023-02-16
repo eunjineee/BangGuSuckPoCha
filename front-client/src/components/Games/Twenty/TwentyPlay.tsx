@@ -86,8 +86,8 @@ function TwentyPlay({
               method: "GET",
               url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
             }).then((r) => {
-              console.log("포차유저정보왔냐", r.data);
-              setPochaUsers(r.data);
+              console.log("포차유저정보왔냐", r.data.data);
+              setPochaUsers(r.data.data);
             });
           }
         });
@@ -95,8 +95,8 @@ function TwentyPlay({
       //토큰 정상이야
       else {
         //실행 결과값 그대로 실행
-        console.log("포차유저정보왔냐", r.data);
-        setPochaUsers(r.data);
+        console.log("포차유저정보왔냐", r.data.data);
+        setPochaUsers(r.data.data);
       }
     });
 

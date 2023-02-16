@@ -163,63 +163,166 @@ const WebRTC = ({
     }
   }
   // 유저들 프로파일 요청하기
-  const getUserProfile = async (username: any) => {
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
-        headers: {
-          accessToken: `${accessToken}`,
-        },
-      });
-      // setUserProfileData((prev: any) => data);
-      if (username === myUserName) {
-        console.log(
-          "처음에 여기 들어오나??",
-          "젠더정보@@@@@@@@@@@@",
-          data.nickname,
-          data.gender
-        );
-        setPeerUser((prev: any) => {
-          return { ...prev, nick: data.nickname, gender: data.gender };
+  const getUserProfile: any = async (username: any) => {
+    axios({
+      url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              if (username === myUserName) {
+                console.log(
+                  "처음에 여기 들어오나??",
+                  "젠더정보@@@@@@@@@@@@",
+                  r.data.data.nickname,
+                  r.data.data.gender
+                );
+                setPeerUser((prev: any) => {
+                  return {
+                    ...prev,
+                    nick: r.data.data.nickname,
+                    gender: r.data.data.gender,
+                  };
+                });
+              }
+              console.log("정보요청 잘왔냐", r.data.data);
+              return r.data.data;
+            });
+          }
         });
       }
-      console.log("정보요청 잘왔냐", data);
-      return data;
-    } catch (error) {
-      console.log("유저정보 처음 요청", error);
-    }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        if (username === myUserName) {
+          console.log(
+            "처음에 여기 들어오나??",
+            "젠더정보@@@@@@@@@@@@",
+            r.data.data.nickname,
+            r.data.data.gender
+          );
+          setPeerUser((prev: any) => {
+            return {
+              ...prev,
+              nick: r.data.data.nickname,
+              gender: r.data.data.gender,
+            };
+          });
+        }
+        console.log("정보요청 잘왔냐", r.data.data);
+        return r.data.data;
+      }
+    });
   };
 
   // 포차 참여유저 데이터 axios 요청
   async function getUsersProfile() {
-    console.log(pochaId);
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
-        headers: {
-          accessToken: `${accessToken}`,
-        },
-      });
-      console.log("참여 유저들 데이터?", data);
-      // 방장 여부 체크
-      data.forEach((user: any) => {
-        if (user.username === myUserName) {
-          setIsHost(user.isHost);
-          propIsHost(user.isHost);
-        }
-      });
-      setPochaUsers(data);
-      dispatch(isRtcLoading(false));
-      handleWelcomeSubmit(
-        data.filter((entity: any) => entity.username === myUserName)[0]
-      );
-    } catch (error) {
-      console.log("포차 참여유저 데이터 axios error", error);
-    }
+    await axios({
+      url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              //실행 결과값 그대로 실행
+              console.log("참여 유저들 데이터?", r.data.data);
+              // 방장 여부 체크
+              r.data.data.forEach((user: any) => {
+                if (user.username === myUserName) {
+                  setIsHost(user.isHost);
+                  propIsHost(user.isHost);
+                }
+              });
+              setPochaUsers(r.data.data);
+              dispatch(isRtcLoading(false));
+              handleWelcomeSubmit(
+                r.data.data.filter(
+                  (entity: any) => entity.username === myUserName
+                )[0]
+              );
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        //실행 결과값 그대로 실행
+        console.log("참여 유저들 데이터?", r.data.data);
+        // 방장 여부 체크
+        r.data.data.forEach((user: any) => {
+          if (user.username === myUserName) {
+            setIsHost(user.isHost);
+            propIsHost(user.isHost);
+          }
+        });
+        setPochaUsers(r.data.data);
+        dispatch(isRtcLoading(false));
+        handleWelcomeSubmit(
+          r.data.data.filter((entity: any) => entity.username === myUserName)[0]
+        );
+      }
+    });
   }
 
   // 카메라 뮤트
@@ -656,8 +759,8 @@ const WebRTC = ({
       socket.emit("game_back_select", roomName);
       setTimeout(() => {
         setIsNotice(false);
-      }, 1000)
-    })
+      }, 1000);
+    });
 
     // 포차 짠! 기능 : 방 설정 다시 불러오기.
     socket.on("pocha_cheers", async () => {
@@ -845,17 +948,59 @@ const WebRTC = ({
     if (userCount.current >= 2) {
       const username = event.currentTarget.id;
       console.log("모달용 데이터 닉?", username);
-      const { data } = await axios({
+      await axios({
         url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
         headers: {
           accessToken: `${accessToken}`,
         },
+      }).then((r) => {
+        //토큰이상해
+        if ("401" === r.data.status) {
+          //토큰 재요청
+          console.log("토큰 이상함");
+          const refreshToken = localStorage.getItem("refreshToken");
+          const Username = localStorage.getItem("Username");
+          axios({
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+            headers: {
+              refreshToken: refreshToken,
+            },
+          }).then((r) => {
+            //재발급 실패
+            if ("401" === r.data.status) {
+              localStorage.clear();
+              toast.error("인증되지 않은 유저입니다");
+              navigate("/");
+            }
+            //재발급 성공
+            else {
+              console.log("재발급 성공", r.data.accessToken);
+              localStorage.setItem("accessToken", r.data.accessToken);
+              accessToken = r.data.accessToken;
+              //원래 axios 실행
+              axios({
+                url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
+                headers: {
+                  accessToken: `${accessToken}`,
+                },
+              }).then((r) => {
+                //실행 결과값 그대로 실행
+                console.log("모달용 데이터?", r.data.data);
+                dispatch(changeNavAlarmReviewEmojiUserData(r.data.data));
+                dispatch(showRoomUserProfile());
+              });
+            }
+          });
+        }
+        //토큰 정상이야
+        else {
+          //실행 결과값 그대로 실행
+          console.log("모달용 데이터?", r.data.data);
+          dispatch(changeNavAlarmReviewEmojiUserData(r.data.data));
+          dispatch(showRoomUserProfile());
+        }
       });
-      console.log("모달용 데이터?", data);
-      dispatch(changeNavAlarmReviewEmojiUserData(data));
-      dispatch(showRoomUserProfile());
-      // setUserProfileData(data);
-      // dispatch(isRtcLoading(false));
     }
   };
 
@@ -868,7 +1013,7 @@ const WebRTC = ({
   // 미팅포차 입장시 알림화면 제거 신호
   const closeNotice = () => {
     socket.emit("close_notice", roomName);
-  }
+  };
 
   // ---------------- 게임 관련 --------------------
   const transitionDiv = useRef<HTMLDivElement>(null);
@@ -962,8 +1107,6 @@ const WebRTC = ({
   const selectedId = useAppSelector((state) => {
     return state.selectGameId;
   });
-
-
 
   return (
     <>
