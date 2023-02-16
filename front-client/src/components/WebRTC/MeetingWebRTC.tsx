@@ -164,25 +164,25 @@ const WebRTC = ({
   }
   // 유저들 프로파일 요청하기
   const getUserProfile: any = async (username: any) => {
-    axios({
+    return await axios({
       url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
       headers: {
         accessToken: `${accessToken}`,
       },
-    }).then((r) => {
+    }).then(async (r) => {
       //토큰이상해
       if ("401" === r.data.status) {
         //토큰 재요청
         console.log("토큰 이상함");
         const refreshToken = localStorage.getItem("refreshToken");
         const Username = localStorage.getItem("Username");
-        axios({
+        await axios({
           method: "get",
           url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
           headers: {
             refreshToken: refreshToken,
           },
-        }).then((r) => {
+        }).then(async (r) => {
           //재발급 실패
           if ("401" === r.data.status) {
             localStorage.clear();
@@ -195,12 +195,12 @@ const WebRTC = ({
             localStorage.setItem("accessToken", r.data.accessToken);
             accessToken = r.data.accessToken;
             //원래 axios 실행
-            axios({
+            await axios({
               url: `https://i8e201.p.ssafy.io/api/user/info/${username}`,
               headers: {
                 accessToken: `${accessToken}`,
               },
-            }).then((r) => {
+            }).then(async (r) => {
               if (username === myUserName) {
                 console.log(
                   "처음에 여기 들어오나??",
@@ -333,6 +333,7 @@ const WebRTC = ({
 
   // 최초실행
   useEffect(() => {
+    getPochaInfo();
     getUserProfile(myUserName);
     console.log("이게끝나고--------------------");
     setIsLoading(false);
@@ -1271,7 +1272,7 @@ const WebRTC = ({
                   className="flex justify-center items-center min-w-fit w-[47vw] overflow-hidden mt-5 rounded-[20px] transition-all duration-1000 opacity-0"
                 >
                   {/* {pochaUsers && <LadderIntro socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>} */}
-                  {isNotice && <div onClick={closeNotice} className={`w-full h-full bg-[url("src/assets/meeting_notice/meetingNotice.png")] bg-contain bg-center`}></div>}
+                  {isNotice && <div onClick={closeNotice} className={`w-full h-full bg-[url("src/assets/meeting_notice/meetingNotice.png")] bg-contain bg-center bg-no-repeat`}></div>}
                   {!isNotice && isGameSelect && (
                     <GameSelect socket={socket} pochaId={pochaId} />
                   )}
