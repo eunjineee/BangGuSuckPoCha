@@ -406,7 +406,11 @@ spring.datasource.password={password}
 ```
 
 ### 2. 네이버 로그인
->
+> back-server/build.gradle
+```bash
+implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+```
+> back-server/src/main/resources/application.properties
 ```bash
 # naver OAuth
 spring.security.oauth2.client.registration.naver.client-id={네이버 API Client Id}
