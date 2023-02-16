@@ -19,8 +19,8 @@ function WaitingRoom({
   waitEnd: Function;
   myInfo: any;
 }): JSX.Element {
-  const username = localStorage.getItem("Username");
-  let accessToken = localStorage.getItem("accessToken");
+  const username = localStorage.getItem('Username')
+  const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 처음에 받아오는 포차 정보
   const [pochaInfo, setPochaInfo] = useState<any>(null);
@@ -93,7 +93,7 @@ function WaitingRoom({
   //             limit: r.data.limitUser,
   //           });
   //         }
-  //         // console.log(r);
+  //         // console.log(r); 
   //         //test
   //       }
   //     })
@@ -102,78 +102,27 @@ function WaitingRoom({
   //   }
   // };
   const getPochaInfo = async (flag: boolean) => {
-    await axios({
-      url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
-      headers: {
-        accessToken: accessToken,
-      },
-    }).then((r) => {
-      //토큰이상해
-      if ("401" === r.data.status) {
-        //토큰 재요청
-        console.log("토큰 이상함");
-        const refreshToken = localStorage.getItem("refreshToken");
-        const Username = localStorage.getItem("Username");
-        axios({
-          method: "get",
-          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
-          headers: {
-            refreshToken: refreshToken,
-          },
-        }).then((r) => {
-          //재발급 실패
-          if ("401" === r.data.status) {
-            localStorage.clear();
-            toast.error("인증되지 않은 유저입니다");
-            navigate("/");
-          }
-          //재발급 성공
-          else {
-            console.log("재발급 성공", r.data.accessToken);
-            localStorage.setItem("accessToken", r.data.accessToken);
-            accessToken = r.data.accessToken;
-            //원래 axios 실행
-            axios({
-              url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
-              headers: {
-                accessToken: accessToken,
-              },
-            }).then((r) => {
-              setPochaInfo(r.data.data.data);
+    try {
+      const { data } = await axios({
+        url: `https://i8e201.p.ssafy.io/api/pocha/${Number(pochaId)}`,
+      });
+      setPochaInfo(data.data);
 
-              if (flag) {
-                setIsLoading(false);
-                socket.emit("wait", {
-                  roomName: pochaId,
-                  username: myInfo.username,
-                  nickname: myInfo.nickname,
-                  limit: r.data.data.data.limitUser,
-                });
-              }
-              console.log("데이터맞나?", r.data.data);
-            });
-          }
+      if (flag) {
+        setIsLoading(false);
+        socket.emit("wait", {
+          roomName: pochaId,
+          username: myInfo.username,
+          nickname: myInfo.nickname,
+          limit: data.data.limitUser,
         });
       }
-      //토큰 정상이야
-      else {
-        console.log("토큰 정상함");
-        //실행 결과값 그대로 실행
-        setPochaInfo(r.data.data.data);
-
-        if (flag) {
-          setIsLoading(false);
-          socket.emit("wait", {
-            roomName: pochaId,
-            username: myInfo.username,
-            nickname: myInfo.nickname,
-            limit: r.data.data.data.limitUser,
-          });
-        }
-        console.log("데이터맞나?", r.data.data);
-      }
-    });
+      console.log(data);
+    } catch (error) {
+      console.log("포차 정보 받아오기", error);
+    }
   };
+
 
   // 자기소개 추가
   const addMyIntroduce = async (e: any) => {
@@ -290,7 +239,7 @@ function WaitingRoom({
                 </div>
               )}
               <div className="text-center m-2 text-2xl font-bold">
-                {pochaInfo.data.totalCount} / {pochaInfo.data.limitUser}
+                {pochaInfo.totalCount} / {pochaInfo.limitUser}
               </div>
               {timer > 0 ? (
                 <div className="text-center m-1 text-3xl font-bold">
