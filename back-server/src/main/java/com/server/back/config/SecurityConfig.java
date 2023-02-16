@@ -38,6 +38,8 @@ public class SecurityConfig {
                .antMatchers("/login/oauth2/code/naver","/user/oauth2/token/naver", "/api/user/oauth2/token/naver","/api/login/oauth2/code/naver","/api/pocha/exit")
                .antMatchers("**/refresh/**","/api/user/auth/refresh/**","/user/auth/refresh/**")
                .antMatchers("**/exit**","**/exit","/pocha/exit","/api/pocha/exit")
+               .antMatchers("**/ws/chat**","**/ws/chat","/ws/chat","/api/ws/chat")
+               .antMatchers("**/sub/chat**","**/sub/chat","/sub/chat","/api/sub/chat")
                .antMatchers("/v2/api-docs","/swagger**/**","/api/v2/**",
                            "/swagger-resources/**",
                            "/configuration/ui",
