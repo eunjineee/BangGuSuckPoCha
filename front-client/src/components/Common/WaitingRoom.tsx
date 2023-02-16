@@ -19,7 +19,7 @@ function WaitingRoom({
   waitEnd: Function;
   myInfo: any;
 }): JSX.Element {
-  const username = localStorage.getItem('Username')
+  const username = localStorage.getItem("Username");
   const accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   // 처음에 받아오는 포차 정보
@@ -42,21 +42,21 @@ function WaitingRoom({
         headers: {
           accessToken: `${accessToken}`,
         },
-      }).then((r)=> {  
+      }).then((r) => {
         // 토큰 갱신 필요
-        if (r.data.status === '401') {
+        if (r.data.status === "401") {
           axios({
-            method: 'get',
-            url:`https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
+            method: "get",
+            url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${username}`,
             headers: {
               refreshToken: `${refreshToken}`,
-            }
-          }).then((r)=> {
+            },
+          }).then((r) => {
             // 돌려보내기
-            if (r.data.status === '401') {
+            if (r.data.status === "401") {
               localStorage.clear();
-              toast.error('인증되지 않은 유저입니다')
-              navigate('/')
+              toast.error("인증되지 않은 유저입니다");
+              navigate("/");
             } else {
               // 엑세스 토큰 추가
               localStorage.setItem("accessToken", r.data.accessToken);
@@ -66,10 +66,12 @@ function WaitingRoom({
                 headers: {
                   accessToken: `${r.data.accessToken}`,
                 },
-              }).then((r)=> {
+              }).then((r) => {
                 setPochaInfo(r.data);
                 if (flag) {
-                  console.log('fleg: ', flag);
+                  console.log("fleg: ", flag);
+                  console.log("미팅 포차 입장!!!");
+                  console.log(r.data);
                   setIsLoading(false);
                   socket.emit("wait", {
                     roomName: pochaId,
@@ -79,12 +81,14 @@ function WaitingRoom({
                   });
                 }
                 // console.log(r);
-              })
+              });
             }
-          })
+          });
         } else {
           setPochaInfo(r.data);
           if (flag) {
+            console.log("미팅 포차 입장!!!");
+            console.log(r.data);
             setIsLoading(false);
             socket.emit("wait", {
               roomName: pochaId,
