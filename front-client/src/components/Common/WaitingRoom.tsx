@@ -42,10 +42,7 @@ function WaitingRoom({
         headers: {
           accessToken: `${accessToken}`,
         },
-      }).then((r)=> {
-        console.log('46번줄: ', r);
-        console.log('46번줄: ', r.data);
-        
+      }).then((r)=> {  
         // 토큰 갱신 필요
         if (r.data.status === '401') {
           axios({
@@ -55,8 +52,6 @@ function WaitingRoom({
               refreshToken: `${refreshToken}`,
             }
           }).then((r)=> {
-            console.log('58번줄: ', r);
-            console.log('58번줄: ', r.data);
             // 돌려보내기
             if (r.data.status === '401') {
               localStorage.clear();
@@ -72,9 +67,6 @@ function WaitingRoom({
                   accessToken: `${r.data.accessToken}`,
                 },
               }).then((r)=> {
-                console.log('75번줄: ', r);
-                console.log('75번줄: ', r.data);
-                console.log('77번줄 fleg: ', flag);
                 setPochaInfo(r.data);
                 if (flag) {
                   console.log('fleg: ', flag);
@@ -91,11 +83,7 @@ function WaitingRoom({
             }
           })
         } else {
-          console.log('93번줄: ',r);
-          console.log('93번줄: ',r.data);
-          
           setPochaInfo(r.data);
-          console.log('98번줄 fleg: ', flag);
           if (flag) {
             setIsLoading(false);
             socket.emit("wait", {
