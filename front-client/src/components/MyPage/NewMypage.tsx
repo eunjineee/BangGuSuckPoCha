@@ -167,7 +167,7 @@ const NewMyPage = () => {
               const isDouble = r.data.data;
               console.log("바뀔닉네임", ModifyNickname);
               console.log("내닉네임", MyNickname);
-              console.log("판단해주는 백", isDouble);
+              console.log("판단해주는 백",isDouble);
 
               if (isDouble) {
                 toast.success(
