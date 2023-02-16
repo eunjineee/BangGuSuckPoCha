@@ -139,7 +139,7 @@ const PublicModal = ({
     try {
       await axios({
         method:'put',
-        url: `https://i8e201.p.ssafy.io/api//pocha/alcohol/${roomName}`,
+        url: `https://i8e201.p.ssafy.io/api/pocha/alcohol/${roomName}`,
         headers: {
           refreshToken: `${accessToken}`,
         }
@@ -164,7 +164,7 @@ const PublicModal = ({
               // 재요청  
               axios({
                 method:'put',
-                url: `https://i8e201.p.ssafy.io/api//pocha/alcohol/${roomName}`,
+                url: `https://i8e201.p.ssafy.io/api/pocha/alcohol/${roomName}`,
                 headers: {
                   refreshToken: `${r.data.data.accessToken}`,
                 }
