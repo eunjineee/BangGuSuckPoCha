@@ -100,8 +100,8 @@ function FriendChat():JSX.Element {
       brokerURL: 'wss://i8e201.p.ssafy.io/api/ws/chat', // 왜 websocket을 붙여줘야하는거지..?
       connectHeaders: {
         // "Content-Type": "text/event-stream;charset=utf-8",
-        // accessToken: `${accessToken}`,
-        "Authorization": `Bearer ${accessToken}`,
+        accessToken: `${accessToken}`,
+        // "Authorization": `Bearer ${accessToken}`,
       },
       webSocketFactory: () => new SockJS("https://i8e201.p.ssafy.io/api/ws/chat"),
       debug: function (str) {
