@@ -110,6 +110,9 @@ function MeetingRoom(): JSX.Element {
                 accessToken: `${accessToken}`,
               },
             }).then((r) => {
+              console.log('113번줄',r);
+              console.log('113번줄',r.data);
+              console.log('113번줄',r.data.data);
               setPochaInfo(r.data.data);
             });
           }
@@ -118,6 +121,9 @@ function MeetingRoom(): JSX.Element {
       //토큰 정상이야
       else {
         //실행 결과값 그대로 실행
+        console.log('124번줄',r);
+        console.log('124번줄',r.data);
+        console.log('124번줄',r.data.data);
         setPochaInfo(r.data.data);
       }
     });
