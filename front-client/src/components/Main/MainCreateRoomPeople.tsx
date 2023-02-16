@@ -14,13 +14,13 @@ const MainCreateRoomPeople = ({ selectOption, pochaInfo }: { selectOption: strin
     console.log('포차정보: ', pochaInfo);
     
     if (pochaInfo) {
-      const index = pochaInfo.limitUser - 2;
+      const index = Number(pochaInfo.limitUser) - 2;
       console.log("포차 정보", pochaInfo);
       console.log("인덱스", index);
       console.log(selectHumans.current[index]);
       
-      selectHumans.current[index].classList.toggle("text-black");
-      selectHumans.current[index].classList.toggle("bg-white");
+      selectHumans.current[index]?.classList.toggle("text-black");
+      selectHumans.current[index]?.classList.toggle("bg-white");
       setPeople(selectHumans.current[index]);
       dispatch(changeCreateRoomChoicePeople(pochaInfo.limitUser));
       return
