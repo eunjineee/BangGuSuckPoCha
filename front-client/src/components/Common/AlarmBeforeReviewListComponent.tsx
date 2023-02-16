@@ -72,7 +72,7 @@ function AlarmBeforeReviewListComponent({to_nickname, reviewId, toUsername, to_p
 
       {/* 유저 이모지 */}
       <div className="flex justify-center items-start">
-        <img className="w-[2rem] h-[2rem] object-fill rounded-full" src={to_profile} alt="" onClick={UserStateSearch}/>
+        <img className="w-[2rem] h-[2rem] object-fill rounded-full cursor-pointer" src={to_profile} alt="" onClick={UserStateSearch}/>
       </div>
       {/* 별점 및 평가하기 */}
       <div className="grid" style={{gridTemplateRows: '1fr 1fr'}}>
