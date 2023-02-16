@@ -236,7 +236,7 @@ function CallIntro({
         />
       ) : null}
       {signal === "INTRO" ? (
-        <div className={`${styles.layout3}`}>
+        <div className={`${styles.layout3} `}>
           <div className={`${styles.box}  ${styles.layout}`}>
             <img
               src={require("src/assets/game_call/탐정.png")}
