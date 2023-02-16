@@ -27,7 +27,7 @@ const NewMyPage = () => {
   let refreshToken = localStorage.getItem("refreshToken");
   const Username: any = localStorage.getItem("Username");
 
- //--------------useState-------------------
+  //--------------useState-------------------
   //내 정보
   const [MyInfo, setMyInfo] = useState<any>();
 
@@ -163,8 +163,12 @@ const NewMyPage = () => {
               headers: {
                 accessToken: accessToken,
               },
-            }).then(() => {
+            }).then((r) => {
               const isDouble = r.data.data;
+              console.log("바뀔닉네임", ModifyNickname);
+              console.log("내닉네임", MyNickname);
+              console.log("판단해주는 백", isDouble);
+
               if (isDouble) {
                 toast.success(
                   `${ModifyNickname}(은)는 수정가능한 닉네임입니다`
@@ -421,7 +425,10 @@ const NewMyPage = () => {
           <NavbarMenu />
           {/* 알림 클릭시 보이기 */}
           <NavbarAlarm />
-          <div className="w-screen h-screen" style={{backgroundColor : "#1C1C1C"}}>
+          <div
+            className="w-screen h-screen"
+            style={{ backgroundColor: "#1C1C1C" }}
+          >
             <Navbar />
             <div className="w-full" style={{ paddingTop: "11rem" }}></div>
             {/* 여기가 배경색 */}
@@ -588,7 +595,7 @@ const NewMyPage = () => {
                             const Code =
                               SelectedFirst.substr(0, 2) + back.substr(2, 8);
                             console.log("수정될Code입니다", Code);
-                            
+
                             axios({
                               method: "put",
                               url: `https://i8e201.p.ssafy.io/api/user/${Username}`,
@@ -651,7 +658,6 @@ const NewMyPage = () => {
                                 window.location.reload();
                               }
                             });
-                         
                           }}
                         >
                           저장
@@ -714,43 +720,33 @@ const NewMyPage = () => {
                     포인트 내역
                   </div>
 
-
-                    <div className="flex flex-row p-1 mt-24 ml-3">
-
-                      <div className="flex flex-col w-[33.3%] ">
-                        <div className="pt-2 text-md"> 나이</div>
-                        <div className="font-bold text-2xl py-2">
-                          {" "}
-                          {age}살
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col w-[33.3%]">
-                        <div className="pt-2 text-md">성별</div>
-                        {MyInfo.gender === "M" ? (
-                          <div className="font-bold text-2xl py-2">
-                            남성
-                          </div>
-                        ) : (
-                          <div className="font-bold text-2xl py-2">
-                            여성
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col w-[33.3%] ">
-                        <div className="pt-2 text-md"> 생일</div>
-                        <div className="font-bold text-2xl py-2">
-                          {MyInfo.birth.split(".")[1]}.
-                          {MyInfo.birth.split(".")[2]}
-                        </div>
-                      </div>
+                  <div className="flex flex-row p-1 mt-24 ml-3">
+                    <div className="flex flex-col w-[33.3%] ">
+                      <div className="pt-2 text-md"> 나이</div>
+                      <div className="font-bold text-2xl py-2"> {age}살</div>
                     </div>
 
-                    <div className="ml-3 w-full text-stone-400">
-                      나이, 성별, 생일은 변경하실 수 없습니다
+                    <div className="flex flex-col w-[33.3%]">
+                      <div className="pt-2 text-md">성별</div>
+                      {MyInfo.gender === "M" ? (
+                        <div className="font-bold text-2xl py-2">남성</div>
+                      ) : (
+                        <div className="font-bold text-2xl py-2">여성</div>
+                      )}
                     </div>
 
+                    <div className="flex flex-col w-[33.3%] ">
+                      <div className="pt-2 text-md"> 생일</div>
+                      <div className="font-bold text-2xl py-2">
+                        {MyInfo.birth.split(".")[1]}.
+                        {MyInfo.birth.split(".")[2]}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="ml-3 w-full text-stone-400">
+                    나이, 성별, 생일은 변경하실 수 없습니다
+                  </div>
                 </div>
               </div>
             </div>

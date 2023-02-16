@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AdminAdd = () => {
-  
   const navigate = useNavigate();
   const [USERNAME, setUSERNAME] = useState();
 
@@ -61,16 +60,68 @@ const AdminAdd = () => {
                         accessToken: `${accessToken}`,
                       },
                     }).then((r) => {
-                      console.log(r.data);
-                      const isDouble = r.data.data;
-                      if (isDouble) {
-                        toast.success(
-                          `${NickName}(은)는 수정가능한 닉네임입니다`
-                        );
-                        setModifydisplay(isDouble);
-                      } else {
-                        toast.warning(`${NickName}(은)는 중복된 닉네임입니다`);
-                        setModifydisplay(isDouble);
+                      //토큰이상해
+                      if ("401" === r.data.status) {
+                        //토큰 재요청
+                        console.log("토큰 이상함");
+                        const refreshToken =
+                          localStorage.getItem("refreshToken");
+                        const Username = localStorage.getItem("Username");
+                        axios({
+                          method: "get",
+                          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                          headers: {
+                            refreshToken: refreshToken,
+                          },
+                        }).then((r) => {
+                          //재발급 실패
+                          if ("401" === r.data.status) {
+                            localStorage.clear();
+                            toast.error("인증되지 않은 유저입니다");
+                            navigate("/");
+                          }
+                          //재발급 성공
+                          else {
+                            console.log("재발급 성공", r.data.accessToken);
+                            localStorage.setItem(
+                              "accessToken",
+                              r.data.accessToken
+                            );
+                            accessToken = r.data.accessToken;
+                            //원래 axios 실행
+                            console.log(r.data);
+                            const isDouble = r.data.data;
+                            if (isDouble) {
+                              toast.success(
+                                `${NickName}(은)는 수정가능한 닉네임입니다`
+                              );
+                              setModifydisplay(isDouble);
+                            } else {
+                              toast.warning(
+                                `${NickName}(은)는 중복된 닉네임입니다`
+                              );
+                              setModifydisplay(isDouble);
+                            }
+                          }
+                        });
+                      }
+                      //토큰 정상이야
+                      else {
+                        console.log("토큰 정상함");
+                        //실행 결과값 그대로 실행
+                        console.log(r.data);
+                        const isDouble = r.data.data;
+                        if (isDouble) {
+                          toast.success(
+                            `${NickName}(은)는 수정가능한 닉네임입니다`
+                          );
+                          setModifydisplay(isDouble);
+                        } else {
+                          toast.warning(
+                            `${NickName}(은)는 중복된 닉네임입니다`
+                          );
+                          setModifydisplay(isDouble);
+                        }
                       }
                     });
                   }
@@ -105,8 +156,6 @@ const AdminAdd = () => {
             <div className="col-span-4"></div>
             <div
               onClick={() => {
-                
-
                 console.log("닉네임", NickName);
                 console.log("USERNAME", USERNAME);
                 console.log("PASSWORD", PASSWORD);
@@ -123,7 +172,55 @@ const AdminAdd = () => {
                     accessToken: accessToken,
                   },
                 }).then((r) => {
-                  console.log(r.data);
+                  //토큰이상해
+                  if ("401" === r.data.status) {
+                    //토큰 재요청
+                    console.log("토큰 이상함");
+                    const refreshToken = localStorage.getItem("refreshToken");
+                    const Username = localStorage.getItem("Username");
+                    axios({
+                      method: "get",
+                      url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+                      headers: {
+                        refreshToken: refreshToken,
+                      },
+                    }).then((r) => {
+                      //재발급 실패
+                      if ("401" === r.data.status) {
+                        localStorage.clear();
+                        toast.error("인증되지 않은 유저입니다");
+                        navigate("/");
+                      }
+                      //재발급 성공
+                      else {
+                        console.log("재발급 성공", r.data.accessToken);
+                        localStorage.setItem("accessToken", r.data.accessToken);
+                        accessToken = r.data.accessToken;
+                        //원래 axios 실행
+                        axios({
+                          method: "post",
+                          url: "https://i8e201.p.ssafy.io/api/admin/join",
+                          data: {
+                            nickname: NickName,
+                            username: USERNAME,
+                            password: PASSWORD,
+                          },
+
+                          headers: {
+                            accessToken: accessToken,
+                          },
+                        }).then((r) => {
+                          console.log(r.data);
+                        });
+                      }
+                    });
+                  }
+                  //토큰 정상이야
+                  else {
+                    console.log("토큰 정상함");
+                    //실행 결과값 그대로 실행
+                    console.log(r.data);
+                  }
                 });
               }}
             >
