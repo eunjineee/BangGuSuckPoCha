@@ -671,12 +671,15 @@ function StartReviewComponent({
                               threeBeforeYMD <= review_create_at
                             );
                           });
+                          console.log('리뷰 안한 것들: ', Beforedata);
+                          
                           const currentBeforedata = Beforedata.reverse();
                           setReviewBefore(currentBeforedata);
                           // 리뷰 이후
                           const Afterdata: any = datas.filter((data) => {
                             return data.review_at !== null;
                           });
+                          console.log('리뷰 완료 된것들',Afterdata)
                           const currentAfterReview = Afterdata.reverse();
                           setReviewAfter(currentAfterReview);
                         });
