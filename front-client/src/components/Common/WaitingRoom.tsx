@@ -262,6 +262,7 @@ function WaitingRoom({
               <div className="text-center m-2 text-xl">{`ex) 반려동물, MBTI, 관심사, 좋아하는 음식, 영화, 계절`}</div>
               <input
                 type="text"
+                maxLength={10}
                 className="w-[45%] rounded-lg p-1 text-center m-2 text-xl text-black border-2 caret-black"
                 placeholder="소개할 정보를 입력하세요"
                 value={introduce}

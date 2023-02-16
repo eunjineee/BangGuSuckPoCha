@@ -1006,12 +1006,12 @@ const WebRTC = ({
                       ></video>
                       <div
                         ref={myIntroduce}
-                        className="w-full h-full relative flex flex-col justify-center items-center bg-black bg-opacity-20"
+                        className="w-full h-full relative flex flex-col justify-center items-center bg-black bg-opacity-40"
                       >
                         <div
-                          className={`text-xl absolute top-3 font-bold ${
+                          className={`text-3xl absolute top-3 font-bold ${
                             peerUser.gender === "M"
-                              ? "text-sky-400"
+                              ? "text-sky-300"
                               : " text-pink-400"
                           }`}
                         >
@@ -1046,13 +1046,13 @@ const WebRTC = ({
                       <div
                         onClick={ShowUserProfile}
                         ref={peerIntroduce2}
-                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                        className="w-full h-full relative flex-col justify-center items-center bg-black bg-opacity-40 cursor-pointer hidden"
                       >
                         <div
                           className={
                             peerUser.peer2gender === "M"
-                              ? `text-xl absolute top-3 font-bold text-sky-400`
-                              : `text-xl absolute top-3 font-bold text-pink-400`
+                              ? `text-3xl absolute top-3 font-bold text-sky-300`
+                              : `text-3xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer2nick}
@@ -1092,13 +1092,13 @@ const WebRTC = ({
                       <div
                         onClick={ShowUserProfile}
                         ref={peerIntroduce4}
-                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                        className="w-full h-full relative flex-col justify-center items-center bg-black bg-opacity-40 cursor-pointer hidden"
                       >
                         <div
                           className={
                             peerUser.peer4gender === "M"
-                              ? `text-xl absolute top-3 font-bold text-sky-400`
-                              : `text-xl absolute top-3 font-bold text-pink-400`
+                              ? `text-3xl absolute top-3 font-bold text-sky-300`
+                              : `text-3xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer4nick}
@@ -1128,8 +1128,8 @@ const WebRTC = ({
                   className="flex justify-center items-center min-w-fit w-[47vw] overflow-hidden mt-5 rounded-[20px] transition-all duration-1000 opacity-0"
                 >
                   {/* {pochaUsers && <LadderIntro socket={socket} pochaId={pochaId} pochaUsers={pochaUsers}/>} */}
-                  {isNotice && <img onClick={closeNotice} className="w-full h-full" src={require("src/assets/meeting_notice/meetingNotice.png")} alt="meetingnotice" />}
-                  {isGameSelect && (
+                  {isNotice && <div onClick={closeNotice} className={`w-full h-full bg-[url("src/assets/meeting_notice/meetingNotice.png")] bg-contain bg-center`}></div>}
+                  {!isNotice && isGameSelect && (
                     <GameSelect socket={socket} pochaId={pochaId} />
                   )}
                   {selectedId === "roul"
@@ -1193,13 +1193,13 @@ const WebRTC = ({
                       <div
                         onClick={ShowUserProfile}
                         ref={peerIntroduce1}
-                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                        className="w-full h-full relative flex-col justify-center items-center bg-black bg-opacity-40 cursor-pointer hidden"
                       >
                         <div
                           className={
                             peerUser.peer1gender === "M"
-                              ? `text-xl absolute top-3 font-bold text-sky-400`
-                              : `text-xl absolute top-3 font-bold text-pink-400`
+                              ? `text-3xl absolute top-3 font-bold text-sky-300`
+                              : `text-3xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer1nick}
@@ -1239,13 +1239,13 @@ const WebRTC = ({
                       <div
                         onClick={ShowUserProfile}
                         ref={peerIntroduce3}
-                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                        className="w-full h-full relative flex-col justify-center items-center bg-black bg-opacity-40 cursor-pointer hidden"
                       >
                         <div
                           className={
                             peerUser.peer3gender === "M"
-                              ? `text-xl absolute top-3 font-bold text-sky-400`
-                              : `text-xl absolute top-3 font-bold text-pink-400`
+                              ? `text-3xl absolute top-3 font-bold text-sky-300`
+                              : `text-3xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer3nick}
@@ -1285,13 +1285,13 @@ const WebRTC = ({
                       <div
                         onClick={ShowUserProfile}
                         ref={peerIntroduce5}
-                        className="w-full h-full relative flex-wrap flex-col justify-center items-center cursor-pointer hidden"
+                        className="w-full h-full relative flex-col justify-center items-center bg-black bg-opacity-40 cursor-pointer hidden"
                       >
                         <div
                           className={
                             peerUser.peer5gender === "M"
-                              ? `text-xl absolute top-3 font-bold text-sky-400`
-                              : `text-xl absolute top-3 font-bold text-pink-400`
+                              ? `text-3xl absolute top-3 font-bold text-sky-300`
+                              : `text-3xl absolute top-3 font-bold text-pink-400`
                           }
                         >
                           {peerUser.peer5nick}
