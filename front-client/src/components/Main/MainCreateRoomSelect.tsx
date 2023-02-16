@@ -23,6 +23,11 @@ const MainCreateRoomSelect = ({
   useEffect(() => {
     // 포차 정보 있을때
     if (pochaInfo) {
+      console.log('룸 선택: ', pochaInfo);
+      console.log('룸 선택: ', pochaInfo.data);
+      console.log('룸 선택: ', pochaInfo.data.age);
+      console.log('룸 선택: ', pochaInfo.age);
+      
       if (pochaInfo.age !== 0 && selectTitle === "나이") {
         selectChoiceAge.current.classList.remove("text-black");
         selectChoiceAge.current.classList.remove("bg-white");
