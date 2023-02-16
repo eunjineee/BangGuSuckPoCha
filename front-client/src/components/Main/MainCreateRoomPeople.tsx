@@ -13,13 +13,17 @@ const MainCreateRoomPeople = ({ selectOption, pochaInfo }: { selectOption: strin
     // 포차 정보 있을때
     if (pochaInfo) {
       const index = pochaInfo.limitUser - 2;
-      // console.log("인덱스", index);
+      console.log("인덱스", index);
+      console.log(selectHumans.current[index]);
+      
       selectHumans.current[index].classList.toggle("text-black");
       selectHumans.current[index].classList.toggle("bg-white");
       setPeople(selectHumans.current[index]);
       dispatch(changeCreateRoomChoicePeople(pochaInfo.limitUser));
       return
     }
+    console.log("정보 없을 때 ", selectHumans.current[0]);
+    
     // 처음에 제일 첫번째 값 선택세팅
     selectHumans.current[0].classList.toggle("text-black");
     selectHumans.current[0].classList.toggle("bg-white");

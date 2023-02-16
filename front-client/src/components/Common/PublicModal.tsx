@@ -153,6 +153,10 @@ const PublicModal = ({
               refreshToken: `${refreshToken}`,
             }
           }).then((r)=> {
+            console.log('갱신되서 받아온 값은?: ', r);
+            console.log('갱신되서 받아온 값은?: ', r.data);
+            console.log('갱신되서 받아온 값은?: ', r.data.data);
+            
             // 돌려보내기
             if (r.data.status === '401') {
               localStorage.clear();
