@@ -74,6 +74,7 @@ function WaitingRoom({
               }).then((r)=> {
                 console.log('75번줄: ', r);
                 console.log('75번줄: ', r.data);
+                console.log('77번줄 fleg: ', flag);
                 setPochaInfo(r.data);
                 if (flag) {
                   console.log('fleg: ', flag);
