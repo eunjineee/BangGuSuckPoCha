@@ -104,7 +104,9 @@ function FriendChat():JSX.Element {
       },
       onConnect:() => { 
         console.log("onConnect");
+        
         const chat_id = localStorage.getItem('chat_id')
+        console.log('챗 아이디: ',chat_id);
         client.current.subscribe("/sub/chat/"+ chat_id, function(newMessage:any) {
           const msg = JSON.parse(newMessage.body)
           setMessage((_chat_list:any)=> [..._chat_list, msg])
