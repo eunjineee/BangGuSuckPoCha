@@ -167,7 +167,6 @@ const AdminAdd = () => {
                     username: USERNAME,
                     password: PASSWORD,
                   },
-
                   headers: {
                     accessToken: accessToken,
                   },
@@ -205,21 +204,19 @@ const AdminAdd = () => {
                             username: USERNAME,
                             password: PASSWORD,
                           },
-
                           headers: {
-                            accessToken: accessToken,
+                            accessToken: r.data.accessToken,
                           },
                         }).then((r) => {
-                          console.log(r.data);
+                          console.log("토큰재발급 후에 어케???", r.data);
                         });
                       }
                     });
                   }
                   //토큰 정상이야
                   else {
-                    console.log("토큰 정상함");
                     //실행 결과값 그대로 실행
-                    console.log(r.data);
+                    console.log("토큰 정상함", r.data);
                   }
                 });
               }}
