@@ -168,7 +168,6 @@ function RoomList(): React.ReactElement {
   });
   useEffect(() => {
     let accessToken = localStorage.getItem("accessToken");
-
     axios({
       method: "get",
       url: "https://i8e201.p.ssafy.io/api/admin/pocha",
