@@ -51,7 +51,7 @@ function NavbarAlarm(): JSX.Element {
   }
 
   return (
-    <div ref={alarmIcon} className={`absolute w-[16rem] `} style={{ right: "3rem", top: "11.5rem", height: "35.2rem"}}>
+    <div ref={alarmIcon} className={`absolute w-[16rem] `} style={{ right: "4.8rem", top: "11.5rem", height: "35.2rem"}}>
       <div className="grid h-full w-full rounded-3xl bg-black text-white" style={{gridTemplateRows: '0.5fr 0.5fr 5fr' }}>
         <div className="grid" style={{gridTemplateColumns: '2fr 1fr 1fr 1fr'}}>
           <div></div>
