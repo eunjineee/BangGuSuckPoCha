@@ -168,12 +168,7 @@ function MeetingRoom(): JSX.Element {
       }
       //토큰 정상이야
       else {
-        //실행 결과값 그대로 실행
-        console.log(r);
-        console.log(r.data);
-        console.log(r.data.username);
-        console.log(r.data.data.username);
-        
+        //실행 결과값 그대로 실행        
         setMyInfo({
           username: r.data.data.username,
           nickname: r.data.data.nickname,
