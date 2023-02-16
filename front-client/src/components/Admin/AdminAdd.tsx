@@ -89,7 +89,8 @@ const AdminAdd = () => {
                             );
                             accessToken = r.data.accessToken;
                             //원래 axios 실행
-                            console.log(r.data);
+                            console.log("r.data재발급", r.data);
+                            console.log("r.data.data재발급", r.data.data);
                             const isDouble = r.data.data;
                             if (isDouble) {
                               toast.success(
