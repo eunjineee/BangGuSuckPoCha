@@ -8,6 +8,8 @@ import CallInput from "./CallInput";
 import axios from "axios";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function CallIntro({
   socket,
   pochaId,
@@ -15,6 +17,7 @@ function CallIntro({
   socket: any;
   pochaId: string;
 }): React.ReactElement {
+  const navigate = useNavigate();
   // 방 이름
   const roomName = pochaId;
   // 내 이름
@@ -24,7 +27,7 @@ function CallIntro({
   // 포차 유저 정보
   const [pochaUsers, setPochaUsers] = useState<any>(null);
 
-  const [pochaInfo, setPochaInfo] = useState<any>(null)  
+  const [pochaInfo, setPochaInfo] = useState<any>(null);
 
   const [isHost, setIshost] = useState<any>(null);
   const [resultData, setResultData] = useState<any>(null);
@@ -51,47 +54,48 @@ function CallIntro({
     });
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     // 타이틀 받아오기
     socket.on("game_call_submit", (data: any) => {
       setTimeout(() => {
         console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]");
-        if(!nowtitles){
+        if (!nowtitles) {
           setNowtitles(data);
         }
       }, 1000);
-      
-      console.log("[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]", nowtitles)
+
+      console.log(
+        "[[[[[[[[[[[[[[[[[[[[받는다고!!!]]]]]]]]]]]]]]]]]",
+        nowtitles
+      );
     });
     return () => {
       socket.off("game_call_submit");
     };
-  })
+  });
   useEffect(() => {
     getPochaInfo();
     getPochaUsers();
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if(pochaUsers){
+    if (pochaUsers) {
       setHostInfo();
       setPeopleInfo();
     }
-  },[pochaUsers]);
-  
-  useEffect(()=>{
-    if (mynum === isHost){
+  }, [pochaUsers]);
+
+  useEffect(() => {
+    if (mynum === isHost) {
       getCallSubject();
     }
-  },[isHost])
+  }, [isHost]);
 
-
-  useEffect(()=>{
-    if ((mynum === isHost)&&(!nowtitles)){
+  useEffect(() => {
+    if (mynum === isHost && !nowtitles) {
       titlechoice();
     }
-  },[titles])
-
+  }, [titles]);
 
   const player = useRef<any>();
   const Player = () => (
@@ -110,36 +114,118 @@ function CallIntro({
 
   // 포차 유저 정보 요청
   const getPochaUsers = async () => {
-    try {
-      const {data: {data}} = await axios({
-        method: "GET",
-        url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`
-      })
-      console.log("포차유저정보왔냐",data)
-      setPochaUsers(data);
-    } catch(error) {
-      console.log("손병호intro", error);
-    }
-  } 
+    let accessToken = localStorage.getItem("accessToken");
+    await axios({
+      method: "GET",
+      url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+      headers: {
+        accessToken: `${accessToken}`,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "GET",
+              url: `https://i8e201.p.ssafy.io/api/pocha/participant/${pochaId}`,
+              headers: {
+                accessToken: `${accessToken}`,
+              },
+            }).then((r) => {
+              console.log("포차유저정보왔냐", r.data.data);
+              setPochaUsers(r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        console.log("토큰 정상함");
+        //실행 결과값 그대로 실행
+        console.log("포차유저정보왔냐", r.data.data);
+        setPochaUsers(r.data.data);
+      }
+    });
+  };
 
   // 포차 정보 요청
   const getPochaInfo = async () => {
     let accessToken = localStorage.getItem("accessToken");
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        method: "GET",
-        url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
-        headers: {
-          accessToken: accessToken,
-        },
-      });
-      console.log("포차정보 데이터 잘 오냐!? call", data);
-      setPochaInfo(data);
-    } catch (error) {
-      console.log("Call게임에서 포차정보 에러", error);
-    }
+    await axios({
+      method: "GET",
+      url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
+      headers: {
+        accessToken: accessToken,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "GET",
+              url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              console.log("포차정보 데이터 잘 오냐!? call", r.data.data);
+              setPochaInfo(r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        console.log("토큰 정상함");
+        //실행 결과값 그대로 실행
+        console.log("포차정보 데이터 잘 오냐!? call", r.data.data);
+        setPochaInfo(r.data.data);
+      }
+    });
   };
 
   // 클릭하면 서버로 시그널 보냄
@@ -173,44 +259,81 @@ function CallIntro({
 
   // 양세찬 게임 주제 받아오기
   const getCallSubject = async () => {
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
-      });
-      setTitles(data);
-      console.log("------------titles----------", data);
-    } catch (error) {
-      console.log("라이어 게임 주제 axios error", error);
-    }
-  }
+    let accessToken = localStorage.getItem("accessToken");
+    await axios({
+      url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+      headers: {
+        accessToken: accessToken,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              url: `https://i8e201.p.ssafy.io/api/pocha/game/ysc`,
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              setTitles(r.data.data);
+              console.log("------------titles----------", r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        console.log("토큰 정상함");
+        //실행 결과값 그대로 실행
+        setTitles(r.data.data);
+        console.log("------------titles----------", r.data.data);
+      }
+    });
+  };
 
   const titlechoice = () => {
     const nowtitle: string[] = [];
-    for (var i = 0; i < 6 ; i++) {
-      if (titles){
-        var newnum = Math.floor(Math.random()* (titles.length))
+    for (var i = 0; i < 6; i++) {
+      if (titles) {
+        var newnum = Math.floor(Math.random() * titles.length);
         nowtitle.push(titles[newnum]);
       }
     }
     const data = nowtitle;
     socket.emit("game_call_submit", roomName, data);
-  }
+  };
 
-  
+  console.log("----------인트로에서 userlist--------", pochaUsers);
+  console.log("----------mynum--------", mynum);
+  console.log("----------host--------", isHost);
 
-  console.log("----------인트로에서 userlist--------",pochaUsers);
-  console.log("----------mynum--------",mynum);
-  console.log("----------host--------",isHost);
-  
-  console.log("----------개빡쳐--------",nowtitles);
+  console.log("----------개빡쳐--------", nowtitles);
 
   return (
     <>
-      {
-        <Player />
-      }
+      {<Player />}
       {signal === "PLAY" ? (
         <CallTitle
           socket={socket}
