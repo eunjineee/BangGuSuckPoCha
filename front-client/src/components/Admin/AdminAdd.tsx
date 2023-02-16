@@ -192,7 +192,7 @@ const AdminAdd = () => {
                       }
                       //재발급 성공
                       else {
-                        console.log("재발급 성공", r.data.accessToken);
+                        console.log("재발급 성공", r.data);
                         localStorage.setItem("accessToken", r.data.accessToken);
                         accessToken = r.data.accessToken;
                         //원래 axios 실행
