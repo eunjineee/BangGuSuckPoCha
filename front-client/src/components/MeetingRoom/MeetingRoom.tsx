@@ -72,6 +72,9 @@ function MeetingRoom(): JSX.Element {
         accessToken: `${accessToken}`,
       },
     }).then((r) => {
+      console.log('75번줄',r);
+      console.log('75번줄',r.data);
+      console.log('75번줄',r.data.data);
       //토큰이상해
       if ("401" === r.data.status) {
         //토큰 재요청
@@ -86,6 +89,10 @@ function MeetingRoom(): JSX.Element {
           },
         }).then((r) => {
           //재발급 실패
+          console.log('92번줄',r);
+          console.log('92번줄',r.data);
+          console.log('92번줄',r.data.data);
+          
           if ("401" === r.data.status) {
             localStorage.clear();
             toast.error("인증되지 않은 유저입니다");
