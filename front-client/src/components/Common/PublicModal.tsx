@@ -160,13 +160,13 @@ const PublicModal = ({
               navigate('/')
             } else {
               // 엑세스 토큰 추가
-              localStorage.setItem("accessToken", r.data.accessToken);
+              localStorage.setItem("accessToken", r.data.data.accessToken);
               // 재요청  
               axios({
                 method:'put',
                 url: `https://i8e201.p.ssafy.io/api/pocha/alcohol/${roomName}`,
                 headers: {
-                  refreshToken: `${r.data.accessToken}`,
+                  refreshToken: `${r.data.data.accessToken}`,
                 }
               }).then((r)=> {
                 socket.emit("pocha_cheers", roomName)
