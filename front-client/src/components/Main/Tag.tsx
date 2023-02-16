@@ -391,6 +391,8 @@ function Tag(): JSX.Element {
     
             } else {
               console.log("스피드 아님")
+              console.log('태그에 넣으려는 값: ', r.data.data)
+              console.log('태그에 넣으려는 값: ', r.data)
               // 그냥 방 해당 태그에 맞게 갱신해주기
               dispatch(changeMainCreateRoomList(r.data.data));
               console.log(r.data)
