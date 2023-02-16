@@ -297,7 +297,7 @@ function Balance({
   // 버튼 호버시 이펙트
   const hoverBtn = (elementId: string) => {
     imgLists.forEach((img) => {
-      console.log("181줄: ", img.current!.id);
+      // console.log("181줄: ", img.current!.id);
       console.log("182줄: ", elementId);
 
       if (img.current!.id === elementId) {
