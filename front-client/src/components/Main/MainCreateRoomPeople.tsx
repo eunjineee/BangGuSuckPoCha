@@ -14,9 +14,10 @@ const MainCreateRoomPeople = ({ selectOption, pochaInfo }: { selectOption: strin
     console.log('포차정보: ', pochaInfo);
     
     if (pochaInfo) {
-      console.log(typeof pochaInfo.limitUser)
+      console.log(pochaInfo.data.limitUser)
+      console.log(typeof pochaInfo.data.limitUser)
       console.log(typeof Number(pochaInfo.limitUser))
-      const index = Number(pochaInfo.limitUser) - 2;
+      const index = Number(pochaInfo.data.limitUser) - 2;
       console.log("포차 정보", pochaInfo);
       console.log("인덱스", index);
       console.log(selectHumans.current[index]);
