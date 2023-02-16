@@ -103,7 +103,7 @@ function MeetingRoom(): JSX.Element {
                 accessToken: `${accessToken}`,
               },
             }).then((r) => {
-              setPochaInfo(r.data.data.data);
+              setPochaInfo(r.data.data);
             });
           }
         });
@@ -111,7 +111,7 @@ function MeetingRoom(): JSX.Element {
       //토큰 정상이야
       else {
         //실행 결과값 그대로 실행
-        setPochaInfo(r.data.data.data);
+        setPochaInfo(r.data.data);
       }
     });
   };
@@ -168,7 +168,7 @@ function MeetingRoom(): JSX.Element {
       }
       //토큰 정상이야
       else {
-        //실행 결과값 그대로 실행        
+        //실행 결과값 그대로 실행
         setMyInfo({
           username: r.data.data.username,
           nickname: r.data.data.nickname,
