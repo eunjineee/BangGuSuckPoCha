@@ -60,7 +60,7 @@ function MeetingRoom(): JSX.Element {
       src="/RoomBGM/Meeting.mp3"
       onPlay={(e) => console.log("onPlay")}
       style={{ display: "none" }}
-      volume={0.2}
+      volume={0.1}
       // other props here
     />
   );
