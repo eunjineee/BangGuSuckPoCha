@@ -1,5 +1,5 @@
 import RoomFooterNav from "../Common/RoomFooterNav";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import WebRTC from "../WebRTC/WebRTC";
 import axios from "axios";
@@ -49,12 +49,13 @@ function StoryRoom(): JSX.Element {
     setIsHost(isHost);
   };
 
-  
+  const [play, setPlay] = useState<boolean>(true);
+
   const player = useRef<any>();
-  const Player = () => (
+  const Player = memo(() => (
     <AudioPlayer
       ref={player}
-      autoPlay={true}
+      autoPlay={play}
       src={`/RoomBGM/${pochaBGM}`}
       loop
       onPlay={(e) => console.log("onPlay")}
@@ -62,7 +63,12 @@ function StoryRoom(): JSX.Element {
       volume={0.2}
       // other props here
     />
-  );
+  ));
+  
+  // 배경음 끄고 켜기 관련
+  const onClickPlayer = () => {
+    setPlay((prev) => !prev);
+  }
 
   const getPochaInfo = async () => {
     // try {
@@ -218,8 +224,6 @@ function StoryRoom(): JSX.Element {
           {RoomUserProfileClickCheck ? (
             <RoomUserProfile userData={navAlarmReviewEmojiUserData} pochaId={String(PochaId)} isHost={isHost} socket={socket}/>
           ) : null}
-          
-          
 
           {/* 화면 및 게임 공간 */}
           <div className="min-h-[90vh]">
@@ -236,9 +240,13 @@ function StoryRoom(): JSX.Element {
                 pochaId={PochaId!}
                 socket={socket}
                 isHost={isHost}
+                onClickPlayer={onClickPlayer}
               />
             )}
           </div>
+          {/* 고양이 공간 */}
+          {/* <div className={`w-24 h-16 bg-[url("/src/assets/storyroom/catLeft.gif")] bg-center bg-contain bg-no-repeat fixed bottom-2 right-0 cursor-pointer`}></div> */}
+          <div className={`w-24 h-16 bg-[url("/src/assets/storyroom/catdown.gif")] bg-center bg-contain bg-no-repeat fixed bottom-2 right-0 cursor-pointer`}></div>
         </div>
       )}
     </>

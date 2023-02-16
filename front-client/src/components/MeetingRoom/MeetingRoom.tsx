@@ -52,11 +52,13 @@ function MeetingRoom(): JSX.Element {
     setIsHost(isHost);
   };
 
+  const [play, setPlay] = useState<boolean>(true);
+
   const player = useRef<any>();
   const Player = () => (
     <AudioPlayer
       ref={player}
-      autoPlay={true}
+      autoPlay={play}
       src="/RoomBGM/Meeting.mp3"
       onPlay={(e) => console.log("onPlay")}
       style={{ display: "none" }}
@@ -64,6 +66,11 @@ function MeetingRoom(): JSX.Element {
       // other props here
     />
   );
+
+  // 배경음 끄고 켜기 관련
+  const onClickPlayer = () => {
+    setPlay((prev) => !prev);
+  }
 
   const getPochaInfo = async () => {
     await axios({
@@ -245,6 +252,7 @@ function MeetingRoom(): JSX.Element {
                 pochaId={PochaId!}
                 socket={socket}
                 isHost={isHost}
+                onClickPlayer={onClickPlayer}
               />
             )}
           </div>
