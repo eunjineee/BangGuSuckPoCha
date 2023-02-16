@@ -16,7 +16,6 @@ const MainCreateRoomPeople = ({ selectOption, pochaInfo }: { selectOption: strin
     if (pochaInfo) {
       console.log(pochaInfo.data.limitUser)
       console.log(typeof pochaInfo.data.limitUser)
-      console.log(typeof Number(pochaInfo.limitUser))
       const index = Number(pochaInfo.data.limitUser) - 2;
       console.log("포차 정보", pochaInfo);
       console.log("인덱스", index);
@@ -25,7 +24,7 @@ const MainCreateRoomPeople = ({ selectOption, pochaInfo }: { selectOption: strin
       selectHumans.current[index].classList.toggle("text-black");
       selectHumans.current[index].classList.toggle("bg-white");
       setPeople(selectHumans.current[index]);
-      dispatch(changeCreateRoomChoicePeople(pochaInfo.limitUser));
+      dispatch(changeCreateRoomChoicePeople(pochaInfo.data.limitUser));
       return
     }
     console.log("정보 없을 때 ", selectHumans.current[0]);
