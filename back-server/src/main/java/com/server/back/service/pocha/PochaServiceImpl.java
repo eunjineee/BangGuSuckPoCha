@@ -191,7 +191,7 @@ public class PochaServiceImpl implements PochaService{
                     else dt = participant.getCreateAt();
 
                     Duration diff = Duration.between(dt, exit);
-                    if (diff.getSeconds() > 1800) {
+                    if (diff.getSeconds() > 30) {
                         reviewRepository.save(Review.builder()
                                 .pocha(pocha)
                                 .fromId(participant.getUser())
