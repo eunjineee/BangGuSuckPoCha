@@ -661,19 +661,19 @@ const WebRTC = ({
           // }
           if (temp === 1) {
             peerFace1.current.srcObject = null;
-            peerHeart1.current.style.display = "none";
+            peerHeart1.current.classList.add("hidden");
           } else if (temp === 2) {
             peerFace2.current.srcObject = null;
-            peerHeart2.current.style.display = "none";
+            peerHeart2.current.classList.add("hidden");
           } else if (temp === 3) {
             peerFace3.current.srcObject = null;
-            peerHeart3.current.style.display = "none";
+            peerHeart3.current.classList.add("hidden");
           } else if (temp === 4) {
             peerFace4.current.srcObject = null;
-            peerHeart4.current.style.display = "none";
+            peerHeart4.current.classList.add("hidden");
           } else if (temp === 5) {
             peerFace5.current.srcObject = null;
-            peerHeart5.current.style.display = "none";
+            peerHeart5.current.classList.add("hidden");
           }
           temp += 1;
         }
@@ -1325,7 +1325,7 @@ const WebRTC = ({
                   <div className="flex flex-col justify-center items-center">
                     <div
                       ref={div2}
-                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] flex items-center border-2"
+                      className="rounded-[1rem] overflow-hidden h-[15rem] w-[28rem] items-center border-2 flex"
                     >
                       <video
                         onClick={ShowUserProfile}
