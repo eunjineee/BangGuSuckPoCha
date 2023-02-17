@@ -207,10 +207,12 @@ function StoryRoom(): JSX.Element {
   const [movingCheck, setMovingCheck] = useState<boolean>(true);
   // 앉아 있는거 체크
   const [isCatWalking, setIsCatWalking] = useState<boolean>(false);
+  const [distance, setDistance] = useState<any>(0)
   const [isRight, setIsRight] = useState<boolean>(true);
   
   const moveToRight = () => {
     if(movingCheck) {
+      catDiv.current!.style.transform = `initial`;
       const randomMove: number = 5 + Math.floor(Math.random() * 10)
       setMovingCheck(false);
       setIsCatWalking(true);
