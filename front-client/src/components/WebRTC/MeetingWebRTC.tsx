@@ -142,7 +142,7 @@ const WebRTC = ({
   async function videoOn(videoElement: any, introduceElement: any) {
     let time = new Date(pochaInfo.createAt);
     time.setHours(time.getHours() + 9);
-    time.setSeconds(time.getSeconds() + 120);
+    time.setSeconds(time.getSeconds() + 90);
     const waitEnd = time.getTime();
 
     const now = new Date().getTime();
@@ -988,7 +988,7 @@ const WebRTC = ({
               }).then((r) => {
                 //실행 결과값 그대로 실행
                 console.log("모달용 데이터?", r.data.data);
-                dispatch(changeNavAlarmReviewEmojiUserData(r.data.data));
+                dispatch(changeNavAlarmReviewEmojiUserData(r.data));
                 dispatch(showRoomUserProfile());
               });
             }
