@@ -20,10 +20,12 @@ function RoomFooterNav({
   pochaId,
   socket,
   isHost,
+  onClickPlayer,
 }: {
   pochaId: string;
   socket: any;
   isHost: boolean;
+  onClickPlayer?: Function;
 }): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
@@ -34,6 +36,8 @@ function RoomFooterNav({
   const myName = localStorage.getItem("Username");
   // 룸 이름
   const roomName = pochaId;
+  // 배경음 켜고 끄기
+  const [playing, setPlaying] = useState<boolean>(true);
   
   // Public모달 데이터
   const [modalData, setModalData] = useState<any>(null);
@@ -66,6 +70,15 @@ function RoomFooterNav({
     let minutes = ("0" + date.getMinutes()).slice(-2);
     setCurrentDate((hour + ":" + minutes) as any);
   }, 1000);
+
+  // 음악 끄는거 관련
+  const onClickMusic = () => {
+    if (onClickPlayer) {
+      onClickPlayer();
+      setPlaying((prev) => !prev);
+    }
+    return
+  }
 
   // Public 모달 보이기 관련
   const showModal = useAppSelector((state) => {
@@ -271,15 +284,15 @@ function RoomFooterNav({
           <div className="flex justify-center items-center text-[2rem] ">
             {currentDate}
           </div>
-          <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer">
+          <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer w-[3.2rem]">
             <img
-              onClick={onClickShowModal}
-              className="h-[2.2rem] py-auto transition-all duration-300 hover:scale-110"
-              src={require("src/assets/roomIcon/time.png")}
+              onClick={onClickMusic}
+              className="h-[2.2rem] py-[0.2rem] transition-all duration-300 hover:scale-110"
+              src={playing ? require("src/assets/roomIcon/pause.png") : require("src/assets/roomIcon/play.png")}
               alt="addTime"
               id="addTime"
             />
-            <span className="text-[0.8rem] mt-1">시간추가</span>
+            <span className="text-[0.8rem] mt-1">{playing ? `BGM Off` : 'BGM On'}</span>
           </div>
           {/* <div className="flex flex-col justify-center items-center min-h-full max-h-full cursor-pointer">
             <img

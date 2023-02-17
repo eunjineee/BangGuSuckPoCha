@@ -1,5 +1,5 @@
 import RoomFooterNav from "../Common/RoomFooterNav";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import WebRTC from "../WebRTC/WebRTC";
 import axios from "axios";
@@ -11,6 +11,7 @@ import NavUserEmojiClickModal from "../Common/NavUserEmojiClickModal";
 import RoomUserProfile from "../Common/RoomUserProfile";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import Player from "./Player";
 function StoryRoom(): JSX.Element {
   // const dispatch = useAppDispatch();
   let accessToken = localStorage.getItem("accessToken");
@@ -49,20 +50,18 @@ function StoryRoom(): JSX.Element {
     setIsHost(isHost);
   };
 
-  
+  const [play, setPlay] = useState<boolean>(true);
+
   const player = useRef<any>();
-  const Player = () => (
-    <AudioPlayer
-      ref={player}
-      autoPlay={true}
-      src={`/RoomBGM/${pochaBGM}`}
-      loop
-      onPlay={(e) => console.log("onPlay")}
-      style={{ display: "none" }}
-      volume={0.2}
-      // other props here
-    />
-  );
+  // 배경음 끄고 켜기 관련
+  const onClickPlayer = () => {
+    if(play) {
+      player.current.audio.current.pause();
+    } else {  
+      player.current.audio.current.play();
+    }
+    setPlay((prev) => !prev);
+  }
 
   const getPochaInfo = async () => {
     // try {
@@ -201,11 +200,50 @@ function StoryRoom(): JSX.Element {
   console.log('PochaId', typeof PochaId, PochaId);
   // console.log('네브 알람 리뷰 이모지 정보: ',navAlarmReviewEmojiUserData);
   // console.log('방 유저 프로필 클릭 체크: ',RoomUserProfileClickCheck);
+  
+  // ---------- 고양이 관련 코드 ------------
+  const catDiv = useRef<HTMLDivElement>(null);
+  // 걷는거 가능한지 체크
+  const [movingCheck, setMovingCheck] = useState<boolean>(true);
+  // 앉아 있는거 체크
+  const [isCatWalking, setIsCatWalking] = useState<boolean>(false);
+  const [distance, setDistance] = useState<any>(0)
+  const [isRight, setIsRight] = useState<boolean>(true);
+  
+  const moveToRight = () => {
+    if(movingCheck) {
+      catDiv.current!.style.transform = `initial`;
+      const randomMove: number = 5 + Math.floor(Math.random() * 10)
+      setMovingCheck(false);
+      setIsCatWalking(true);
+      if(isRight) {
+        catDiv.current!.style.transform = `translateX(${randomMove}rem)`;
+        catDiv.current!.style.transition = `20s`;
+        catDiv.current!.style.transitionTimingFunction = `ease-in-out`;
+        setIsRight(false);
+      } else {
+        catDiv.current!.style.transform = `translateX(-${randomMove}rem)`;
+        catDiv.current!.style.transition = `20s`;
+        catDiv.current!.style.transitionTimingFunction = `ease-in-out`;
+        setIsRight(true);
+      }
+      // 20초 후에 움직이기 가능하게
+      setTimeout(() => {
+        setMovingCheck(true);
+        setIsCatWalking(false);
+      }, 21000)
+    }
+  }
+    
+  // 고양이 2분마다 움직임
+  setInterval(() => {
+    moveToRight();
+  }, 120000);
 
   return (
     <>
     {
-      <Player />
+      <Player player={player}/>
     }
       {isLoading ? (
         <Loading />
@@ -218,8 +256,6 @@ function StoryRoom(): JSX.Element {
           {RoomUserProfileClickCheck ? (
             <RoomUserProfile userData={navAlarmReviewEmojiUserData} pochaId={String(PochaId)} isHost={isHost} socket={socket}/>
           ) : null}
-          
-          
 
           {/* 화면 및 게임 공간 */}
           <div className="min-h-[90vh]">
@@ -236,9 +272,15 @@ function StoryRoom(): JSX.Element {
                 pochaId={PochaId!}
                 socket={socket}
                 isHost={isHost}
+                onClickPlayer={onClickPlayer}
               />
             )}
           </div>
+          {/* 고양이 공간 */}
+          <div ref={catDiv} onClick={moveToRight} className={`fixed bottom-2 right-[16rem] cursor-pointer w-24 h-16`}>
+            <img className="object-contain object-center h-full transition-all duration-300 hover:scale-105" src={!isCatWalking ? require("src/assets/storyroom/catdown.gif") : isRight ? require("src/assets/storyroom/catLeft.gif") : require("src/assets/storyroom/catRight.gif")} alt="cat" />
+          </div>
+          {/* <div className={`w-24 h-16 bg-[url("/src/assets/storyroom/catdown.gif")] bg-center bg-contain bg-no-repeat fixed bottom-2 right-0 cursor-pointer`}></div> */}
         </div>
       )}
     </>
