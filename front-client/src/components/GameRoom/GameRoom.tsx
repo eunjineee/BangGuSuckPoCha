@@ -38,11 +38,13 @@ function GameRoom(): JSX.Element {
     return state.RoomUserProfileClickCheck;
   });
 
+  const [play, setPlay] = useState<boolean>(true);
+
   const player = useRef<any>();
   const Player = () => (
     <AudioPlayer
       ref={player}
-      autoPlay={true}
+      autoPlay={play}
       src="/RoomBGM/Game.mp3"
       loop
       onPlay={(e) => console.log("onPlay")}
@@ -51,6 +53,11 @@ function GameRoom(): JSX.Element {
       // other props here
     />
   );
+
+  // 배경음 끄고 켜기 관련
+  const onClickPlayer = () => {
+    setPlay((prev) => !prev);
+  }
 
   const propIsHost = (isHost: boolean) => {
     setIsHost(isHost);
@@ -212,6 +219,7 @@ function GameRoom(): JSX.Element {
                 pochaId={PochaId!}
                 socket={socket}
                 isHost={isHost}
+                onClickPlayer={onClickPlayer}
               />
             )}
           </div>
