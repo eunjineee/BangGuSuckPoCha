@@ -6,6 +6,8 @@ import LiarVote from "./LiarVote";
 import axios from "axios";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function LiarIntro({
   socket,
   pochaId,
@@ -15,6 +17,7 @@ function LiarIntro({
   pochaId: string;
   pochaUsers: any;
 }): React.ReactElement {
+  const navigate = useNavigate();
   // 방 이름
   const roomName = pochaId;
   // 내 이름
@@ -33,21 +36,59 @@ function LiarIntro({
   // 포차 정보 요청
   const getPochaInfo = async () => {
     let accessToken = localStorage.getItem("accessToken");
-    try {
-      const {
-        data: { data },
-      } = await axios({
-        method: "GET",
-        url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
-        headers: {
-          accessToken: accessToken,
-        },
-      });
-      console.log("포차정보 데이터 잘 오냐!? SON", data);
-      setPochaInfo(data);
-    } catch (error) {
-      console.log("Son게임에서 포차정보 에러", error);
-    }
+    await axios({
+      method: "GET",
+      url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
+      headers: {
+        accessToken: accessToken,
+      },
+    }).then((r) => {
+      //토큰이상해
+      if ("401" === r.data.status) {
+        //토큰 재요청
+        console.log("토큰 이상함");
+        const refreshToken = localStorage.getItem("refreshToken");
+        const Username = localStorage.getItem("Username");
+        axios({
+          method: "get",
+          url: `https://i8e201.p.ssafy.io/api/user/auth/refresh/${Username}`,
+          headers: {
+            refreshToken: refreshToken,
+          },
+        }).then((r) => {
+          //재발급 실패
+          if ("401" === r.data.status) {
+            localStorage.clear();
+            toast.error("인증되지 않은 유저입니다");
+            navigate("/");
+          }
+          //재발급 성공
+          else {
+            console.log("재발급 성공", r.data.accessToken);
+            localStorage.setItem("accessToken", r.data.accessToken);
+            accessToken = r.data.accessToken;
+            //원래 axios 실행
+            axios({
+              method: "GET",
+              url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
+              headers: {
+                accessToken: accessToken,
+              },
+            }).then((r) => {
+              console.log("포차정보 데이터 잘 오냐!? SON", r.data.data);
+              setPochaInfo(r.data.data);
+            });
+          }
+        });
+      }
+      //토큰 정상이야
+      else {
+        console.log("토큰 정상함");
+        //실행 결과값 그대로 실행
+        console.log("포차정보 데이터 잘 오냐!? SON", r.data.data);
+        setPochaInfo(r.data.data);
+      }
+    });
   };
 
   useEffect(() => {
@@ -131,9 +172,7 @@ function LiarIntro({
 
   return (
     <>
-    {
-      <Player />
-    }
+      {<Player />}
       {signal === "PLAY" ? (
         <LiarTitle
           socket={socket}

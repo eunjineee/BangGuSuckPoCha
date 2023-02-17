@@ -49,7 +49,7 @@ function GameRoom(): JSX.Element {
       loop
       onPlay={(e) => console.log("onPlay")}
       style={{ display: "none" }}
-      volume={0.2}
+      volume={0.1}
       // other props here
     />
   );

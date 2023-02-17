@@ -62,7 +62,7 @@ function MeetingRoom(): JSX.Element {
       src="/RoomBGM/Meeting.mp3"
       onPlay={(e) => console.log("onPlay")}
       style={{ display: "none" }}
-      volume={0.2}
+      volume={0.1}
       // other props here
     />
   );
@@ -79,6 +79,9 @@ function MeetingRoom(): JSX.Element {
         accessToken: `${accessToken}`,
       },
     }).then((r) => {
+      console.log('75번줄',r);
+      console.log('75번줄',r.data);
+      console.log('75번줄',r.data.data);
       //토큰이상해
       if ("401" === r.data.status) {
         //토큰 재요청
@@ -93,6 +96,10 @@ function MeetingRoom(): JSX.Element {
           },
         }).then((r) => {
           //재발급 실패
+          console.log('92번줄',r);
+          console.log('92번줄',r.data);
+          console.log('92번줄',r.data.data);
+          
           if ("401" === r.data.status) {
             localStorage.clear();
             toast.error("인증되지 않은 유저입니다");
@@ -110,7 +117,10 @@ function MeetingRoom(): JSX.Element {
                 accessToken: `${accessToken}`,
               },
             }).then((r) => {
-              setPochaInfo(r.data.data.data);
+              console.log('113번줄',r);
+              console.log('113번줄',r.data);
+              console.log('113번줄',r.data.data);
+              setPochaInfo(r.data.data);
             });
           }
         });
@@ -118,7 +128,10 @@ function MeetingRoom(): JSX.Element {
       //토큰 정상이야
       else {
         //실행 결과값 그대로 실행
-        setPochaInfo(r.data.data.data);
+        console.log('124번줄',r);
+        console.log('124번줄',r.data);
+        console.log('124번줄',r.data.data);
+        setPochaInfo(r.data.data);
       }
     });
   };
@@ -177,8 +190,8 @@ function MeetingRoom(): JSX.Element {
       else {
         //실행 결과값 그대로 실행
         setMyInfo({
-          username: r.data.data.data.username,
-          nickname: r.data.data.data.nickname,
+          username: r.data.data.username,
+          nickname: r.data.data.nickname,
         });
       }
     });

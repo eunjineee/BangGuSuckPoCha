@@ -91,18 +91,32 @@ function FriendChat():JSX.Element {
     })
   },[])
 
-
+  console.log('accessToken: ', accessToken);
+  
   const connect = () => {
+    console.log('97번 여기는 가지냐?: ');
+    
     client.current = new StompJs.Client({
-      brokerURL: 'ws://i8e201.p.ssafy.io/api/ws/chat', // 왜 websocket을 붙여줘야하는거지..?
+      brokerURL: 'wss://i8e201.p.ssafy.io/api/ws/chat', // 왜 websocket을 붙여줘야하는거지..?
+      connectHeaders: {
+        // "Content-Type": "text/event-stream;charset=utf-8",
+        accessToken: `${accessToken}`,
+        // "Authorization": `Bearer ${accessToken}`,
+      },
       webSocketFactory: () => new SockJS("https://i8e201.p.ssafy.io/api/ws/chat"),
       debug: function (str) {
           console.log(str);
       },
-      onConnect:() => { 
+
+      onConnect:(frame) => { 
+        console.log(frame);
+        
         console.log("onConnect");
+        console.log('112번 여기는 가지냐?: ');
+        
         const chat_id = localStorage.getItem('chat_id')
-        client.current.subscribe("/sub/chat/"+ chat_id, function(newMessage:any) {
+        console.log('챗 아이디: ',chat_id);
+        client.current.subscribe(`/sub/chat/${chat_id}`, function(newMessage:any) {
           const msg = JSON.parse(newMessage.body)
           setMessage((_chat_list:any)=> [..._chat_list, msg])
           setTimeout(() => {
