@@ -37,7 +37,7 @@
 
  💬 코로나 19로 인해 달라진 음주 문화(홈술)에 맞춰 MZ세대가 선호하지 않는 술자리 문화와 거리의 제약을 해결하기 위함
 
-![image-20230221140908757](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221140908757.png)
+![image-20230221140908757](./README.assets/image-20230221140908757.png)
 
 `한국농수산식품유통공사 : 식품산업통계보고서 - 2021년`
 
@@ -58,7 +58,7 @@
 
 `Logo`
 
-![logo](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\logo.gif)
+![logo](./README.assets/logo.gif)
 
 ### 와이어프레임
 
@@ -66,7 +66,7 @@
 
 <img src="C:\Users\SSAFY\Downloads\7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="zoom: 5%;" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
 
-<img src=".\README.assets\image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
+<img src="./README.assets/image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
 
 
 
@@ -76,67 +76,67 @@
 
 [🍻방구석포차](https://i8e201.p.ssafy.io/)
 
-`Login Page`<img src=".\README.assets\image-20230221120144320.png" alt="image-20230221120144320"  />
+`Login Page`<img src="./README.assets/image-20230221120144320.png" alt="image-20230221120144320"  />
 
 
 
 `Main Page`
 
-![image-20230221094618492](.\README.assets\image-20230221094618492-1676956383679-10.png)
+![image-20230221094618492](./README.assets/image-20230221094618492-1676956383679-10.png)
 
 
 
 `My Page`
 
-![image-20230221094928719](.\README.assets\image-20230221094928719-1676956443379-12.png)
+![image-20230221094928719](./README.assets/image-20230221094928719-1676956443379-12.png)
 
 
 
 `Choice Pocha Theme Modal`
 
-![image-20230221095154869](.\README.assets\image-20230221095154869.png)
+![image-20230221095154869](./README.assets/image-20230221095154869.png)
 
 
 
 `Create Pocha Modal`
 
-![image-20230221095117175](.\README.assets\image-20230221095117175.png)
+![image-20230221095117175](./README.assets/image-20230221095117175.png)
 
 
 
 `Story Pocha`
 
-![image-20230221095351806](.\README.assets\image-20230221095351806.png)
+![image-20230221095351806](./README.assets/image-20230221095351806.png)
 
 
 
 `Game Pocha`
 
-![image-20230221095635434](.\README.assets\image-20230221095635434.png)
+![image-20230221095635434](./README.assets/image-20230221095635434.png)
 
 
 
 `Meeting Pocha Loding Page`	
 
-![image-20230221095813813](.\README.assets\image-20230221095813813.png)
+![image-20230221095813813](./README.assets/image-20230221095813813.png)
 
 
 
 `Meeting Pocha`
 
-![image-20230221095946515](.\README.assets\image-20230221095946515.png)
+![image-20230221095946515](./README.assets/image-20230221095946515.png)
 
 
 
 `Review Page`
 
-![image-20230221100115602](.\README.assets\image-20230221100115602.png)
+![image-20230221100115602](./README.assets/image-20230221100115602.png)
 
 
 
 `Chat`
 
-![image-20230221100144833](.\README.assets\image-20230221100144833.png)
+![image-20230221100144833](./README.assets/image-20230221100144833.png)
 
 
 
@@ -146,7 +146,7 @@
 
 <img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="zoom:7%;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ) 
 
-![image-20230221100512582](.\README.assets\image-20230221100512582.png)
+![image-20230221100512582](./README.assets/image-20230221100512582.png)
 
 
 
