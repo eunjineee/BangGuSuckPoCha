@@ -136,7 +136,6 @@ const UpdateRoomInfo = ({
   const createRoomThemeCheck = useAppSelector((state) => {
     return state.createRoomThemeCheck;
   });
-
   // 현재 포차 정보 요청
   const getPochaInfo = async () => {
     try {
@@ -176,10 +175,10 @@ const UpdateRoomInfo = ({
                   setIsLoading(false);
                 }, 500);
                 // console.log("태그", data.data.tagList);
-                const tags = r.data.tagList;
+                const tags = r.data.data.tagList;
                 // 현재 포차의 선택된 태그들 표시해주기
                 // ref로 잡아온 리스트 for문 돌리고
-                console.log("현재 방 태그들",tags);
+                console.log("현재 방 태그들!!@",tags);
                 selectTags.current.forEach((tag) => {
                   // 현재 포차 태그리스트로 2중 for문
                   tags.forEach((tagName: any) => {
@@ -201,10 +200,10 @@ const UpdateRoomInfo = ({
             setIsLoading(false);
           }, 500);
           // console.log("태그", data.data.tagList);
-          const tags = r.data.tagList;
+          const tags = r.data.data.tagList;
           // 현재 포차의 선택된 태그들 표시해주기
           // ref로 잡아온 리스트 for문 돌리고
-          console.log("현재 방 태그들",tags);
+          console.log("현재 방 태그들@@@@",tags);
           selectTags.current.forEach((tag) => {
             // 현재 포차 태그리스트로 2중 for문
             tags.forEach((tagName: any) => {
@@ -232,13 +231,12 @@ const UpdateRoomInfo = ({
   const updateRoom = async (event: React.MouseEvent<HTMLInputElement>) => {
     const changeThemeId = event.currentTarget.id;
     try {
-      // console.log("pochaInfo.isPrivate!@!@!@!@",pochaInfo.isPrivate)
       await axios({
         method: "PUT",
         url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
         data: {
           age: createRoomChoiceAge,
-          isPrivate: pochaInfo.isPrivate,
+          isPrivate: pochaInfo.data.isPrivate,
           limitUser: createRoomChoicePeople,
           region: createRoomChoiceRegion,
           tagList: choiceTagList,
@@ -271,7 +269,7 @@ const UpdateRoomInfo = ({
               url: `https://i8e201.p.ssafy.io/api/pocha/${pochaId}`,
               data: {
                 age: createRoomChoiceAge,
-                isPrivate: pochaInfo.isPrivate,
+                isPrivate: pochaInfo.data.isPrivate,
                 limitUser: createRoomChoicePeople,
                 region: createRoomChoiceRegion,
                 tagList: choiceTagList,
@@ -342,10 +340,10 @@ const UpdateRoomInfo = ({
                   pochaInfo={pochaInfo}
                 />
               )}
-              <div className="text-left w-full text-xl font-bold mt-2 pt-3 border-t-2">
+              <div className="w-full pt-3 mt-2 text-xl font-bold text-left border-t-2">
                 태그
               </div>
-              <div className="flex justify-center flex-wrap">
+              <div className="flex flex-wrap justify-center">
                 {tagList.map((tag, index) => {
                   return (
                     <div
@@ -423,10 +421,10 @@ const UpdateRoomInfo = ({
                   pochaInfo={pochaInfo}
                 />
               )}
-              <div className="text-left w-full text-xl font-bold mt-2 pt-3 border-t-2">
+              <div className="w-full pt-3 mt-2 text-xl font-bold text-left border-t-2">
                 태그
               </div>
-              <div className="flex justify-center flex-wrap">
+              <div className="flex flex-wrap justify-center">
                 {tagList.map((tag, index) => {
                   return (
                     <div
