@@ -37,7 +37,7 @@
 
  💬 코로나 19로 인해 달라진 음주 문화(홈술)에 맞춰 MZ세대가 선호하지 않는 술자리 문화와 거리의 제약을 해결하기 위함
 
-![Untitled](assets\Untitled.png)
+![image-20230221140908757](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221140908757.png)
 
 `한국농수산식품유통공사 : 식품산업통계보고서 - 2021년`
 
@@ -58,7 +58,7 @@
 
 `Logo`
 
-![logo](assets\logo.gif)
+![logo](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\logo.gif)
 
 ### 와이어프레임
 
@@ -66,7 +66,7 @@
 
 <img src="C:\Users\SSAFY\Downloads\7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="zoom: 5%;" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
 
-![image-20230221093759632](assets\image-20230221093759632.png)
+![image-20230221093759632](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221093759632.png)
 
 
 
@@ -76,39 +76,67 @@
 
 [🍻방구석포차](https://i8e201.p.ssafy.io/)
 
-`Login Page`
-
-<img src="C:\Users\SSAFY\Desktop\S08P12E201\assets\image-20230221094323522.png" alt="image-20230221094323522" style="zoom:36.2%;" /><img src="assets\image-20230221120144320.png" alt="image-20230221120144320" style="zoom:36.1%;" />
+`Login Page`<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221120144320.png" alt="image-20230221120144320"  />
 
 
 
-`Main Page`																																				`My Page`
+`Main Page`
 
-<img src="assets\image-20230221094618492.png" alt="image-20230221094618492" style="zoom:35.9%;" /><img src="assets\image-20230221094928719.png" alt="image-20230221094928719" style="zoom:36%;" />
-
-
-
-`Choice Pocha Theme Modal`																												`Create Pocha Modal`
-
-<img src="assets\image-20230221095154869.png" alt="image-20230221095154869" style="zoom:36%;" /><img src="assets\image-20230221095117175.png" alt="image-20230221095117175" style="zoom:36%;" />
+![image-20230221094618492](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221094618492-1676956383679-10.png)
 
 
 
-`Story Pocha`																																				`Game Pocha`	
+`My Page`
 
-<img src="assets\image-20230221095351806.png" alt="image-20230221095351806" style="zoom:36%;" /><img src="assets\image-20230221095635434.png" alt="image-20230221095635434" style="zoom:36%;" />
-
-
-
-`Meeting Pocha Loding Page`																												`Meeting Pocha`	
-
-<img src="assets\image-20230221095813813.png" alt="image-20230221095813813" style="zoom:36.1%;" /><img src="assets\image-20230221095946515.png" alt="image-20230221095946515" style="zoom:36%;" />
+![image-20230221094928719](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221094928719-1676956443379-12.png)
 
 
 
-`Meeting Pocha Loding Page`																												`Meeting Pocha`	
+`Choice Pocha Theme Modal`
 
-<img src="assets\image-20230221100115602.png" alt="image-20230221100115602" style="zoom:36.3%;" /><img src="assets\image-20230221100144833.png" alt="image-20230221100144833" style="zoom:36%;" />
+![image-20230221095154869](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221095154869.png)
+
+
+
+`Create Pocha Modal`
+
+![image-20230221095117175](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221095117175.png)
+
+
+
+`Story Pocha`
+
+![image-20230221095351806](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221095351806.png)
+
+
+
+`Game Pocha`
+
+![image-20230221095635434](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221095635434.png)
+
+
+
+`Meeting Pocha Loding Page`	
+
+![image-20230221095813813](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221095813813.png)
+
+
+
+`Meeting Pocha`
+
+![image-20230221095946515](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221095946515.png)
+
+
+
+`Review Page`
+
+![image-20230221100115602](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221100115602.png)
+
+
+
+`Chat`
+
+![image-20230221100144833](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221100144833.png)
 
 
 
@@ -116,11 +144,9 @@
 
 ---
 
-<img src="C:\Users\SSAFY\Downloads\erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="zoom:7%;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ) 
+<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="zoom:7%;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ) 
 
-![image-20230221100512582](assets\image-20230221100512582.png)
-
-
+![image-20230221100512582](C:\Users\SSAFY\Desktop\S08P12E201\README.assets\image-20230221100512582.png)
 
 
 
@@ -142,7 +168,7 @@
 
 ## 🍺기술스택, 개발환경, 서비스구조
 
-#### <img src="C:\Users\SSAFY\Downloads\다운로드.png" alt="다운로드" style="zoom:10%;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
+#### <img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\다운로드.png" alt="다운로드" style="zoom:10%;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
 
 
 
