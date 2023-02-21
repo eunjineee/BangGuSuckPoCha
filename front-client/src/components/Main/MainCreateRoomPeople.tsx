@@ -52,8 +52,8 @@ const MainCreateRoomPeople = ({ selectOption, pochaInfo }: { selectOption: strin
     
   };
   return (
-    <div className="flex w-full h-12 mb-10 font-bold items-center">
-      <div className="text-left text-xl mr-10">{selectTitle}</div>
+    <div className="flex items-center w-full h-12 mb-10 font-bold">
+      <div className="mr-10 text-xl text-left">{selectTitle}</div>
       {selectPeople.map((people, index) => (
         <div
           onClick={onSelect}
