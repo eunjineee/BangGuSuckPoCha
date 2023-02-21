@@ -1,22 +1,18 @@
 ### 목차
 
-* 기획배경
-* 기획
-  * 디자인 컨셉
-  * 와이어프레임
-  * UI디자인
-  * ERD
-* 주요기능
-* 기술스택,개발환경,서비스구조
-* 팀 소개
+- 기획배경
+- 기획
+  - 디자인 컨셉
+  - 와이어프레임
+  - UI디자인
+  - ERD
+- 주요기능
+- 기술스택,개발환경,서비스구조
+- 팀 소개
 
 ---
 
-
-
 ## 🍺기획배경
-
-
 
 프로젝트명
 
@@ -35,7 +31,7 @@
 
 ###### 문제 정의
 
- 💬 코로나 19로 인해 달라진 음주 문화(홈술)에 맞춰 MZ세대가 선호하지 않는 술자리 문화와 거리의 제약을 해결하기 위함
+💬 코로나 19로 인해 달라진 음주 문화(홈술)에 맞춰 MZ세대가 선호하지 않는 술자리 문화와 거리의 제약을 해결하기 위함
 
 ![image-20230221140908757](./README.assets/image-20230221140908757.png)
 
@@ -47,8 +43,6 @@
   - 입맛에 맞지 않거나 비싼 외식 비용
   - 분위기에 따른 조절 하기 힘든 주량
 - 거리에 대한 제약 없이 지인 및 새로운 사람들과 만남 가능
-
-
 
 ## 🍺기획
 
@@ -68,8 +62,6 @@
 
 <img src="./README.assets/image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
 
-
-
 ### UI 디자인
 
 ---
@@ -78,77 +70,53 @@
 
 `Login Page`<img src="./README.assets/image-20230221120144320.png" alt="image-20230221120144320"  />
 
-
-
 `Main Page`
 
 ![image-20230221094618492](./README.assets/image-20230221094618492-1676956383679-10.png)
-
-
 
 `My Page`
 
 ![image-20230221094928719](./README.assets/image-20230221094928719-1676956443379-12.png)
 
-
-
 `Choice Pocha Theme Modal`
 
 ![image-20230221095154869](./README.assets/image-20230221095154869.png)
-
-
 
 `Create Pocha Modal`
 
 ![image-20230221095117175](./README.assets/image-20230221095117175.png)
 
-
-
 `Story Pocha`
 
 ![image-20230221095351806](./README.assets/image-20230221095351806.png)
-
-
 
 `Game Pocha`
 
 ![image-20230221095635434](./README.assets/image-20230221095635434.png)
 
-
-
-`Meeting Pocha Loding Page`	
+`Meeting Pocha Loding Page`
 
 ![image-20230221095813813](./README.assets/image-20230221095813813.png)
-
-
 
 `Meeting Pocha`
 
 ![image-20230221095946515](./README.assets/image-20230221095946515.png)
 
-
-
 `Review Page`
 
 ![image-20230221100115602](./README.assets/image-20230221100115602.png)
-
-
 
 `Chat`
 
 ![image-20230221100144833](./README.assets/image-20230221100144833.png)
 
-
-
 ### ERD
 
 ---
 
-<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="width: 1.5rem; height: 1.5rem;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ) 
+<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="width: 1.5rem; height: 1.5rem;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ)
 
 ![image-20230221100512582](./README.assets/image-20230221100512582.png)
-
-
 
 ## 🍺주요기능
 
@@ -161,116 +129,59 @@
 - 각 술자리 컨셉에 따른 다양한 술 게임 제공
   - 소켓 통신을 활용한 실시간 게임 가능
 - 친구와의 1:1 채팅 기능 제공
-  - 소켓 통신을 활용한 실시간 채팅 가능              
+  - 소켓 통신을 활용한 실시간 채팅 가능
 - 매너 온도를 통해 악성 사용자 판별
-
-
 
 ## 🍺기술스택, 개발환경, 서비스구조
 
 <img src="./README.assets/다운로드.png" alt="다운로드" style="width: 1.5rem; height: 1.5rem;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
 
-
-
 ## 🍺팀 소개
 
 #### SSAFY 8기 부울경 1반 E201팀
 
-#### 팀명 
+#### 팀명
 
 말랑말랑1조
 
 ##### 팀원
 
-<table style="width: 15rem;">
+<table style="width: 100%;">
 	<thead>
-        <tr>
-			<th style="text-align: center;">
-				팀원
-			</th>
-            <th style="text-align: center;">
-				git
-			</th>
-		</tr>
-    </thead>
     <tbody>
 		<tr>
 			<td style="display: flex; justify-content: center; align-items:center;">
-                <div>
-                    <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 3rem; height:3rem; border-radius: 100%;"/>
-                    <div>김홍민</div> 
-                </div>
+        <div>
+            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+            <div style="display: flex; justify-content: center; align-items:center;">김홍민(Front-end & 팀장)</div>
+            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/KHminor</a></div>
+        </div>
+         <div>
+            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+            <div style="display: flex; justify-content: center; align-items:center;">김남규(Back-end)</div>
+            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/isanghada</a></div>
+        </div>
+        <div>
+            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+            <div style="display: flex; justify-content: center; align-items:center;">김애림(Back-end)</div>
+            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/aemong22</a></div>      
+        </div>
+        <div>
+          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+        	<div style="display: flex; justify-content: center; align-items:center;">김찬희(Front-end)</div>
+        	<div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/wndjf11</a></div>
+        </div>
+        <div>
+          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+          <div style="display: flex; justify-content: center; align-items:center;">양은진(Back-end)</div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/eunjineee</a></div>
+        </div>
+        <div>
+          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+          <div style="display: flex; justify-content: center; align-items:center;">한상현(Front-end)</div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/mintcoo</a></div>
+        </div>
 			</td>
-            <td style="text-align: center;">
-				<a href="https://github.com/KHminor">KHminor</a>
-			</td>
-		</tr>
-        <tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
-                <div>
-                    <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 3rem; height:3rem; border-radius: 100%;"/>
-                	<div>김남규</div>
-                </div>
-			</td>
-            <td style="text-align: center; width: 10rem;">
-				<a href="https://github.com/isanghada">Isanghada</a>
-			</td>
-		</tr>
-        <tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
-                <div>
-                    <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 3rem; height:3rem; border-radius: 100%;"/>
-                	<div>김애림</div>      
-                </div>
-			</td>
-            <td style="text-align: center;">
-				<a href="https://github.com/aemong22">aemong22</a>
-			</td>
-		</tr>
-        <tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
-                <div>
-                    <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 3rem; height:3rem; border-radius: 100%;"/>
-                	<div>김찬희</div>
-                </div>
-			</td>
-            <td style="text-align: center;">
-				<a href="https://github.com/wndjf11">wndjf11</a>
-			</td>
-		</tr>
-        <tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
-                <div>
-                    <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 3rem; height:3rem; border-radius: 100%;"/>
-               		<div>양은진</div>
-                </div>
-			</td>
-            <td style="text-align: center;">
-				<a href="https://github.com/eunjineee">Eunjin Yang</a>
-			</td>
-		</tr>
-        <tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
-                <div>
-                    <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 3rem; height:3rem; border-radius: 100%;"/>
-                	<div>한상현</div>
-                </div>
-			</td>
-            <td style="text-align: center;">
-				<a href="https://github.com/mintcoo"  style="width: 3rem; height:3rem; border-radius: 100%;">mintcoo</a>
-			</td>
-		</tr>
     </tbody>
 </table>
-```
-|제목|내용|설명|
-|------|---|---|
-|테스트1|테스트2|테스트3|
-|테스트1|테스트2|테스트3|
-|테스트1|테스트2|테스트3|
-```
-
-|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\109326297.jpeg" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\90487843.png" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\55730504.jpeg" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\73467750.png" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\108562895.jpeg" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\109326433.png" style="width: 3rem; height:3rem; "/>|
-
-|[김홍민(Front-end & 팀장)](https://github.com/KHminor)|[김남규(Back-end)](https://github.com/isanghada)|[김애림(Back-end)](https://github.com/aemong22)|[김찬희(Front-end)](https://github.com/wndjf11)|[양은진(Back-end)](https://github.com/eunjineee)|[한상현(Front-end)](https://github.com/mintcoo)|
 
