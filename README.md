@@ -58,7 +58,7 @@
 
 ---
 
-<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="width: 2rem; height: 2rem;" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
+<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="width: 3%; " />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
 
 <img src="./README.assets/image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
 
@@ -152,36 +152,35 @@
 		<tr>
 			<td style="display: flex; justify-content: center; align-items:center;">
         <div>
-            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
+            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
             <div style="display: flex; justify-content: center; align-items:center;">김홍민(Front-end & 팀장)</div>
             <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/KHminor</a></div>
         </div>
          <div>
-            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
+            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
             <div style="display: flex; justify-content: center; align-items:center;">김남규(Back-end)</div>
             <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/isanghada</a></div>
         </div>
         <div>
-            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
+            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
             <div style="display: flex; justify-content: center; align-items:center;">김애림(Back-end)</div>
             <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/aemong22</a></div>      
         </div>
         <div>
-          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
+          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
         	<div style="display: flex; justify-content: center; align-items:center;">김찬희(Front-end)</div>
         	<div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/wndjf11</a></div>
         </div>
         <div>
-          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
+          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
           <div style="display: flex; justify-content: center; align-items:center;">양은진(Back-end)</div>
           <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/eunjineee</a></div>
         </div>
         <div>
-          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
+          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
           <div style="display: flex; justify-content: center; align-items:center;">한상현(Front-end)</div>
           <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/mintcoo</a></div>
         </div>
 			</td>
     </tbody>
 </table>
-
