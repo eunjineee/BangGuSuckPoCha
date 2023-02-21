@@ -152,32 +152,32 @@
 		<tr>
 			<td style="display: flex; justify-content: center; align-items:center;">
         <div>
-            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
             <div style="display: flex; justify-content: center; align-items:center;">김홍민(Front-end & 팀장)</div>
             <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/KHminor</a></div>
         </div>
          <div>
-            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
             <div style="display: flex; justify-content: center; align-items:center;">김남규(Back-end)</div>
             <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/isanghada</a></div>
         </div>
         <div>
-            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
             <div style="display: flex; justify-content: center; align-items:center;">김애림(Back-end)</div>
             <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/aemong22</a></div>      
         </div>
         <div>
-          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
         	<div style="display: flex; justify-content: center; align-items:center;">김찬희(Front-end)</div>
         	<div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/wndjf11</a></div>
         </div>
         <div>
-          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
           <div style="display: flex; justify-content: center; align-items:center;">양은진(Back-end)</div>
           <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/eunjineee</a></div>
         </div>
         <div>
-          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
+          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 200px; height:200px; display: flex; justify-content: center; align-items:center;"/>
           <div style="display: flex; justify-content: center; align-items:center;">한상현(Front-end)</div>
           <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/mintcoo</a></div>
         </div>
