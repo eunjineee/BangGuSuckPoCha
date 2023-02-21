@@ -64,7 +64,7 @@
 
 ---
 
-<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="zoom: 5%;" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
+<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="width: 2rem; height: 2rem;" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
 
 <img src="./README.assets/image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
 
@@ -144,7 +144,7 @@
 
 ---
 
-<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="zoom:7%;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ) 
+<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="width: 1.5rem; height: 1.5rem;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ) 
 
 ![image-20230221100512582](./README.assets/image-20230221100512582.png)
 
@@ -168,7 +168,7 @@
 
 ## 🍺기술스택, 개발환경, 서비스구조
 
-#### <img src="./README.assets/다운로드.png" alt="다운로드" style="zoom:10%;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
+<img src="./README.assets/다운로드.png" alt="다운로드" style="width: 1.5rem; height: 1.5rem;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
 
 
 
@@ -262,4 +262,15 @@
 		</tr>
     </tbody>
 </table>
+```
+|제목|내용|설명|
+|------|---|---|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
+```
+
+|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\109326297.jpeg" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\90487843.png" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\55730504.jpeg" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\73467750.png" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\108562895.jpeg" style="width: 3rem; height:3rem;"/>|<img src="C:\Users\SSAFY\Desktop\S08P12E201\README.assets\109326433.png" style="width: 3rem; height:3rem; "/>|
+
+|[김홍민(Front-end & 팀장)](https://github.com/KHminor)|[김남규(Back-end)](https://github.com/isanghada)|[김애림(Back-end)](https://github.com/aemong22)|[김찬희(Front-end)](https://github.com/wndjf11)|[양은진(Back-end)](https://github.com/eunjineee)|[한상현(Front-end)](https://github.com/mintcoo)|
 
