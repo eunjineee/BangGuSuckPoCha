@@ -1,14 +1,15 @@
-### 목차
+# <img src = "./README.assets/pocha.gif" width = "3%"/>방구석 포차
+## 목차
 
-- 기획배경
-- 기획
-  - 디자인 컨셉
-  - 와이어프레임
-  - UI디자인
-  - ERD
-- 주요기능
-- 기술스택,개발환경,서비스구조
-- 팀 소개
+- [기획배경](#기획배경)
+- [설계](#설계)
+  - [디자인 컨셉](#디자인-컨셉)
+  - [와이어프레임](#와이어프레임)
+  - [UI 디자인](#ui-디자인)
+  - [ERD](#erd)
+- [주요기능](#주요기능)
+- [기술스택, 개발환경, 서비스구조](#기술스택-개발환경-서비스구조)
+- [팀 소개](#팀-소개)
 
 ---
 
@@ -44,7 +45,7 @@
   - 분위기에 따른 조절 하기 힘든 주량
 - 거리에 대한 제약 없이 지인 및 새로운 사람들과 만남 가능
 
-## 🍺기획
+## 🍺설계
 
 ### 디자인 컨셉
 
@@ -58,7 +59,7 @@
 
 ---
 
-<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="width: 3%; " />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
+<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" width="5%" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
 
 <img src="./README.assets/image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
 
@@ -114,27 +115,27 @@
 
 ---
 
-<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="width: 1.5rem; height: 1.5rem;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ)
+<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" width="5%" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ)
 
 ![image-20230221100512582](./README.assets/image-20230221100512582.png)
 
 ## 🍺주요기능
 
-- WebRTC기능을 활용한 비대면 화상 포차
-- 태그를 이용한 맞춤형 술자리 빠른 랜덤 매칭
-- 컨셉( 소통, 게임, 헌팅 )에 따른 술자리 분류
-  - 소통포차 : 이야기를 즐길 수 있는 포차
-  - 게임포차 : 다양한 게임을 즐길 수 있는 포차
-  - 헌팅포차 : 새로운 사람을 소개받을 수 있는 포차
-- 각 술자리 컨셉에 따른 다양한 술 게임 제공
-  - 소켓 통신을 활용한 실시간 게임 가능
-- 친구와의 1:1 채팅 기능 제공
-  - 소켓 통신을 활용한 실시간 채팅 가능
-- 매너 온도를 통해 악성 사용자 판별
+##### ✔ WebRTC기능을 활용한 비대면 화상 포차
+##### ✔ 태그를 이용한 맞춤형 술자리 빠른 랜덤 매칭
+##### ✔ 컨셉( 소통, 게임, 헌팅 )에 따른 술자리 분류
+- 소통포차 : 이야기를 즐길 수 있는 포차
+- 게임포차 : 다양한 게임을 즐길 수 있는 포차
+- 헌팅포차 : 새로운 사람을 소개받을 수 있는 포차
+##### ✔ 각 술자리 컨셉에 따른 다양한 술 게임 제공
+- 소켓 통신을 활용한 실시간 게임 가능
+##### ✔ 친구와의 1:1 채팅 기능 제공
+- 소켓 통신을 활용한 실시간 채팅 가능
+##### ✔ 매너 온도를 통해 악성 사용자 판별
 
 ## 🍺기술스택, 개발환경, 서비스구조
 
-<img src="./README.assets/다운로드.png" alt="다운로드" style="width: 1.5rem; height: 1.5rem;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
+<img src="./README.assets/notion_logo.png" alt="다운로드" width="3%" /> [노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
 
 ## 🍺팀 소개
 
@@ -146,41 +147,58 @@
 
 ##### 팀원
 
-<table style="width: 100%;">
-	<thead>
-    <tbody>
-		<tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
+<table >
+  <thead>
+    <th>FE</th>
+    <th>BE</th>
+  </thead>
+  <tbody>
+  <tr>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+          <img src="https://avatars.githubusercontent.com/u/109326297?v=4" width="15%"/>
+          <div style="display: flex; justify-content: center; align-items:center;"><b>김홍민(Front-end & 팀장)</b></div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/KHminor">https://github.com/KHminor</a></div>
+      </div>
+    </td>
+    <td style="display: flex; justify-content: center; align-items:center;">
         <div>
-            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-            <div style="display: flex; justify-content: center; align-items:center;">김홍민(Front-end & 팀장)</div>
-            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/KHminor</a></div>
-        </div>
-         <div>
-            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-            <div style="display: flex; justify-content: center; align-items:center;">김남규(Back-end)</div>
-            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/isanghada</a></div>
-        </div>
-        <div>
-            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-            <div style="display: flex; justify-content: center; align-items:center;">김애림(Back-end)</div>
-            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/aemong22</a></div>      
-        </div>
-        <div>
-          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-        	<div style="display: flex; justify-content: center; align-items:center;">김찬희(Front-end)</div>
-        	<div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/wndjf11</a></div>
-        </div>
-        <div>
-          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-          <div style="display: flex; justify-content: center; align-items:center;">양은진(Back-end)</div>
-          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/eunjineee</a></div>
-        </div>
-        <div>
-          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-          <div style="display: flex; justify-content: center; align-items:center;">한상현(Front-end)</div>
-          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/mintcoo</a></div>
-        </div>
-			</td>
-    </tbody>
+          <img src="https://avatars.githubusercontent.com/u/90487843?v=4" width="15%"/>
+          <div style="display: flex; justify-content: center; align-items:center;"><b>김남규(Back-end)</b></div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/isanghada">https://github.com/isanghada</a></div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+        <img src="https://avatars.githubusercontent.com/u/73467750?v=4" width="15%" border="solid"/>
+        <div style="display: flex; justify-content: center; align-items:center;"><b>김찬희(Front-end)</b></div>
+        <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/wndjf11">https://github.com/wndjf11</a></div>
+      </div>
+    </td>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+          <img src="https://avatars.githubusercontent.com/u/55730504?v=4" width="15%"/>
+          <div style="display: flex; justify-content: center; align-items:center;"><b>김애림(Back-end)></b></div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/aemong22">https://github.com/aemong22</a></div>      
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+        <img src="https://avatars.githubusercontent.com/u/109326433?v=4" width="15%"/>
+        <div style="display: flex; justify-content: center; align-items:center;"><b>한상현(Front-end)</b></div>
+        <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/mintcoo">https://github.com/mintcoo</a></div>
+      </div>
+    </td>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+        <img src="https://avatars.githubusercontent.com/u/108562895?v=4" width="15%"/>
+        <div style="display: flex; justify-content: center; align-items:center;"><b>양은진(Back-end)</b></div>
+        <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/eunjineee">https://github.com/eunjineee</a></div>
+      </div>
+    </td>
+  </tbody>
 </table>
