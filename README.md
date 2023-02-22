@@ -58,7 +58,7 @@
 
 ---
 
-<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" style="width: 3%; " />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
+<img src="./README.assets/7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover.png" alt="7a5ebfb0-0508-48ab-be9a-31b36ba53f97-cover" width="5%" />[Figma](https://www.figma.com/file/j4Ip9hMmVco26mJ67COuSK/%EB%94%94%EC%9E%90%EC%9D%B8-%EB%AA%A9%EC%97%85?node-id=313%3A6109&t=D4PNG15Al40oJ0Uu-0)
 
 <img src="./README.assets/image-20230221093759632.png" alt="image-20230221093759632" style="zoom:80%;" />
 
@@ -114,7 +114,7 @@
 
 ---
 
-<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" style="width: 1.5rem; height: 1.5rem;" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ)
+<img src="./README.assets/erd-2684250-2227990.webp" alt="erd-2684250-2227990" width="5%" />[ERD](https://www.erdcloud.com/d/C25xaNwzPPz9vNbGZ)
 
 ![image-20230221100512582](./README.assets/image-20230221100512582.png)
 
@@ -134,7 +134,7 @@
 
 ## 🍺기술스택, 개발환경, 서비스구조
 
-<img src="./README.assets/다운로드.png" alt="다운로드" style="width: 1.5rem; height: 1.5rem;" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
+<img src="./README.assets/notion_logo.png" alt="다운로드" width="5%" />[노션으로 이동](https://www.notion.so/3b33e8ea242d475199a0533fac9d8aa9)
 
 ## 🍺팀 소개
 
@@ -146,41 +146,58 @@
 
 ##### 팀원
 
-<table style="width: 100%;">
-	<thead>
-    <tbody>
-		<tr>
-			<td style="display: flex; justify-content: center; align-items:center;">
+<table >
+  <thead>
+    <th>FE</th>
+    <th>BE</th>
+  </thead>
+  <tbody>
+  <tr>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+          <img src="https://avatars.githubusercontent.com/u/109326297?v=4" width="15%"/>
+          <div style="display: flex; justify-content: center; align-items:center;">김홍민(Front-end & 팀장)</div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/KHminor">https://github.com/KHminor</a></div>
+      </div>
+    </td>
+    <td style="display: flex; justify-content: center; align-items:center;">
         <div>
-            <img src="https://avatars.githubusercontent.com/u/109326297?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-            <div style="display: flex; justify-content: center; align-items:center;">김홍민(Front-end & 팀장)</div>
-            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/KHminor</a></div>
-        </div>
-         <div>
-            <img src="https://avatars.githubusercontent.com/u/90487843?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-            <div style="display: flex; justify-content: center; align-items:center;">김남규(Back-end)</div>
-            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/isanghada</a></div>
-        </div>
-        <div>
-            <img src="https://avatars.githubusercontent.com/u/55730504?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-            <div style="display: flex; justify-content: center; align-items:center;">김애림(Back-end)</div>
-            <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/aemong22</a></div>      
-        </div>
-        <div>
-          <img src="https://avatars.githubusercontent.com/u/73467750?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-        	<div style="display: flex; justify-content: center; align-items:center;">김찬희(Front-end)</div>
-        	<div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/wndjf11</a></div>
-        </div>
-        <div>
-          <img src="https://avatars.githubusercontent.com/u/108562895?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-          <div style="display: flex; justify-content: center; align-items:center;">양은진(Back-end)</div>
-          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/eunjineee</a></div>
-        </div>
-        <div>
-          <img src="https://avatars.githubusercontent.com/u/109326433?v=4" style="width: 15rem; height:15rem; display: flex; justify-content: center; align-items:center;"/>
-          <div style="display: flex; justify-content: center; align-items:center;">한상현(Front-end)</div>
-          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/mintcoo</a></div>
-        </div>
-			</td>
-    </tbody>
+          <img src="https://avatars.githubusercontent.com/u/90487843?v=4" width="15%"/>
+          <div style="display: flex; justify-content: center; align-items:center;">김남규(Back-end)</div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/isanghada</a></div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+        <img src="https://avatars.githubusercontent.com/u/73467750?v=4" width="15%" border="solid"/>
+        <div style="display: flex; justify-content: center; align-items:center;">김찬희(Front-end)</div>
+        <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/wndjf11</a></div>
+      </div>
+    </td>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+          <img src="https://avatars.githubusercontent.com/u/55730504?v=4" width="15%"/>
+          <div style="display: flex; justify-content: center; align-items:center;">김애림(Back-end)</div>
+          <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/aemong22</a></div>      
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+        <img src="https://avatars.githubusercontent.com/u/109326433?v=4" width="15%"/>
+        <div style="display: flex; justify-content: center; align-items:center;">한상현(Front-end)</div>
+        <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/mintcoo</a></div>
+      </div>
+    </td>
+    <td style="display: flex; justify-content: center; align-items:center;">
+      <div>
+        <img src="https://avatars.githubusercontent.com/u/108562895?v=4" width="15%"/>
+        <div style="display: flex; justify-content: center; align-items:center;">양은진(Back-end)</div>
+        <div style="display: flex; justify-content: center; align-items:center;"><a>https://github.com/eunjineee</a></div>
+      </div>
+    </td>
+  </tbody>
 </table>
