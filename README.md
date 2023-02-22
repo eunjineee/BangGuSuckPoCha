@@ -172,7 +172,7 @@
   <tr>
     <td style="display: flex; justify-content: center; align-items:center;">
       <div>
-        <img src="https://avatars.githubusercontent.com/u/73467750?v=4" width="15%" border="solid"/>
+        <img src="https://avatars.githubusercontent.com/u/73467750?v=4" width="15%"/>
         <div style="display: flex; justify-content: center; align-items:center;"><b>김찬희(Front-end)</b></div>
         <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/wndjf11">https://github.com/wndjf11</a></div>
       </div>
@@ -200,5 +200,6 @@
         <div style="display: flex; justify-content: center; align-items:center;"><a href="https://github.com/eunjineee">https://github.com/eunjineee</a></div>
       </div>
     </td>
+  </tr>
   </tbody>
 </table>
